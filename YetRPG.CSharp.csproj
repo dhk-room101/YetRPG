@@ -284,7 +284,7 @@
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
-    <Compile Include="Assets\packages\core\scripts\structs\xConvNode.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xConversation.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEvent.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xPlot.cs" />
@@ -295,9 +295,7 @@
     <Compile Include="Assets\packages\core\scripts\xLoader.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectARE.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectBase.cs" />
-    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectCNV.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectMOD.cs" />
-    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectPLO.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTC.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTP.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTT.cs" />

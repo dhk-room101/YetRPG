@@ -102,7 +102,6 @@ public static partial class EngineConstants
     public const int OBJECT_TYPE_PLACEABLE = 512;
     public const int OBJECT_TYPE_AREAOFEFFECTOBJECT = 2048;
     public const int OBJECT_TYPE_WAYPOINT = 4096;
-    public const int OBJECT_TYPE_CONVERSATION = 8192;
     public const int OBJECT_TYPE_SOUND = 16384;
     public const int OBJECT_TYPE_PARTY = 32768;
     public const int OBJECT_TYPE_MAPPATCH = 65536;

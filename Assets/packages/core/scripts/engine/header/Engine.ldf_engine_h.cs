@@ -45,6 +45,7 @@ using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Threading;
 using System.Reflection;
+using UnityEngine.UI;
 
 public partial class Engine
 {
@@ -1627,7 +1628,7 @@ public partial class Engine
     */
     public void SetLocalInt(GameObject oObject, string sVarName, int nValue)
     {
-        UpdateProperty(oObject, sVarName, nValue.ToString());
+        UpdateGameObjectProperty(oObject, sVarName, nValue.ToString());
     }
 
     /* zDA2 @brief Retrieves a global integer variable stored in the user's profile.
@@ -1791,7 +1792,7 @@ public partial class Engine
     */
     public void SetLocalFloat(GameObject oObject, string sVarName, float fValue)
     {
-        UpdateProperty(oObject, sVarName, fValue.ToString());
+        UpdateGameObjectProperty(oObject, sVarName, fValue.ToString());
     }
 
     /* @brief Gets a local string variable on an object.
@@ -1824,7 +1825,7 @@ public partial class Engine
     */
     public void SetLocalString(GameObject oObject, string sVarName, string sValue)
     {
-        UpdateProperty(oObject, sVarName, sValue);
+        UpdateGameObjectProperty(oObject, sVarName, sValue);
     }
 
     /* @brief Gets a local GameObject variable on an object.
@@ -1865,7 +1866,7 @@ public partial class Engine
         Type t = Type.GetType(oValue.name);
         oObject.AddComponent(t);
         oObject.GetComponent(t).gameObject.name = sVarName;*/
-        UpdateProperty(oObject, sVarName, oValue.ToString());
+        UpdateGameObjectProperty(oObject, sVarName, oValue.ToString());
     }
 
     /* @brief Gets a local Vector3 variable on an object.
@@ -3053,7 +3054,7 @@ public partial class Engine
                             string _v = _x.Value;
                             if (_v != "")
                             {
-                                UpdateProperty(oObject, _d, _v);
+                                UpdateGameObjectProperty(oObject, _d, _v);
                             }
                         }
                     }
@@ -4418,7 +4419,7 @@ public partial class Engine
 
     public void SetCreatureGoreLevel(GameObject oCreature, float fGoreLevel)
     {
-        UpdateProperty(oCreature, "GORE", fGoreLevel.ToString());
+        UpdateGameObjectProperty(oCreature, "GORE", fGoreLevel.ToString());
         //oCreature.GetComponent<xGameObjectUTC>().GORE = fGoreLevel;
     }
 
@@ -5543,7 +5544,6 @@ public partial class Engine
     */
     public void DisplayFloatyMessage(GameObject oCreature, string sMessage, int nStyle = EngineConstants.FLOATY_MESSAGE, int nColour = 16777215, float nDuration = 0.5f)
     {
-        //TO DO implement duration
         GameObject oFloaty = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/floatyPrefab"));
         oFloaty.name = oCreature.name + "_floaty";
         var _floaty = oFloaty.GetComponent<GUIText>();
@@ -7773,7 +7773,7 @@ public partial class Engine
     */
     public void SetGameMode(int nMode)
     {
-        //UpdateProperty(GetModule(), "GAME_MODE", nMode.ToString());
+        //UpdateGameObjectProperty(GetModule(), "GAME_MODE", nMode.ToString());
         xEvent ev = Event(EngineConstants.EVENT_TYPE_GAMEMODE_CHANGE);
         SetEventIntegerRef(ref ev, 0, nMode);//New desired game mode
         SetEventIntegerRef(ref ev, 1, GetLocalInt(GetModule(), "GAME_MODE"));//Current-old Game mode
@@ -7977,8 +7977,8 @@ public partial class Engine
     * @remarks Any duplicate commands in the queue that are adjacent to one another are deleted.
     * @author Brenon
     */
-    public void AddCommand(GameObject oObject, xCommand cCommand, 
-        int bAddToFront = EngineConstants.FALSE, int bStatic = EngineConstants.FALSE, 
+    public void AddCommand(GameObject oObject, xCommand cCommand,
+        int bAddToFront = EngineConstants.FALSE, int bStatic = EngineConstants.FALSE,
         int nOverrideAddBehavior = -1)
     {
         cCommand.bStatic = bStatic;
@@ -10094,7 +10094,7 @@ public partial class Engine
     */
     public void SetPartyLeader(GameObject oLeader)
     {
-        UpdateProperty(xGameObjectMOD.instance.gameObject, EngineConstants.PARTY_LEADER_STORE, oLeader.name);
+        UpdateGameObjectProperty(xGameObjectMOD.instance.gameObject, EngineConstants.PARTY_LEADER_STORE, oLeader.name);
     }
 
     /* @brief Adds a creature that follows you around but it is not part of the 
@@ -10811,7 +10811,7 @@ public partial class Engine
         TextAsset iniTextAsset;
         iniTextAsset = Resources.Load(System.IO.Path.GetFileNameWithoutExtension("DragonAge")) as TextAsset;
         File.WriteAllBytes(Application.persistentDataPath + "/DragonAge.ini", iniTextAsset.bytes);
-        
+
         string f = Application.persistentDataPath + "/DragonAge.ini";
         using (var input = File.OpenText(f))
         {
@@ -12125,13 +12125,13 @@ public partial class Engine
         return typeof(T).GetProperties()[0].Name;
     }
 
-    public void UpdateProperty(GameObject oObject, string key, string value)
+    public void UpdateGameObjectProperty(GameObject oObject, string key, string value)
     {
         /* example 
         xGameObject t = gameObject.GetComponent<xGameObjectBase>();
                     string k = "test";
                     int v = 50;
-                    UpdateProperty(t, k, v);*/
+                    UpdateGameObjectProperty(t, k, v);*/
         //string[] t = oObject.GetType().ToString().Split();
         char c = (char)46;
         var obt = GetObjectType(oObject.gameObject);
@@ -12141,11 +12141,6 @@ public partial class Engine
             case EngineConstants.OBJECT_TYPE_AREA:
                 {
                     x = oObject.GetComponent<xGameObjectARE>();
-                    break;
-                }
-            case EngineConstants.OBJECT_TYPE_CONVERSATION:
-                {
-                    x = oObject.GetComponent<xGameObjectCNV>();
                     break;
                 }
             case EngineConstants.OBJECT_TYPE_CREATURE:
@@ -12245,7 +12240,7 @@ public partial class Engine
         foreach (XElement ve in vl)
         {
             //Find property using reflection and set the value accordingly
-            UpdateProperty(oArea, ve.Element("xname").Value, ve.Element("Data").Value);
+            UpdateGameObjectProperty(oArea, ve.Element("xname").Value, ve.Element("Data").Value);
             //a.VariableList.Add(ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
@@ -12268,7 +12263,7 @@ public partial class Engine
                 string _v = _x.Value;
                 if (_v != "")
                 {
-                    UpdateProperty(oArea, _d, _v);
+                    UpdateGameObjectProperty(oArea, _d, _v);
                 }
             }
         }
@@ -12339,10 +12334,10 @@ public partial class Engine
             }*/
 
             //For now, manually, Few of them, relevant
-            UpdateProperty(ow, xe.Element("Tag").Name.ToString(), xe.Element("Tag").Value);
-            UpdateProperty(ow, xe.Element("WaypointName").Name.ToString(), xe.Element("WaypointName").Value);
-            UpdateProperty(ow, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-            UpdateProperty(ow, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+            UpdateGameObjectProperty(ow, xe.Element("Tag").Name.ToString(), xe.Element("Tag").Value);
+            UpdateGameObjectProperty(ow, xe.Element("WaypointName").Name.ToString(), xe.Element("WaypointName").Value);
+            UpdateGameObjectProperty(ow, xe.Element("position").Name.ToString(), xe.Element("position").Value);
+            UpdateGameObjectProperty(ow, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
 
             //Update object position And orientation
             ow.gameObject.transform.position = ow.gameObject.GetComponent<xGameObjectUTW>().position;
@@ -12387,7 +12382,7 @@ public partial class Engine
         foreach (XElement ve in vl)
         {
             //Find property using reflection and set the value accordingly
-            UpdateProperty(oPlaceable, ve.Element("xname").Value, ve.Element("Data").Value);
+            UpdateGameObjectProperty(oPlaceable, ve.Element("xname").Value, ve.Element("Data").Value);
             //Check for world map
             if (ve.Element("Data").Value == "world_map")
             {
@@ -12416,15 +12411,15 @@ public partial class Engine
                 string _v = _x.Value;
                 if (_v != "")
                 {
-                    UpdateProperty(oPlaceable, _d, _v);
+                    UpdateGameObjectProperty(oPlaceable, _d, _v);
                 }
             }
         }
         /*//Manually update some relevant variables during debugging tests
-        UpdateProperty(oPlaceable, agent.Element("xname").Name.ToString(), agent.Element("xname").Value);
-        UpdateProperty(oPlaceable, agent.Element("Tag").Name.ToString(), agent.Element("Tag").Value);
-        UpdateProperty(oPlaceable, agent.Element("Appearance").Name.ToString(), agent.Element("Appearance").Value);
-        UpdateProperty(oPlaceable, agent.Element("Useable").Name.ToString(), agent.Element("Useable").Value);*/
+        UpdateGameObjectProperty(oPlaceable, agent.Element("xname").Name.ToString(), agent.Element("xname").Value);
+        UpdateGameObjectProperty(oPlaceable, agent.Element("Tag").Name.ToString(), agent.Element("Tag").Value);
+        UpdateGameObjectProperty(oPlaceable, agent.Element("Appearance").Name.ToString(), agent.Element("Appearance").Value);
+        UpdateGameObjectProperty(oPlaceable, agent.Element("Useable").Name.ToString(), agent.Element("Useable").Value);*/
 
     }
 
@@ -12457,7 +12452,7 @@ public partial class Engine
         foreach (XElement ve in vl)
         {
             //Find property using reflection and set the value accordingly
-            UpdateProperty(oCreature, ve.Element("xname").Value, ve.Element("Data").Value);
+            UpdateGameObjectProperty(oCreature, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
         //Add script URI
@@ -12489,21 +12484,21 @@ public partial class Engine
                 string _v = _x.Value;
                 if (_v != "")
                 {
-                    UpdateProperty(oCreature, _d, _v);
+                    UpdateGameObjectProperty(oCreature, _d, _v);
                 }
             }
         }
 
         /*//Manually update some relevant variables during debugging tests
-        UpdateProperty(c, agent.Element("xname").Name.ToString(), agent.Element("xname").Value);
-        UpdateProperty(c, agent.Element("Tag").Name.ToString(), agent.Element("Tag").Value);
-        UpdateProperty(c, agent.Element("Race").Name.ToString(), agent.Element("Race").Value);
-        UpdateProperty(c, agent.Element("Gender").Name.ToString(), agent.Element("Gender").Value);
-        UpdateProperty(c, agent.Element("Group").Name.ToString(), agent.Element("Group").Value);
-        UpdateProperty(c, agent.Element("Team").Name.ToString(), agent.Element("Team").Value);
-        UpdateProperty(c, agent.Element("Selectable").Name.ToString(), agent.Element("Selectable").Value);
-        UpdateProperty(c, agent.Element("PlotGiver").Name.ToString(), agent.Element("PlotGiver").Value);
-        UpdateProperty(c, agent.Element("Class").Name.ToString(), agent.Element("Class").Value);*/
+        UpdateGameObjectProperty(c, agent.Element("xname").Name.ToString(), agent.Element("xname").Value);
+        UpdateGameObjectProperty(c, agent.Element("Tag").Name.ToString(), agent.Element("Tag").Value);
+        UpdateGameObjectProperty(c, agent.Element("Race").Name.ToString(), agent.Element("Race").Value);
+        UpdateGameObjectProperty(c, agent.Element("Gender").Name.ToString(), agent.Element("Gender").Value);
+        UpdateGameObjectProperty(c, agent.Element("Group").Name.ToString(), agent.Element("Group").Value);
+        UpdateGameObjectProperty(c, agent.Element("Team").Name.ToString(), agent.Element("Team").Value);
+        UpdateGameObjectProperty(c, agent.Element("Selectable").Name.ToString(), agent.Element("Selectable").Value);
+        UpdateGameObjectProperty(c, agent.Element("PlotGiver").Name.ToString(), agent.Element("PlotGiver").Value);
+        UpdateGameObjectProperty(c, agent.Element("Class").Name.ToString(), agent.Element("Class").Value);*/
 
         switch (oCreature.GetComponent<xGameObjectUTC>().Group)
         {
@@ -12554,12 +12549,12 @@ public partial class Engine
             }
 
             //Find property using reflection and set the value accordingly
-            UpdateProperty(oPlaceable, ve.Element("xname").Value, ve.Element("Data").Value);
+            UpdateGameObjectProperty(oPlaceable, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
         //Manually update some relevant variables during debugging tests
-        UpdateProperty(oPlaceable, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-        UpdateProperty(oPlaceable, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+        UpdateGameObjectProperty(oPlaceable, xe.Element("position").Name.ToString(), xe.Element("position").Value);
+        UpdateGameObjectProperty(oPlaceable, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
 
         //Update object position And orientation
         oPlaceable.gameObject.transform.position = oPlaceable.gameObject.GetComponent<xGameObjectUTP>().position;
@@ -12575,12 +12570,12 @@ public partial class Engine
         foreach (XElement ve in vl)//Double check if creature in area ever has variable list
         {
             //Find property using reflection and set the value accordingly
-            UpdateProperty(oCreature, ve.Element("xname").Value, ve.Element("Data").Value);
+            UpdateGameObjectProperty(oCreature, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
         //Manually update some relevant variables during debugging tests
-        UpdateProperty(oCreature, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-        UpdateProperty(oCreature, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+        UpdateGameObjectProperty(oCreature, xe.Element("position").Name.ToString(), xe.Element("position").Value);
+        UpdateGameObjectProperty(oCreature, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
 
         //Update object position And orientation
         oCreature.gameObject.transform.position = oCreature.gameObject.GetComponent<xGameObjectUTC>().position;
@@ -12653,42 +12648,176 @@ public partial class Engine
 
     public void Engine_Conversation()
     {
-        int bSuccess = ParseConversation();
+        ParseConversation();
 
-        if (bSuccess == EngineConstants.TRUE)
+        xConversation cnv = GetConversation();
+
+        if (cnv == null)
         {
-            GameObject conv = GetConversation();
-            var cnv = conv.GetComponent<xGameObjectCNV>();
-
-            List<int> s = new List<int>();
-            foreach( var _s in cnv.StartList)
-            {
-                s.Add(_s);
-            }
-            List<string> n = new List<string>();
-            foreach (var _n in cnv.NPCLineList)
-            {
-                n.Add(_n.text);
-            }
-            List<string> p = new List<string>();
-            foreach (var _p in cnv.PlayerLineList)
-            {
-                p.Add(_p.text);
-            }
-
-            Console.WriteLine();
-            
+            throw new NotImplementedException();
         }
+
+        //1st analyze the start list conditions to see which is the current branch to initiate
+        int bStart = EngineConstants.FALSE;
+        int lIndex = 0;//Line index current
+        xConvNode node;
+        int plotID;
+        xPlot plot;
+        xPlotElement ePlot;
+
+        foreach (int n in cnv.StartList)
+        {
+            node = cnv.NPCLineList.ElementAt(n);
+            //Let's analyze the current node conditions/plot, If any
+            plotID = node.ConditionPlotURI;
+            if (plotID != 0)//If there is an actual condition
+            {
+                //Check to see if plot already exists, if not create one
+                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+                if (plot == null) //Not found
+                {
+                    //let's parse and create one
+                    plot = ParsePlot(GetResource("ID", plotID.ToString(), "Name"));
+                }
+
+                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
+                if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                {
+                    bStart = EngineConstants.TRUE;
+                    lIndex = n;//set the found starting branch
+                    break;
+                }
+            }
+        }
+
+        if (bStart == EngineConstants.TRUE) //We actually found the Starting conversation node
+        {
+            node = cnv.NPCLineList.ElementAt(lIndex);
+        }
+        else //nothing found?
+        {
+            throw new NotImplementedException();
+        }
+
+        //Time to display the first branch, and if null, the player choices directly
+        GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+        oConversation.SetActive(true);
+        GameObject npcLine = oConversation.transform.Find("NPCLine").gameObject;
+
+        //Prepare an array of text lines, to be visible or not based on need
+        List<GameObject> pLines = new List<GameObject>();
+        GameObject line;
+        line = oConversation.transform.Find("0").gameObject;
+        pLines.Add(line);
+        line = oConversation.transform.Find("1").gameObject;
+        pLines.Add(line);
+        line = oConversation.transform.Find("2").gameObject;
+        pLines.Add(line);
+        line = oConversation.transform.Find("3").gameObject;
+        pLines.Add(line);
+        line = oConversation.transform.Find("4").gameObject;
+        pLines.Add(line);
+        line = oConversation.transform.Find("5").gameObject;
+        pLines.Add(line);
+
+        Text ct = (Text)npcLine.GetComponent(typeof(Text));
+        ct.text = node.text;
+
+        //Get the list of player replies
+        List<xConvNode> pReplies = new List<xConvNode>();
+        foreach(Transition t in cnv.NPCLineList.ElementAt(lIndex).TransitionList)
+        {
+            pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
+        }
+
+        //activate text lines
+        foreach (xConvNode pNode in pReplies)
+        {
+            char c = (char)124;
+            string[] split = pNode.text.Split(c);
+            pNode.text = split[1];
+            string lineLocation = split[0][0].ToString();
+            char iconID = split[0][1];
+            GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
+            lReply.SetActive(true);
+            lReply.GetComponent<Text>().text = pNode.text;
+        }
+
+        Console.WriteLine();
     }
 
-    public int ParseConversation()
+    public xPlot ParsePlot(string rTemplate)
     {
-        string sConversation = GetLocalString(GetModule(), "CONVERSATION");
-        GameObject oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/conversationPrefab"));
-        oObject.name = sConversation + "_conversation";
-        oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_CONVERSATION;
+        xPlot plot = new xPlot();
 
-        var cnv = oObject.GetComponent<xGameObjectCNV>();
+        //Get its template XML, Convert name to file ID
+        string id = GetResource("Name", rTemplate, "ID", "plo");
+        plot.ResRefID = int.Parse(id);//Double check
+        string seed = String.Format("{0:x}", DateTime.Now.ToString("hh:mm:ss tt").GetHashCode() + increment);
+        increment++;
+
+        Unzip(id, seed);
+
+        string f = EngineConstants.SOURCE + id + seed + ".xml";
+
+        //Load the identified XML template for parsing
+        //XmlNode node = doc.SelectSingleNode("//Resource/Agent/ResRefName/text()");
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.Load(f);
+        XDocument xDoc = XDocument.Load(new XmlNodeReader(xmldoc));
+        XElement root = xDoc.Root;
+        XElement agent = root.Element("Agent");
+
+        //update all the variables That are Not list
+        var e = agent.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateObjectProperty(plot, _d, _v);
+                }
+            }
+        }
+
+        //Parse the plot status list
+        IEnumerable<XElement> statuslist = agent.Element("StatusList").Elements("Agent");
+        foreach (XElement _ll in statuslist)
+        {
+            var _node = new xPlotNode();
+
+            foreach (XElement _l in _ll.Elements())
+            {
+                string _d = _l.Name.ToString();
+                if (_d.IndexOf("List") == -1)//If not list
+                {
+                    string _v = _l.Value;
+                    if (_v != "")
+                    {
+                        UpdateObjectProperty(_node, _d, _v);
+                    }
+                }
+            }
+
+            //Create the new plot element with the default value and added to the list
+            xPlotElement _element = new xPlotElement(_node, _node.DefaultValue);
+            plot.StatusList.Add(_element);
+        }
+
+        //Add the newly parsed plot into the main plot list for future use
+        xGameObjectMOD.instance.oPlots.Add(plot);
+
+        return plot;
+    }
+
+    public void ParseConversation()
+    {
+        xConversation cnv = new xConversation();
+
+        string sConversation = GetLocalString(GetModule(), "CONVERSATION");
 
         //Get its template XML, Convert name to file ID
         string id = GetResource("Name", sConversation, "ID", "dlg");
@@ -12717,21 +12846,21 @@ public partial class Engine
                 string _v = _x.Value;
                 if (_v != "")
                 {
-                    UpdateProperty(oObject, _d, _v);
+                    UpdateObjectProperty(cnv, _d, _v);
                 }
             }
         }
 
         //Parse the start list
         IEnumerable<XElement> sl = agent.Element("StartList").Elements("Agent");
-        foreach (XElement _s in sl) 
+        foreach (XElement _s in sl)
         {
             cnv.StartList.Add(int.Parse(_s.Element("LineIndex").Value));
         }
 
         //Parse the NPC and player lines
         IEnumerable<XElement> npc = agent.Element("NPCLineList").Elements("Agent");
-        foreach (XElement _ll in npc)  
+        foreach (XElement _ll in npc)
         {
             var _node = new xConvNode();
 
@@ -12744,7 +12873,7 @@ public partial class Engine
                     string _v = _l.Value;
                     if (_v != "")
                     {
-                        UpdateConversationNode(_node, _d, _v);
+                        UpdateObjectProperty(_node, _d, _v);
                     }
                 }
             }
@@ -12776,7 +12905,7 @@ public partial class Engine
                     string _v = _l.Value;
                     if (_v != "")
                     {
-                        UpdateConversationNode(_node, _d, _v);
+                        UpdateObjectProperty(_node, _d, _v);
                     }
                 }
             }
@@ -12794,7 +12923,9 @@ public partial class Engine
             cnv.PlayerLineList.Add(_node);
         }
 
-        return EngineConstants.TRUE;
+        //Temporary during the bug, the goal is to pre-parse conversations 
+        //and other resources during area load and store them
+        xGameObjectMOD.instance.oConversation = cnv;
     }
 
     public object GetGameObjectType(GameObject oObject)
@@ -12899,7 +13030,7 @@ public partial class Engine
         }
     }
 
-    public void UpdateConversationNode(xConvNode oObject, string key, string value)
+    public void UpdateObjectProperty(object oObject, string key, string value)
     {
         char c = (char)46;
 
@@ -12916,6 +13047,12 @@ public partial class Engine
                 {
                     uint v = uint.Parse(value);
                     oObject.GetType().GetProperty(key).SetValue(oObject, v, null);
+                    break;
+                }
+            case "Guid":
+                {
+                    Guid guid = new Guid(value);
+                    oObject.GetType().GetProperty(key).SetValue(oObject, guid, null);
                     break;
                 }
             case "GameObject":
@@ -12954,17 +13091,9 @@ public partial class Engine
         }
     }
 
-    public GameObject GetConversation()
+    public xConversation GetConversation()
     {
-        GameObject oConv;
-        GameObject[] oConvList = GameObject.FindGameObjectsWithTag("Conversation");
-        if (oConvList.Length != 1)//Either no Conversation was found or more than one
-        {
-            throw new NotImplementedException();
-        }
-        
-        else oConv = oConvList[0];
-        return oConv;
+        return xGameObjectMOD.instance.oConversation;
     }
     #endregion
 

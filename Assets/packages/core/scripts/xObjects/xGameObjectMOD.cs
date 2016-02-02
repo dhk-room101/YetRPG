@@ -145,6 +145,7 @@ public class xGameObjectMOD : MonoBehaviour
     public int GAME_MODE { get; set; }
     public string CONVERSATION { get; set; }//The resource conversation Name to be played When the conversation mode kicks in
     public int CONVERSATION_IN_PROGRESS { get; set; }
+    public xConversation oConversation { get; set; }
     #endregion
     Engine engine { get; set; }
     xGameObjectBase oBase { get; set; }
@@ -155,7 +156,7 @@ public class xGameObjectMOD : MonoBehaviour
     //Active party is extrapolated based on FOLLOWER_STATE_ACTIVE
     public List<GameObject> oPartyPool { get; set; }
 
-    public List<xGameObjectPLO> oPlots { get; set; }
+    public List<xPlot> oPlots { get; set; }
 
     string Script = "demo_module";//Starting script
     public string tArea { get; set; }//Transition to area
@@ -192,7 +193,7 @@ public class xGameObjectMOD : MonoBehaviour
         engine.SetLocalString(engine.GetModule(), "PARTY_OVERRIDE_CONVERSATION", string.Empty);
 
         if (oPartyPool == null) oPartyPool = new List<GameObject>();
-        if (oPlots == null) oPlots = new List<xGameObjectPLO>();
+        if (oPlots == null) oPlots = new List<xPlot>();
 
         //Initialize the camera in the scene
         HandleCamera();
@@ -301,7 +302,7 @@ public class xGameObjectMOD : MonoBehaviour
                             GameObject _player = GameObject.Find("demo000cr_player");
 
                             //Set placeable action as area transition
-                            engine.UpdateProperty(pat, "PLC_ACTION", EngineConstants.PLACEABLE_ACTION_AREA_TRANSITION.ToString());
+                            engine.UpdateGameObjectProperty(pat, "PLC_ACTION", EngineConstants.PLACEABLE_ACTION_AREA_TRANSITION.ToString());
 
                             xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_USE);
                             engine.SetEventCreatorRef(ref ev, _player);
