@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D002BAE5-C742-225D-34EF-A4A5DD6C6121}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile></CompilerResponseFile>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
+    <UnityVersion>5.3.1f1</UnityVersion>
+    <RootNamespace></RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Debug\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_1;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;DEVELOPMENT_BUILD;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
+    <IntermediateOutputPath>Temp\UnityVS_obj\Release\</IntermediateOutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DefineConstants>TRACE;UNITY_5_3_1;UNITY_5_3;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_LOG_MIXED_STACKTRACE;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;DEVELOPMENT_BUILD;ENABLE_PROFILER;DEBUG;TRACE;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN</DefineConstants>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="Boo.Lang" />
+    <Reference Include="UnityScript.Lang" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assets\Plugins\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\packages\core\scripts\demo\demo100ar_wilderness.cs" />
+    <Compile Include="Assets\packages\core\scripts\demo\demo200pl_security_lever.cs" />
+    <Compile Include="Assets\packages\core\scripts\demo\demo_consts_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\demo\demo_module.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\ai_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\arl_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\autoss_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bdc_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bdn_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bec_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bed_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bhm_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\bhn_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\camp_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\cir330ar_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\cir_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\cli_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\den_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\den_lc_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\effect_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\epi_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\global_objects_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\item_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\ldf_engine_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\lit_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\lot_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\m2da_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\monster_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\mtn_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\nrd_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\ntb_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\orz_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bdcpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bdnpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bec000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bed000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bhm000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_bhn000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_cir000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_clipt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_cmnpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_denpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_epipt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_mnp000pt_main_events.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_mnp000pt_main_lothering.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_mnp000pt_main_rumour.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_mtn000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_ntb000pt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_orzpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\plot\plt_urnpt_main.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\ran_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\spell_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\talent_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\urn_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\var_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\vfx_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\constants\wrd_constants_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\ability_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\aoe_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\area_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\cir000cr_team_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\creature_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\module_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\orzar_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\placeable_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\player_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\plot_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\rules_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\sys_chargen_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\sys_comboeffects_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\sys_treasure_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\core\trigger_core.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_addability.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_ai_modifier_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_charm_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_conecasting_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_confusion_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_damage_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_daze_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_death_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_disease_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_dispel_magic_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_dot2_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_dot_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_enchantment_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_feign_death_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_grab_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_heal_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_heartbeat_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_impact_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_knockdown_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_lyrium_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_mabari_dominance_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_modify_attribute_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_modify_critchance_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_modify_mana_stam_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_modify_property_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_paralyze_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_polymorph.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_rec_knockdown_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_regeneration_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_resurrection_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_root_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_screenshake_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_sleep_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_stealth_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_stun_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_summon_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_swarm_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_test_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_upkeep_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_visualeffect_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\effect\effect_wbomb_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ability_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ability_summon_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.achievement_core_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.achievement_sp_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ai_ballista_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ai_behaviors_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ai_conditions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ai_main_h_2.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ai_threat_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.aoe_effects_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.approval_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.arl_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.arl_siege_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.arl_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.attributes_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.bdc_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.bdn_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.bec_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.bhm_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.bhm_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cai_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cai_runner_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cai_useplc_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.camp_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.campaign_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cir_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cir_mapgui_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cir_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cli_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cli_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.combat_damage_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.combat_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.config_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.core_difficulty_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.core_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.den600_bigfight_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.den_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.den_lc_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.dlc_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.effects_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.epi_attendees_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.events_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.items_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ldf_engine_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.lit_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.log_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.lot_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.m2da_data_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.map_events_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.nrd_inc_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ntb_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ntb_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.orz540_apparatus_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.orz540_branka_caridin_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.orz550_broodmother_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.orz_codex_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.orz_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.party_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.placeable_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.plot_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre100_atmosphere_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre100_bridge_attack_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre100_lightning_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre410_barricade_fire_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre440_darkspawn_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre_ai_ballista_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre_ai_emissary_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.pre_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.proving_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ran_repeat_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.rules_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.stats_core_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.tutorials_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.ui_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.urn_dragon_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.urn_functions_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.urn_ssf_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.utility_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.world_maps_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.wrappers_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.zz_crafting_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.zz_plotguidebug_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\header\Engine.zz_removebuttons_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_achievements_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_ambient_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_areabalance.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_audio_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_autolevelup_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_autoscale_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_chargen_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_classify_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_disease.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_gore_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_injury.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_itemprops_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_itemsets_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_resistances_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_rewards_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_rubberband_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_soundset_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_stealth_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_traps_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xConvNode.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xEvent.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xPlot.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xProperty.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xTactic.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xThreat.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xTrigger.cs" />
+    <Compile Include="Assets\packages\core\scripts\xLoader.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectARE.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectBase.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectCNV.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectMOD.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectPLO.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTC.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTP.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTT.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTW.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\z_xGameObjectTemplate.cs" />
+    <Compile Include="Assets\packages\core\scripts\xPlayerMovement.cs" />
+    <Compile Include="Assets\packages\core\scripts\zdebug\xAddTalent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Resources\AbilitiesBase.xml" />
+    <None Include="Assets\Resources\AppearanceBase.xml" />
+    <None Include="Assets\Resources\AreaData.xml" />
+    <None Include="Assets\Resources\AutoScale.xml" />
+    <None Include="Assets\Resources\AutoscaleData.xml" />
+    <None Include="Assets\Resources\BaseClass.xml" />
+    <None Include="Assets\Resources\BaseItem.xml" />
+    <None Include="Assets\Resources\BaseRace.xml" />
+    <None Include="Assets\Resources\Commands.xml" />
+    <None Include="Assets\Resources\Difficulty.xml" />
+    <None Include="Assets\Resources\DragonAge.txt" />
+    <None Include="Assets\Resources\EngineEvents.xml" />
+    <None Include="Assets\Resources\Experience.xml" />
+    <None Include="Assets\Resources\GameSettings.xml" />
+    <None Include="Assets\Resources\LoadHints.xml" />
+    <None Include="Assets\Resources\LoadHintsVLowLevel.xml" />
+    <None Include="Assets\Resources\Packages.xml" />
+    <None Include="Assets\Resources\Properties.xml" />
+    <None Include="Assets\Resources\Resources.xml" />
+    <None Include="Assets\Resources\TalkTable.xml" />
+    <None Include="Assets\Resources\UIMessages.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
+</Project>
