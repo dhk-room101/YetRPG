@@ -282,6 +282,7 @@
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_stealth_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_traps_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\xConvTouch.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xConversation.cs" />

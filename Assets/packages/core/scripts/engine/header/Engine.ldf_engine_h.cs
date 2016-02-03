@@ -12737,10 +12737,12 @@ public partial class Engine
             string[] split = pNode.text.Split(c);
             pNode.text = split[1];
             string lineLocation = split[0][0].ToString();
-            char iconID = split[0][1];
+            string iconID = split[0][1].ToString();
             GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
-            lReply.SetActive(true);
             lReply.GetComponent<Text>().text = pNode.text;
+            lReply.GetComponent<xConvTouch>().index = int.Parse(lineLocation);
+            lReply.GetComponent<xConvTouch>().iconID = iconID;
+            lReply.SetActive(true);
         }
 
         Console.WriteLine();
