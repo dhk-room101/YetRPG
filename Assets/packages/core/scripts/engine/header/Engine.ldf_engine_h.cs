@@ -1861,12 +1861,9 @@ public partial class Engine
     */
     public void SetLocalObject(GameObject oObject, string sVarName, GameObject oValue)
     {
-        /*Debug.LogWarning("set local object: TO DO");
-        //basically add GameObject oValue with name sVarName on GameObject oObject
-        Type t = Type.GetType(oValue.name);
-        oObject.AddComponent(t);
-        oObject.GetComponent(t).gameObject.name = sVarName;*/
-        UpdateGameObjectProperty(oObject, sVarName, oValue.ToString());
+        //Debug.LogWarning("set local object: TO DO");
+        if (oValue != null) UpdateGameObjectProperty(oObject, sVarName, oValue.ToString());
+        else UpdateGameObjectProperty(oObject, sVarName, "null");
     }
 
     /* @brief Gets a local Vector3 variable on an object.
@@ -6475,6 +6472,7 @@ public partial class Engine
     public void EndConversation()
     {
         SetLocalString(GetModule(), "CONVERSATION", "");
+        SetLocalObject(GetModule(), "CONVERSATION_SPEAKER", null);
         SetLocalInt(GetModule(), "CONVERSATION_IN_PROGRESS", EngineConstants.FALSE);
         WR_SetGameMode(EngineConstants.GM_EXPLORE);
     }
@@ -12188,8 +12186,12 @@ public partial class Engine
                 }
             case "GameObject":
                 {
-                    GameObject go = GameObject.Find(value);
-                    x.GetType().GetProperty(key).SetValue(x, go, null);
+                    if (value != "null")
+                    {
+                        GameObject go = GameObject.Find(value);
+                        x.GetType().GetProperty(key).SetValue(x, go, null);
+                    }
+                    else x.GetType().GetProperty(key).SetValue(x, null, null);
                     break;
                 }
             case "Vector3":

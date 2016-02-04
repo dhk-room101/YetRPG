@@ -145,6 +145,7 @@ public class xGameObjectMOD : MonoBehaviour
     public int GAME_MODE { get; set; }
     public string CONVERSATION { get; set; }//The resource conversation Name to be played When the conversation mode kicks in
     public int CONVERSATION_IN_PROGRESS { get; set; }
+    public GameObject CONVERSATION_SPEAKER { get; set; }
     #endregion
     Engine engine { get; set; }
     xGameObjectBase oBase { get; set; }
@@ -180,7 +181,7 @@ public class xGameObjectMOD : MonoBehaviour
 
         engine = xGameObjectMOD.instance.GetComponent<Engine>();
         oBase = gameObject.GetComponent<xGameObjectBase>();
-        
+
         //Deleting previous temp files if any
         engine.DeleteTemp();
 
@@ -234,7 +235,7 @@ public class xGameObjectMOD : MonoBehaviour
             #region GAME MODE
 
             #region CONVERSATION
-            if (GAME_MODE == EngineConstants.GM_CONVERSATION && CONVERSATION_IN_PROGRESS == EngineConstants.FALSE) 
+            if (GAME_MODE == EngineConstants.GM_CONVERSATION && CONVERSATION_IN_PROGRESS == EngineConstants.FALSE)
             {
                 if (CONVERSATION != null || CONVERSATION != string.Empty)
                 {
@@ -316,15 +317,16 @@ public class xGameObjectMOD : MonoBehaviour
                     {
                         //If not in combat And has conversation
                         if (engine.GetLocalInt(engine.GetModule(), "GAME_MODE") != EngineConstants.GM_COMBAT &&
-                            engine.HasConversation(pat) != EngineConstants.FALSE) 
+                            engine.HasConversation(pat) != EngineConstants.FALSE)
                         {
 
-                                //engine.UpdateProperty(gameObject, "CONVERSATION", sConversation);
+                            //engine.UpdateProperty(gameObject, "CONVERSATION", sConversation);
 
-                                //engine.WR_SetGameMode(EngineConstants.GM_CONVERSATION);
-                                //For now doing debug only the player can initiate dialogues
-                                GameObject _player = GameObject.Find("demo000cr_player");
-                                engine.UT_Talk(pat, _player);                            
+                            //engine.WR_SetGameMode(EngineConstants.GM_CONVERSATION);
+                            //For now doing debug only the player can initiate dialogues
+                            CONVERSATION_SPEAKER = pat;
+                            GameObject _player = GameObject.Find("demo000cr_player");
+                            engine.UT_Talk(pat, _player);
                         }
                     }
                     #endregion

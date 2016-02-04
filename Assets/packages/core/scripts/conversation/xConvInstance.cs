@@ -94,9 +94,6 @@ public class xConvInstance : MonoBehaviour
 
         if (bStart == EngineConstants.TRUE) //We actually found the Starting conversation node
         {
-            //Time to display the first branch, and if null, the player choices directly
-            gameObject.SetActive(true);
-
             NPCLines(lIndex);
         }
         else //nothing found?
@@ -114,75 +111,99 @@ public class xConvInstance : MonoBehaviour
         Text ct = (Text)npcLine.GetComponent(typeof(Text));
         ct.text = node.text;
 
-        //Check for actions that needs to be set
-        int plotID;
-        xPlot plot;
-        xPlotElement ePlot;
-        plotID = node.ActionPlotURI;
-        if (plotID != 0)//If there is an actual condition
+        if (node.Ambient)//If ambient, we skip the conversation mode
         {
-            //Check to see if plot already exists, if not create one
-            plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
-            if (plot == null) //Not found
+            xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
+                        xGameObjectMOD.instance.CONVERSATION_SPEAKER, node.text, 0, 12345, 2);
+            //Switchback to game mode explore, or whatever
+            xGameObjectMOD.instance.GetComponent<Engine>().EndConversation();
+        }
+        else
+        {
+            //Time to display the first branch, and if null, the player choices directly
+            gameObject.SetActive(true);
+
+            //Check for actions that needs to be set
+            int plotID;
+            xPlot plot;
+            xPlotElement ePlot;
+            plotID = node.ActionPlotURI;
+            if (plotID != 0)//If there is an actual condition
             {
-                //let's parse and create one
-                plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
-                    xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                //Check to see if plot already exists, if not create one
+                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+                if (plot == null) //Not found
+                {
+                    //let's parse and create one
+                    plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
+                        xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                }
+
+                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
+                if (ePlot != null)
+                {
+                    ePlot.pValue = Convert.ToInt32(node.ActionResult);
+                    xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
+                        xGameObjectMOD.instance.GetComponent<Engine>().GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                }
+            }
+            //Get the list of player replies
+            List<xConvNode> pReplies = new List<xConvNode>();
+            foreach (Transition t in cnv.NPCLineList.ElementAt(lineIndex).TransitionList)
+            {
+                pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
             }
 
-            ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
-            if (ePlot != null)
+            //If an actual multinode conversation
+            if (pReplies.Count > 0)
             {
-                ePlot.pValue = Convert.ToInt32(node.ActionResult);
-                xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
-                    xGameObjectMOD.instance.GetComponent<Engine>().GetHero(), ePlot.pNode.xname, 0, 12345, 2);
-            }
-        }
-        //Get the list of player replies
-        List<xConvNode> pReplies = new List<xConvNode>();
-        foreach (Transition t in cnv.NPCLineList.ElementAt(lineIndex).TransitionList)
-        {
-            pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
-        }
-
-        //activate text lines
-        foreach (xConvNode pNode in pReplies)
-        {
-            if (pNode.text != null) //If null, It's either or CONTINUE or End Dialogue
-            {
-                char c = (char)124;//'|' Delimiter
-                string[] split = pNode.text.Split(c);
-                pNode.text = split[1];
-                string lineLocation = split[0][0].ToString();
-                string iconID = split[0][1].ToString();
-                GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
-                lReply.GetComponent<Text>().text = pNode.text;
-                lReply.GetComponent<xConvTouch>().lineLocation = int.Parse(lineLocation);
-                lReply.GetComponent<xConvTouch>().iconID = iconID;
-                lReply.GetComponent<xConvTouch>().lineIndex = pNode.lineIndex;
-                lReply.SetActive(true);
-            }
-            else
-            {
-                //Check to see if it's CONTINUE
-                if (cnv.PlayerLineList.ElementAt(pNode.lineIndex).TransitionList.Count != 0)
+                //activate text lines
+                foreach (xConvNode pNode in pReplies)
                 {
-                    //It's a continue connector, Run it after a short delay
-                    //This is a static hack, 
-                    //correctly would be to set up a yield waiting for the sound file to stop playing
-                    timer = 2.0f;
-                    nextLine = pNode;
-                    ResetLayout();
-                    DelayLineChange();
+                    if (pNode.text != null) //If null, It's either or CONTINUE or End Dialogue
+                    {
+                        char c = (char)124;//'|' Delimiter
+                        string[] split = pNode.text.Split(c);
+                        pNode.text = split[1];
+                        string lineLocation = split[0][0].ToString();
+                        string iconID = split[0][1].ToString();
+                        GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
+                        lReply.GetComponent<Text>().text = pNode.text;
+                        lReply.GetComponent<xConvTouch>().lineLocation = int.Parse(lineLocation);
+                        lReply.GetComponent<xConvTouch>().iconID = iconID;
+                        lReply.GetComponent<xConvTouch>().lineIndex = pNode.lineIndex;
+                        lReply.SetActive(true);
+                    }
+                    else
+                    {
+                        //Check to see if it's CONTINUE
+                        if (cnv.PlayerLineList.ElementAt(pNode.lineIndex).TransitionList.Count != 0)
+                        {
+                            //It's a continue connector, Run it after a short delay
+                            //This is a static hack, 
+                            //correctly would be to set up a yield waiting for the sound file to stop playing
+                            timer = 2.0f;
+                            nextLine = pNode;
+                            ResetLayout();
+                            DelayLineChange();
+                        }
+                        else //it's end dialogue
+                        {
+                            end = true;
+                            timer = 2.0f;
+                            nextLine = pNode;
+                            ResetLayout();
+                            DelayLineChange();
+                        }
+                    }
                 }
-                else //it's end dialogue
-                {
-                    end = true;
-                    timer = 2.0f;
-                    nextLine = pNode;
-                    ResetLayout();
-                    DelayLineChange();
-                }
+            }
+            else //it's a one-liner
+            {
+                end = true;
+                timer = 2.0f;
+                ResetLayout();
+                DelayLineChange();
             }
         }
     }
