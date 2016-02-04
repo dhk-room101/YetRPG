@@ -21,12 +21,20 @@ yellow cubes: waypoint
 
 All of these objects were created on the fly and repositioned according to the information parsed from the original Demo Module from Dragon Age Toolset.
 
-To do: expand AI, and changing levels, eventually some dialogue implementation
+conversation parser is done, it includes: correctly parsing NPC and player lines, correctly exchanging the lines in the dialogue flow, correctly analyzing conditions and actions and setting them properly, correctly highlight the hovered over line. visually the dialogue follows Dragon age 2 and Dragon age Inquisition dialogue wheel. Most importantly, in order to create elaborate dialogues, the original Dragon age origins Toolset can be used, the only catch is to add two extra characters at the beginning of any text, the first character represents position on the wheel 0-5, starting top right going clockwise, the second character 0-f is used to fetch the mood icon to be displayed on the dialogue wheel
+
+Example:"1a||put some text" will be parsed as follows: the text "put some text"will be displayed on middle right position of the wheel, and if one hovers over, the icon a.png will be turned into a Sprite and displayed in the center of the wheel
+
+![Alt text](https://raw.githubusercontent.com/dhk-room101/YetRPG/master/Assets/Resources/Images/conversation1.jpg)
+
+To do: expand AI
 
 changes history:
 
 09/01/15: porting of *_core and *_h files done 
 
-01/21/16: parsing the XML files from Demo Module from Dragon Age Toolset
+01/21/16: parsing the XML files from Demo Module from Dragon Age Toolset, correctly changing between areas
 
 01/31/16: dialogue parser completed, basic game states changes, and other small tweaks
+
+02/04/16: complete dialogue implementation

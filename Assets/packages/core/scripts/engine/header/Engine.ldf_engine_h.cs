@@ -6472,6 +6472,13 @@ public partial class Engine
         WR_SetGameMode(EngineConstants.GM_CONVERSATION);
     }
 
+    public void EndConversation()
+    {
+        SetLocalString(GetModule(), "CONVERSATION", "");
+        SetLocalInt(GetModule(), "CONVERSATION_IN_PROGRESS", EngineConstants.FALSE);
+        WR_SetGameMode(EngineConstants.GM_EXPLORE);
+    }
+
     /* @brief Starts a slideshow, as used in the DA epilogue
     *
     * @param * rConversation - The conversation with the slideshow information
@@ -12648,10 +12655,21 @@ public partial class Engine
 
     public void Engine_Conversation()
     {
-        ParseConversation();
-        //Signal the conversation to start
-        GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
-        oConversation.GetComponent<xConvInstance>().StartConversation();
+        //Check directly manually
+        if (xGameObjectMOD.instance.CONVERSATION == "" ||
+            xGameObjectMOD.instance.CONVERSATION == null ||
+            xGameObjectMOD.instance.CONVERSATION == string.Empty)
+        {
+            //it may be in game states transition, Manually turn off conversation in progress
+            xGameObjectMOD.instance.CONVERSATION_IN_PROGRESS = EngineConstants.FALSE;
+        }
+        else
+        {
+            ParseConversation();
+            //Signal the conversation to start
+            GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+            oConversation.GetComponent<xConvInstance>().StartConversation();
+        }
     }
 
     public xPlot ParsePlot(string rTemplate)

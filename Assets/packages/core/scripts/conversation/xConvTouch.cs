@@ -26,9 +26,9 @@ public class xConvTouch : MonoBehaviour {
 
     public void OnMouseClick()
     {
+        //Get the current line index and pass it to flow to the next conversation node
         int l = lineIndex;
         var cInstance = gameObject.transform.parent.GetComponent<xConvInstance>();
         cInstance.NextLine(l);
-        Console.WriteLine();
     }
 }
