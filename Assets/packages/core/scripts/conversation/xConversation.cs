@@ -109,6 +109,9 @@ public class xConvNode
     //AnimationListList - oh, the creativity :-)
     //CustomCutsceneParameterList
     //PreviewTagMappingList
+
+    //DHK
+    public int lineIndex { get; set; }//Keeps track of position in the Conversation branch
 }
 
 public class Transition

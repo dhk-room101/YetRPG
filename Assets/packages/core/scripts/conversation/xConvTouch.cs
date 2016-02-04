@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class xConvTouch : MonoBehaviour {
-
-    public int index { get; set; }
+    public int lineIndex { get; set; }//Keeps track of position in the Conversation branch
+    public int lineLocation { get; set; }
     public string iconID { get; set; }
     Transform _mood { get; set; }
 
@@ -21,5 +22,13 @@ public class xConvTouch : MonoBehaviour {
     {
         if (_mood != null && _mood.gameObject != null) _mood.gameObject.SetActive(false);
         gameObject.GetComponent<Text>().color = new Color(0.588f, 0.588f, 0.588f);
+    }
+
+    public void OnMouseClick()
+    {
+        int l = lineIndex;
+        var cInstance = gameObject.transform.parent.GetComponent<xConvInstance>();
+        cInstance.NextLine(l);
+        Console.WriteLine();
     }
 }

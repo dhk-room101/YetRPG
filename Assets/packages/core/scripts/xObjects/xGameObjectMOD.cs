@@ -145,7 +145,6 @@ public class xGameObjectMOD : MonoBehaviour
     public int GAME_MODE { get; set; }
     public string CONVERSATION { get; set; }//The resource conversation Name to be played When the conversation mode kicks in
     public int CONVERSATION_IN_PROGRESS { get; set; }
-    public xConversation oConversation { get; set; }
     #endregion
     Engine engine { get; set; }
     xGameObjectBase oBase { get; set; }

@@ -65,6 +65,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\packages\core\scripts\conversation\xConvInstance.cs" />
+    <Compile Include="Assets\packages\core\scripts\conversation\xConvTouch.cs" />
+    <Compile Include="Assets\packages\core\scripts\conversation\xConversation.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo100ar_wilderness.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo200pl_security_lever.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo_consts_h.cs" />
@@ -282,10 +285,8 @@
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_stealth_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_traps_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
-    <Compile Include="Assets\packages\core\scripts\misc\xConvTouch.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
-    <Compile Include="Assets\packages\core\scripts\structs\xConversation.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEvent.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xPlot.cs" />

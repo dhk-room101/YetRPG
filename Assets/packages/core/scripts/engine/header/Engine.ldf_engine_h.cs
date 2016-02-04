@@ -12649,103 +12649,9 @@ public partial class Engine
     public void Engine_Conversation()
     {
         ParseConversation();
-
-        xConversation cnv = GetConversation();
-
-        if (cnv == null)
-        {
-            throw new NotImplementedException();
-        }
-
-        //1st analyze the start list conditions to see which is the current branch to initiate
-        int bStart = EngineConstants.FALSE;
-        int lIndex = 0;//Line index current
-        xConvNode node;
-        int plotID;
-        xPlot plot;
-        xPlotElement ePlot;
-
-        foreach (int n in cnv.StartList)
-        {
-            node = cnv.NPCLineList.ElementAt(n);
-            //Let's analyze the current node conditions/plot, If any
-            plotID = node.ConditionPlotURI;
-            if (plotID != 0)//If there is an actual condition
-            {
-                //Check to see if plot already exists, if not create one
-                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
-                if (plot == null) //Not found
-                {
-                    //let's parse and create one
-                    plot = ParsePlot(GetResource("ID", plotID.ToString(), "Name"));
-                }
-
-                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
-                if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
-                {
-                    bStart = EngineConstants.TRUE;
-                    lIndex = n;//set the found starting branch
-                    break;
-                }
-            }
-        }
-
-        if (bStart == EngineConstants.TRUE) //We actually found the Starting conversation node
-        {
-            node = cnv.NPCLineList.ElementAt(lIndex);
-        }
-        else //nothing found?
-        {
-            throw new NotImplementedException();
-        }
-
-        //Time to display the first branch, and if null, the player choices directly
+        //Signal the conversation to start
         GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
-        oConversation.SetActive(true);
-        GameObject npcLine = oConversation.transform.Find("NPCLine").gameObject;
-
-        //Prepare an array of text lines, to be visible or not based on need
-        List<GameObject> pLines = new List<GameObject>();
-        GameObject line;
-        line = oConversation.transform.Find("0").gameObject;
-        pLines.Add(line);
-        line = oConversation.transform.Find("1").gameObject;
-        pLines.Add(line);
-        line = oConversation.transform.Find("2").gameObject;
-        pLines.Add(line);
-        line = oConversation.transform.Find("3").gameObject;
-        pLines.Add(line);
-        line = oConversation.transform.Find("4").gameObject;
-        pLines.Add(line);
-        line = oConversation.transform.Find("5").gameObject;
-        pLines.Add(line);
-
-        Text ct = (Text)npcLine.GetComponent(typeof(Text));
-        ct.text = node.text;
-
-        //Get the list of player replies
-        List<xConvNode> pReplies = new List<xConvNode>();
-        foreach(Transition t in cnv.NPCLineList.ElementAt(lIndex).TransitionList)
-        {
-            pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
-        }
-
-        //activate text lines
-        foreach (xConvNode pNode in pReplies)
-        {
-            char c = (char)124;
-            string[] split = pNode.text.Split(c);
-            pNode.text = split[1];
-            string lineLocation = split[0][0].ToString();
-            string iconID = split[0][1].ToString();
-            GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
-            lReply.GetComponent<Text>().text = pNode.text;
-            lReply.GetComponent<xConvTouch>().index = int.Parse(lineLocation);
-            lReply.GetComponent<xConvTouch>().iconID = iconID;
-            lReply.SetActive(true);
-        }
-
-        Console.WriteLine();
+        oConversation.GetComponent<xConvInstance>().StartConversation();
     }
 
     public xPlot ParsePlot(string rTemplate)
@@ -12853,6 +12759,8 @@ public partial class Engine
             }
         }
 
+        int i = 0;//Have a counter ready to assign line index on the conversation note
+
         //Parse the start list
         IEnumerable<XElement> sl = agent.Element("StartList").Elements("Agent");
         foreach (XElement _s in sl)
@@ -12890,8 +12798,15 @@ public partial class Engine
                 _node.TransitionList.Add(_transition);
             }
 
+            _node.lineIndex = i;
+
             cnv.NPCLineList.Add(_node);
+
+            i++;
         }
+
+        //Reset i counter for player line indexes
+        i = 0;
 
         IEnumerable<XElement> player = agent.Element("PlayerLineList").Elements("Agent");
         foreach (XElement _ll in player)
@@ -12921,13 +12836,17 @@ public partial class Engine
                 _transition.LineIndex = int.Parse(_t.Element("LineIndex").Value);
                 _node.TransitionList.Add(_transition);
             }
+            _node.lineIndex = i;
 
             cnv.PlayerLineList.Add(_node);
+
+            i++;
         }
 
         //Temporary during the bug, the goal is to pre-parse conversations 
         //and other resources during area load and store them
-        xGameObjectMOD.instance.oConversation = cnv;
+        GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+        oConversation.GetComponent<xConvInstance>().oConversation = cnv;
     }
 
     public object GetGameObjectType(GameObject oObject)
@@ -13095,7 +13014,7 @@ public partial class Engine
 
     public xConversation GetConversation()
     {
-        return xGameObjectMOD.instance.oConversation;
+        return GameObject.Find("Canvas").transform.Find("convPanel").gameObject.GetComponent<xConvInstance>().oConversation;
     }
     #endregion
 
