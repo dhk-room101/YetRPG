@@ -116,6 +116,8 @@ public class xConvInstance : MonoBehaviour
             xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
                         xGameObjectMOD.instance.CONVERSATION_SPEAKER, node.text, 0, 12345, 2);
             //Switchback to game mode explore, or whatever
+            GameObject gConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+            Destroy(gConversation);
             xGameObjectMOD.instance.GetComponent<Engine>().EndConversation();
         }
         else
@@ -322,7 +324,8 @@ public class xConvInstance : MonoBehaviour
         {
             //Switchback to game mode explore, or whatever
             GameObject gConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
-            gConversation.SetActive(false);
+            //gConversation.SetActive(false);
+            Destroy(gConversation);
             xGameObjectMOD.instance.GetComponent<Engine>().EndConversation();
         }
     }

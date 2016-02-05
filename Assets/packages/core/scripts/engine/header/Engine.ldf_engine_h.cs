@@ -12670,6 +12670,7 @@ public partial class Engine
             ParseConversation();
             //Signal the conversation to start
             GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+            
             oConversation.GetComponent<xConvInstance>().StartConversation();
         }
     }
@@ -12865,7 +12866,18 @@ public partial class Engine
 
         //Temporary during the bug, the goal is to pre-parse conversations 
         //and other resources during area load and store them
-        GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
+           GameObject oConversation = (GameObject)GameObject.Instantiate(Resources.Load("conversation/convPanel"));
+        //Position the conversation panel
+        RectTransform rectangle = oConversation.GetComponent<RectTransform>();
+        
+        rectangle.pivot = new Vector2(0.5f, 0.5f);
+        rectangle.anchoredPosition = new Vector2(Screen.width / 2, 60);
+
+        oConversation.name = "convPanel";
+        Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+
+        oConversation.transform.SetParent(canvas);
+        
         oConversation.GetComponent<xConvInstance>().oConversation = cnv;
     }
 
@@ -12925,7 +12937,8 @@ public partial class Engine
             string s = go.ToString().Split()[0];
             if (s == "GameModule" || s == "MainCamera" || s == "Floaty" ||
                 s == "DirectionalLight" || s == "Invalid" ||
-                s == "Floor" || s == "floorPlane")
+                s == "Canvas" || s == "EventSystem" ||
+                s == "Floor" || s == "floorPlane") 
             {
 
             }
