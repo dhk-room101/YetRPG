@@ -1,4 +1,5 @@
 ﻿//Warning("debug mode: 3-D coordinates in complete!");
+//Warning("ambience conversations to be implemented!");
 
 #region Design Choices
 /*
@@ -10,7 +11,6 @@ this way we can check which object has which target/s, such as enemies, triggers
 #endregion
 
 //TO DO: string and location
-//event ref: update functions from DA:O format to DA2
 
 #pragma warning disable 0168
 #pragma warning disable 0219
@@ -2638,7 +2638,6 @@ public partial class Engine
     */
     public string GetEventStringRef(ref xEvent evEvent, int nIndex)
     {
-        Debug.LogWarning("get event string");
         return (evEvent.sList.Count > nIndex) ? evEvent.sList.ElementAt(nIndex) : string.Empty;
     }
 
@@ -2655,7 +2654,6 @@ public partial class Engine
     */
     public void SetEventStringRef(ref xEvent evEvent, int nIndex, string sValue)
     {
-        Debug.LogWarning("set event string");
         evEvent.sList.Insert(nIndex, sValue);
     }
 
@@ -6442,7 +6440,7 @@ public partial class Engine
     // this makes sure an already running ambient dialog triggers it's plot flag action
     public void ClearAmbientDialogs(GameObject oObject)
     {
-        Warning("ambience conversations to be implemented!");
+        //Warning("ambience conversations to be implemented!");
         //SetLocalInt(GetModule(), "AMB_SYSTEM_CONVERSATION", 0);
     }
 
@@ -7369,9 +7367,11 @@ public partial class Engine
     * @param oObject - Returns the GameObject for the party
     * @author Adriana
     */
-    public List<GameObject> GetParty(GameObject oCreature)
+    public GameObject GetParty(GameObject oCreature = null)
     {
-        return GetPartyPoolList();
+        //return GetPartyPoolList();
+        //Assuming parties only for the player
+        return GetModule().GetComponent<xGameObjectMOD>().oParty;
     }
 
     /* @brief Performs the AutoSave functionality
@@ -9609,8 +9609,9 @@ public partial class Engine
     */
     public int GetPartyPlotFlag(GameObject oParty, string strPlot, int nFlag, int nCallScript = EngineConstants.FALSE)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xPlot plot = oParty.GetComponent<xGameObjectPTY>().oPlots.Find(x => x.ResRefName == strPlot);
+        xPlotElement ePlot = plot.StatusList.Find(x => x.pNode.Flag == nFlag);
+        return ePlot.pValue;
     }
 
     /* @brief Sets the value of a plot flag
@@ -9641,8 +9642,16 @@ public partial class Engine
     */
     public int GetPlotEntryName(string strPlot)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Try by guid
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.GUID.ToString() == strPlot);
+        //Then by resref
+        if (plot == null) 
+        {
+            plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.ResRefName == strPlot);
+        }
+        return plot.NameStringID;
     }
 
     /* @brief Returns the resref of the plot (without extension) as a string
@@ -9652,8 +9661,16 @@ public partial class Engine
     */
     public string GetPlotResRef(string strPlot)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Try by guid
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.GUID.ToString() == strPlot);
+        //Then by resref
+        if (plot == null)
+        {
+            plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.ResRefName == strPlot);
+        }
+        return plot.ResRefName;
     }
 
     /* @brief Returns the GUID of the plot as a string (you should always translate RESREFS to GUIDs before using them)
@@ -9664,8 +9681,9 @@ public partial class Engine
     */
     public string GetPlotGUID(string strPlotResRef)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+        .oPlots.Find(x => x.ResRefName == strPlotResRef);
+        return plot.GUID.ToString();
     }
 
     /* @brief Returns the name of the plot flag as a string
@@ -9676,8 +9694,17 @@ public partial class Engine
     */
     public string GetPlotFlagName(string strPlot, int nFlag)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Try by guid
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.GUID.ToString() == strPlot);
+        //Then by resref
+        if (plot == null)
+        {
+            plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.ResRefName == strPlot);
+        }
+        xPlotElement pe = plot.StatusList.Find(x => x.pNode.Flag == nFlag);
+        return pe.pNode.xname;
     }
 
     /* @brief Returns the reward ID related to a specific plot flag.
@@ -9688,8 +9715,10 @@ public partial class Engine
     */
     public int GetPlotFlagRewardId(string strPlot, int nFlag)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.GUID.ToString() == strPlot);
+        xPlotElement pe = plot.StatusList.Find(x => x.pNode.Flag == nFlag);
+        return pe.pNode.RewardID;
     }
 
     /* @brief Sets the party picker area name
@@ -9809,7 +9838,7 @@ public partial class Engine
     */
     public List<GameObject> GetPartyPoolList()
     {
-        return xGameObjectMOD.instance.oPartyPool;
+        return GetParty().GetComponent<xGameObjectPTY>().oPartyPool;
     }
 
     /* @brief Adds a creature into the player's active party
@@ -9869,12 +9898,13 @@ public partial class Engine
     */
     public List<GameObject> GetPartyList(GameObject oCreature = null)
     {
+        if (oCreature == null) oCreature = GetHero();
         //Should return party with FOLLOWER_STATE_ACTIVE + Player
         List<GameObject> _party = new List<GameObject>();
-        _party.Add(xGameObjectMOD.instance.oHero);
+        _party.Add(oCreature);
 
-        _party.Concat(xGameObjectMOD.instance.GetComponent<xGameObjectMOD>().oPartyPool.
-            FindAll(x => x.GetComponent<xGameObjectUTC>().FOLLOWER_STATE
+        _party.Concat(GetParty(oCreature).GetComponent<xGameObjectPTY>()
+            .oPartyPool.FindAll(x => x.GetComponent<xGameObjectUTC>().FOLLOWER_STATE
             == EngineConstants.FOLLOWER_STATE_ACTIVE));
 
         return _party;
@@ -12670,7 +12700,7 @@ public partial class Engine
             ParseConversation();
             //Signal the conversation to start
             GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
-            
+
             oConversation.GetComponent<xConvInstance>().StartConversation();
         }
     }
@@ -12737,7 +12767,7 @@ public partial class Engine
         }
 
         //Add the newly parsed plot into the main plot list for future use
-        xGameObjectMOD.instance.oPlots.Add(plot);
+        GetParty().GetComponent<xGameObjectPTY>().oPlots.Add(plot);
 
         return plot;
     }
@@ -12866,10 +12896,10 @@ public partial class Engine
 
         //Temporary during the bug, the goal is to pre-parse conversations 
         //and other resources during area load and store them
-           GameObject oConversation = (GameObject)GameObject.Instantiate(Resources.Load("conversation/convPanel"));
+        GameObject oConversation = (GameObject)GameObject.Instantiate(Resources.Load("conversation/convPanel"));
         //Position the conversation panel
         RectTransform rectangle = oConversation.GetComponent<RectTransform>();
-        
+
         rectangle.pivot = new Vector2(0.5f, 0.5f);
         rectangle.anchoredPosition = new Vector2(Screen.width / 2, 60);
 
@@ -12877,8 +12907,30 @@ public partial class Engine
         Transform canvas = GameObject.Find("Canvas").gameObject.transform;
 
         oConversation.transform.SetParent(canvas);
-        
+
         oConversation.GetComponent<xConvInstance>().oConversation = cnv;
+    }
+
+    public int PlotEvent(int nType, string sGuid, int nFlag, GameObject oCreator, GameObject oTarget)
+    {
+        xEvent ev = Event(nType);
+        SetEventStringRef(ref ev, 0, sGuid);
+        SetEventIntegerRef(ref ev, 0, ev.nType);//hack
+        SetEventIntegerRef(ref ev, 1, nFlag);
+        SetEventCreatorRef(ref ev, oCreator);
+        SetEventObjectRef(ref ev, 0, oTarget);
+
+        //Return the plot script name from the plot guid
+        xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
+            .oPlots.Find(x => x.GUID.ToString() == sGuid);
+        if (GetParty().GetComponent(Type.GetType(plot.ResRefName)) == null)
+            GetParty().AddComponent(Type.GetType(plot.ResRefName));
+        int nResult = ((xPlotConditional)
+            (GetParty().GetComponent(Type.GetType(plot.ResRefName))))
+            .StartingConditional(ev);
+
+        return nResult;
+
     }
 
     public object GetGameObjectType(GameObject oObject)
@@ -12938,7 +12990,7 @@ public partial class Engine
             if (s == "GameModule" || s == "MainCamera" || s == "Floaty" ||
                 s == "DirectionalLight" || s == "Invalid" ||
                 s == "Canvas" || s == "EventSystem" ||
-                s == "Floor" || s == "floorPlane") 
+                s == "Floor" || s == "floorPlane")
             {
 
             }

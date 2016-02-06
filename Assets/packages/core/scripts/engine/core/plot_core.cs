@@ -9,7 +9,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class plot_core : MonoBehaviour
+//simple template plot class
+public class plot_core : xPlotConditional
 {
     //::///////////////////////////////////////////////
     //:: Plot engine.Events Template
@@ -37,7 +38,7 @@ public class plot_core : MonoBehaviour
         engine = gameObject.GetComponent<Engine>();
     }
 
-     public int StartingConditional(xEvent eParms)
+     public override int StartingConditional(xEvent eParms)
      {
           //xEvent eParms = engine.GetCurrentEvent();                // Contains all input parameters
           int nType = engine.GetEventTypeRef(ref eParms);               // GET or SET call

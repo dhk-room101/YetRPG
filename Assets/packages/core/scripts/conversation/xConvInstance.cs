@@ -16,7 +16,7 @@ public class xConvInstance : MonoBehaviour
     IEnumerator delay { get; set; }
     float timer { get; set; }
     xConvNode nextLine { get; set; }
-    bool end { get; set; }    
+    bool end { get; set; }
     // Use this for initialization
     void Awake()
     {
@@ -68,26 +68,51 @@ public class xConvInstance : MonoBehaviour
 
         foreach (int n in cnv.StartList)
         {
+            Engine engine = xGameObjectMOD.instance.GetComponent<Engine>()
+                .GetParty().GetComponent<Engine>();
+
             node = cnv.NPCLineList.ElementAt(n);
             //Let's analyze the current node conditions/plot, If any
             plotID = node.ConditionPlotURI;
             if (plotID != 0)//If there is an actual condition
             {
                 //Check to see if plot already exists, if not create one
-                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+                xGameObjectPTY oParty = engine.GetParty().
+                    GetComponent<xGameObjectPTY>();
+                plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
                 if (plot == null) //Not found
                 {
                     //let's parse and create one
-                    plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
-                        xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                    plot = engine.ParsePlot(
+                        engine.GetResource("ID", plotID.ToString(), "Name"));
+                    //gameObject.AddComponent(Type.GetType(Script));
+                    //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
                 }
 
-                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
-                if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                //Check defined flag versus regular flag
+                if (node.ConditionPlotFlag > 255) //Defined flag, That is AND/OR combination of regular flags
                 {
-                    bStart = EngineConstants.TRUE;
-                    lIndex = n;//set the found starting branch
-                    break;
+                    if (engine.PlotEvent(EngineConstants.EVENT_TYPE_GET_PLOT,
+                    plot.GUID.ToString(),
+                    node.ConditionPlotFlag,
+                    engine.GetParty(),
+                    engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"))
+                    == EngineConstants.TRUE)
+                    {
+                        bStart = EngineConstants.TRUE;
+                        lIndex = n;//set the found starting branch
+                        break;
+                    }
+                }
+                else //Regular flag, check directly
+                {
+                    ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
+                    if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                    {
+                        bStart = EngineConstants.TRUE;
+                        lIndex = n;//set the found starting branch
+                        break;
+                    }
                 }
             }
         }
@@ -100,10 +125,13 @@ public class xConvInstance : MonoBehaviour
         {
             throw new NotImplementedException();
         }
-}
+    }
 
     public void NPCLines(int lineIndex)
     {
+        Engine engine = xGameObjectMOD.instance.GetComponent<Engine>()
+    .GetParty().GetComponent<Engine>();
+
         xConversation cnv = oConversation;
         xConvNode node = cnv.NPCLineList.ElementAt(lineIndex);
         GameObject npcLine = gameObject.transform.Find("NPCLine").gameObject;
@@ -113,12 +141,12 @@ public class xConvInstance : MonoBehaviour
 
         if (node.Ambient)//If ambient, we skip the conversation mode
         {
-            xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
+            engine.DisplayFloatyMessage(
                         xGameObjectMOD.instance.CONVERSATION_SPEAKER, node.text, 0, 12345, 2);
             //Switchback to game mode explore, or whatever
             GameObject gConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
             Destroy(gConversation);
-            xGameObjectMOD.instance.GetComponent<Engine>().EndConversation();
+            engine.EndConversation();
         }
         else
         {
@@ -133,21 +161,36 @@ public class xConvInstance : MonoBehaviour
             if (plotID != 0)//If there is an actual condition
             {
                 //Check to see if plot already exists, if not create one
-                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+                xGameObjectPTY oParty = engine.GetParty().
+                    GetComponent<xGameObjectPTY>();
+                plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
                 if (plot == null) //Not found
                 {
                     //let's parse and create one
-                    plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
-                        xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                    plot = engine.ParsePlot(
+                        engine.GetResource("ID", plotID.ToString(), "Name"));
+                    //gameObject.AddComponent(Type.GetType(Script));
+                    //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
                 }
 
-                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
-                if (ePlot != null)
+                if (node.ActionPlotFlag <= 255) //Only regular flags can be set directly
                 {
-                    ePlot.pValue = Convert.ToInt32(node.ActionResult);
-                    xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
-                        xGameObjectMOD.instance.GetComponent<Engine>().GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                    engine.PlotEvent(EngineConstants.EVENT_TYPE_SET_PLOT,
+                        plot.GUID.ToString(),
+                        node.ActionPlotFlag,
+                        engine.GetParty(),
+                        engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"));
+
+                    ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
+                    if (ePlot != null)
+                    {
+                        ePlot.pValue = Convert.ToInt32(node.ActionResult);
+                        engine.DisplayFloatyMessage(
+                            engine.GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                    }
                 }
+                //Something tries to directly set a defined flag...
+                else throw new NotImplementedException();
             }
             //Get the list of player replies
             List<xConvNode> pReplies = new List<xConvNode>();
@@ -219,6 +262,9 @@ public class xConvInstance : MonoBehaviour
 
     public void PlayerLines(int lineIndex)
     {
+        Engine engine = xGameObjectMOD.instance.GetComponent<Engine>()
+    .GetParty().GetComponent<Engine>();
+
         int bStart = EngineConstants.FALSE;
         int lIndex = 0;//Line index current
         int plotID;
@@ -233,21 +279,36 @@ public class xConvInstance : MonoBehaviour
         if (plotID != 0)//If there is an actual condition
         {
             //Check to see if plot already exists, if not create one
-            plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+            xGameObjectPTY oParty = engine.GetParty().
+                    GetComponent<xGameObjectPTY>();
+            plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
             if (plot == null) //Not found
             {
                 //let's parse and create one
-                plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
-                    xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                plot = engine.ParsePlot(
+                    engine.GetResource("ID", plotID.ToString(), "Name"));
+                //gameObject.AddComponent(Type.GetType(Script));
+                //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
             }
 
-            ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
-            if (ePlot != null)
+            if (node.ActionPlotFlag <= 255) //Regular flag
             {
-                ePlot.pValue = Convert.ToInt32(node.ActionResult);
-                xGameObjectMOD.instance.GetComponent<Engine>().DisplayFloatyMessage(
-                    xGameObjectMOD.instance.GetComponent<Engine>().GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                engine.PlotEvent(EngineConstants.EVENT_TYPE_SET_PLOT,
+                        plot.GUID.ToString(),
+                        node.ActionPlotFlag,
+                        engine.GetParty(),
+                        engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"));
+
+                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
+                if (ePlot != null)
+                {
+                    ePlot.pValue = Convert.ToInt32(node.ActionResult);
+                    engine.DisplayFloatyMessage(
+                        engine.GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                }
             }
+            //Something tries to directly set the defined flag...
+            else throw new NotImplementedException();
         }
         //Get the list of NPC replies
         List<xConvNode> npcReplies = new List<xConvNode>();
@@ -267,20 +328,41 @@ public class xConvInstance : MonoBehaviour
             if (plotID != 0)//If there is an actual condition
             {
                 //Check to see if plot already exists, if not create one
-                plot = xGameObjectMOD.instance.oPlots.Find(x => x.ResRefID == plotID);
+                xGameObjectPTY oParty = engine.GetParty().
+                    GetComponent<xGameObjectPTY>();
+                plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
                 if (plot == null) //Not found
                 {
                     //let's parse and create one
-                    plot = xGameObjectMOD.instance.GetComponent<Engine>().ParsePlot(
-                        xGameObjectMOD.instance.GetComponent<Engine>().GetResource("ID", plotID.ToString(), "Name"));
+                    plot = engine.ParsePlot(
+                        engine.GetResource("ID", plotID.ToString(), "Name"));
+                    //gameObject.AddComponent(Type.GetType(Script));
+                    //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
                 }
 
-                ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
-                if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                if (node.ConditionPlotFlag > 255) //Defined flag, That is AND/OR combination of regular flags
                 {
-                    bStart = EngineConstants.TRUE;
-                    lIndex = n;//set the found Next NPC branch
-                    break;
+                    if (engine.PlotEvent(EngineConstants.EVENT_TYPE_GET_PLOT,
+                    plot.GUID.ToString(),
+                    node.ConditionPlotFlag,
+                    engine.GetParty(),
+                    engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"))
+                    == EngineConstants.TRUE)
+                    {
+                        bStart = EngineConstants.TRUE;
+                        lIndex = n;//set the found starting branch
+                        break;
+                    }
+                }
+                else
+                {
+                    ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
+                    if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                    {
+                        bStart = EngineConstants.TRUE;
+                        lIndex = n;//set the found Next NPC branch
+                        break;
+                    }
                 }
             }
         }
@@ -299,7 +381,7 @@ public class xConvInstance : MonoBehaviour
             }
             else if (end)
             {
-                
+
             }
             else throw new NotImplementedException();
         }
@@ -322,11 +404,14 @@ public class xConvInstance : MonoBehaviour
         PlayerLines(nextLine.lineIndex);
         if (end)
         {
+            Engine engine = xGameObjectMOD.instance.GetComponent<Engine>()
+    .GetParty().GetComponent<Engine>();
+            engine.EndConversation();
+
             //Switchback to game mode explore, or whatever
             GameObject gConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
             //gConversation.SetActive(false);
             Destroy(gConversation);
-            xGameObjectMOD.instance.GetComponent<Engine>().EndConversation();
         }
     }
 

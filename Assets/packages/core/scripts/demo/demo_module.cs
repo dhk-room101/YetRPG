@@ -246,7 +246,8 @@ public class demo_module : MonoBehaviour
                     oHero.gameObject.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
 
                     //Move party members
-                    foreach (var oPartyMember in gameObject.GetComponent<xGameObjectMOD>().oPartyPool)
+                    foreach (var oPartyMember in engine.GetParty(engine.GetModule())
+                        .GetComponent<xGameObjectPTY>().oPartyPool)
                     {
                         //Check if followers state is active
                         if (oPartyMember.GetComponent<xGameObjectUTC>().FOLLOWER_STATE == EngineConstants.FOLLOWER_STATE_ACTIVE)

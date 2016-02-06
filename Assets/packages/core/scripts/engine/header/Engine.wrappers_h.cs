@@ -62,11 +62,11 @@ public partial class Engine
      public int WR_GetPlotFlag(string strPlot, int nFlag, int nCallScript = EngineConstants.FALSE)
      {
           GameObject oPC = GetHero();
-          //GameObject oParty = GetParty(oPC);
+          GameObject oParty = GetParty(oPC);
           int nPlotName = GetPlotEntryName(strPlot);
           string sPlotName = GetPlotResRef(strPlot);
           if ((sPlotName) == "") sPlotName = strPlot;
-          int nCurrent = GetPartyPlotFlag(oPC, strPlot, nFlag, nCallScript);
+          int nCurrent = GetPartyPlotFlag(oParty, strPlot, nFlag, nCallScript);
           string sFlagName = GetPlotFlagName(strPlot, nFlag);
 
           LogTrace(EngineConstants.LOG_CHANNEL_PLOT, "GetPlot [" + sPlotName + "] ["
@@ -78,11 +78,11 @@ public partial class Engine
      public void WR_SetPlotFlag(string strPlot, int nFlag, int nValue, int nCallScript = EngineConstants.FALSE)
      {
           GameObject oPC = GetHero();
-          //GameObject oParty = GetParty(oPC);
+          GameObject oParty = GetParty(oPC);
           int nPlotName = GetPlotEntryName(strPlot);
           string sPlotName = GetPlotResRef(strPlot);
           if ((sPlotName) == "") sPlotName = strPlot;
-          int nCurrent = GetPartyPlotFlag(oPC, strPlot, nFlag, nCallScript);
+          int nCurrent = GetPartyPlotFlag(oParty, strPlot, nFlag, nCallScript);
           string sFlagName = GetPlotFlagName(strPlot, nFlag);
           LogTrace(EngineConstants.LOG_CHANNEL_PLOT, "SetPlot [" + sPlotName + "] ["
               + sFlagName + "] -> [" + ToString(nValue) + "]");
@@ -91,7 +91,7 @@ public partial class Engine
           {
                //TrackPlotEvent(EngineConstants.EVENT_TYPE_SET_PLOT, gameObject, oPC, nValue, -1, sPlotName, sFlagName);
           }
-          SetPartyPlotFlag(oPC, strPlot, nFlag, nValue, nCallScript);
+          SetPartyPlotFlag(oParty, strPlot, nFlag, nValue, nCallScript);
      }
 
      public void WR_DestroyObject(GameObject oObject)

@@ -149,14 +149,9 @@ public class xGameObjectMOD : MonoBehaviour
     #endregion
     Engine engine { get; set; }
     xGameObjectBase oBase { get; set; }
+    public GameObject oParty { get; set; }
 
     public static xGameObjectMOD instance = null;
-    public GameObject oHero { get; set; }
-
-    //Active party is extrapolated based on FOLLOWER_STATE_ACTIVE
-    public List<GameObject> oPartyPool { get; set; }
-
-    public List<xPlot> oPlots { get; set; }
 
     string Script = "demo_module";//Starting script
     public string tArea { get; set; }//Transition to area
@@ -164,6 +159,7 @@ public class xGameObjectMOD : MonoBehaviour
 
     //Temp debug player reference template
     public string player = "demo000cr_player";
+    public GameObject oHero { get; set; }
 
     int dCounter;//This is the deleting counter
     int counter;
@@ -188,13 +184,16 @@ public class xGameObjectMOD : MonoBehaviour
         //Set GameObject type module
         oBase.nObjectType = EngineConstants.OBJECT_TYPE_MODULE;
 
+        //create an empty party and attach it to the creature
+        oParty = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/partyPrefab"));
+        oParty.name = "Party";
+        oParty.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_PARTY;
+        oParty.transform.parent = gameObject.transform;
+
         //Damn strings also need to be initialized C# 5-
         //if (PARTY_OVERRIDE_CONVERSATION == null) PARTY_OVERRIDE_CONVERSATION = string.Empty;
         engine.SetLocalString(engine.GetModule(), "PARTY_OVERRIDE_CONVERSATION", string.Empty);
-
-        if (oPartyPool == null) oPartyPool = new List<GameObject>();
-        if (oPlots == null) oPlots = new List<xPlot>();
-
+        
         //Initialize the camera in the scene
         HandleCamera();
 

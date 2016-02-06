@@ -68,7 +68,7 @@ public class demo100ar_wilderness : MonoBehaviour
         int nEventType = engine.GetEventTypeRef(ref ev);
         //string sDebug;
         GameObject oPC = engine.GetHero();
-        List<GameObject> oParty = engine.GetParty(oPC);
+        GameObject oParty = engine.GetParty(oPC);
         int bEventHandled = EngineConstants.FALSE;
 
         engine.Log_Events("", ev);
