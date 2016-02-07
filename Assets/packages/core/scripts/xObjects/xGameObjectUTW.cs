@@ -14,7 +14,7 @@ public class xGameObjectUTW : xGameObjectBase {
     public Guid GUID { get; set; }
     public List<Guid> AssociatedInstanceGUIDList { get; set; }
     public int Group { get; set; }
-    public int Color { get; set; }//Colour
+    public int Colour { get; set; }//Colour
     public bool MapNoteEnabled { get; set; }
     public int MapNoteType { get; set; }
     public string Comments { get; set; }

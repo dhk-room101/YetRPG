@@ -3054,24 +3054,12 @@ public partial class Engine
                         }
                     }
 
-                    /*//Set basic details
-                    oObject.gameObject.GetComponent<xGameObjectBase>().ResRefID = int.Parse(id);
-                    oObject.gameObject.GetComponent<xGameObjectBase>().XResRefName = rTemplate;
-                    oObject.gameObject.GetComponent<xGameObjectBase>().ResType = GetResourceType(f);
-
-                    //Load the identified XML template for parsing
-                    //XmlNode node = doc.SelectSingleNode("//Resource/Agent/ResRefName/text()");
-                    //string rrn = xDoc.Descendants("ResRefName").First().Value;
-                    //string rrn = agent.Element("ResRefName").Value;*/
-
                     break;
                 }
             case EngineConstants.OBJECT_TYPE_WAYPOINT:
                 {
                     oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/waypointPrefab"));
                     oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_WAYPOINT;
-                    //oObject.gameObject.AddComponent<xGameObjectUTW>();
-                    //oObject.tag = "Waypoint";
                     oObject.name = rTemplate;
                     if (bSpawnActive != EngineConstants.TRUE)
                     {
@@ -3088,8 +3076,6 @@ public partial class Engine
                 {
                     oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/creaturePrefab"));
                     oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_CREATURE;
-                    //oObject.gameObject.AddComponent<xGameObjectUTC>();
-                    //oObject.tag = "Creature";
                     oObject.name = rTemplate;
                     if (bSpawnActive != EngineConstants.TRUE)
                     {
@@ -3102,14 +3088,24 @@ public partial class Engine
                 {
                     oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/placeablePrefab"));
                     oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_PLACEABLE;
-                    //oObject.gameObject.AddComponent<xGameObjectUTP>();
-                    //oObject.tag = "Placeable";
                     oObject.name = rTemplate;
                     if (bSpawnActive != EngineConstants.TRUE)
                     {
                         oObject.SetActive(false);
                     }
                     ParsePlaceable(oObject, rTemplate);
+                    break;
+                }
+            case EngineConstants.OBJECT_TYPE_TRIGGER:
+                {
+                    oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/triggerPrefab"));
+                    oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_TRIGGER;
+                    oObject.name = rTemplate;
+                    if (bSpawnActive != EngineConstants.TRUE)
+                    {
+                        oObject.SetActive(false);
+                    }
+                    ParseTrigger(oObject, rTemplate);
                     break;
                 }
             default: throw new NotImplementedException();
@@ -12193,6 +12189,11 @@ public partial class Engine
                     x = oObject.GetComponent<xGameObjectUTP>();
                     break;
                 }
+            case EngineConstants.OBJECT_TYPE_TRIGGER:
+                {
+                    x = oObject.GetComponent<xGameObjectUTT>();
+                    break;
+                }
             case EngineConstants.OBJECT_TYPE_WAYPOINT:
                 {
                     x = oObject.GetComponent<xGameObjectUTW>();
@@ -12201,10 +12202,11 @@ public partial class Engine
             default: throw new NotImplementedException();
         }
 
-        if (x == null)
+        if (x.GetType().GetProperty(key) == null)
         {
             throw new NotImplementedException();
         }
+       
         string o = x.GetType().GetProperty(key).ToString().Split()[0].Split(c)[1];
         switch (o)
         {
@@ -12212,6 +12214,12 @@ public partial class Engine
                 {
                     int v = int.Parse(value);
                     x.GetType().GetProperty(key).SetValue(x, v, null);
+                    break;
+                }
+            case "Guid":
+                {
+                    Guid guid = new Guid(value);
+                    x.GetType().GetProperty(key).SetValue(x, guid, null);
                     break;
                 }
             case "GameObject":
@@ -12339,17 +12347,17 @@ public partial class Engine
                         oArea.gameObject.GetComponent<xGameObjectARE>().ObjectList.Add(on);
                         break;
                     }
+                case "utt":
+                    {
+                        n = GetResource("ID", oid, "Name");
+                        on = CreateObject(EngineConstants.OBJECT_TYPE_TRIGGER, n, Vector3.zero);
+                        //Add creature properties from area
+                        on = ParseAreaTrigger(on, xe);
+                        oArea.gameObject.GetComponent<xGameObjectARE>().ObjectList.Add(on);
+                        break;
+                    }
                 default: break;//resource type not explicitly set, ignoring
             }
-            //string tn = GetResourceString("ID", ob, "Type");
-            //string hn = GetResourceString("ID", ob);
-            /*if (tn == "utc" || tn == "chr")  
-            {
-                //string fn = GetResourceString("ID", ob, "FullName");
-                i++;
-                //Console.WriteLine("something");
-            }*/
-            //sl.Add(oid + "." + tn);
         }
 
         //Get Waypoint list to be populated on the area
@@ -12362,34 +12370,26 @@ public partial class Engine
             wn = xe.Element("Tag").Value;
             ow = CreateObject(EngineConstants.OBJECT_TYPE_WAYPOINT, wn, Vector3.zero);
 
-            //Add waypoint properties on UTW
-            //TO DO: handle all elements in a loop
-            /*var e = xe.Elements();
-            foreach (var _x in e)
+            //update all the variables That are Not list
+            var ew = xe.Elements();
+            foreach (var _x in ew)
             {
-                var _d = _x.Name;
-                var _v = _x.Value;
-                Console.WriteLine("");
-            }*/
-
-            //For now, manually, Few of them, relevant
-            UpdateGameObjectProperty(ow, xe.Element("Tag").Name.ToString(), xe.Element("Tag").Value);
-            UpdateGameObjectProperty(ow, xe.Element("WaypointName").Name.ToString(), xe.Element("WaypointName").Value);
-            UpdateGameObjectProperty(ow, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-            UpdateGameObjectProperty(ow, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+                string _d = _x.Name.ToString();
+                if (_d.IndexOf("List") == -1)//If not list
+                {
+                    string _v = _x.Value;
+                    if (_v != "")
+                    {
+                        UpdateGameObjectProperty(ow, _d, _v);
+                    }
+                }
+            }
 
             //Update object position And orientation
             ow.gameObject.transform.position = ow.gameObject.GetComponent<xGameObjectUTW>().position;
             var rot = ow.gameObject.GetComponent<xGameObjectUTW>().orientation;
             ow.gameObject.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
         }
-
-        /*string rrn = (string)
-            (from el in root.Elements("Resource")
-             where (int)el.Element("Agent").Element( "ResRefName") == nStrRef
-             select el).First().Element("Agent").Value;*/
-        //Create XML from stream
-
     }
 
     public void ParsePlaceable(GameObject oPlaceable, string rTemplate)
@@ -12574,6 +12574,63 @@ public partial class Engine
         SignalEvent(oCreature.gameObject, ev);
     }
 
+    public void ParseTrigger(GameObject oTrigger, string rTemplate)
+    {
+        //Add the Cylinder as visual aid
+        GameObject oC = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        oC.GetComponent<Renderer>().material.color = Color.green;
+        oC.transform.parent = oTrigger.transform;
+
+        //Get its template XML, Convert name to file ID
+        string id = GetResource("Name", rTemplate, "ID", "utt");
+        string seed = String.Format("{0:x}", DateTime.Now.ToString("hh:mm:ss tt").GetHashCode() + increment);
+        increment++;
+
+        Unzip(id, seed);
+
+        string f = EngineConstants.SOURCE + id + seed + ".xml";
+
+        //Load the identified XML template for parsing
+        //XmlNode node = doc.SelectSingleNode("//Resource/Agent/ResRefName/text()");
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.Load(f);
+        XDocument xDoc = XDocument.Load(new XmlNodeReader(xmldoc));
+        XElement root = xDoc.Root;
+        XElement agent = root.Element("Agent");
+
+        //Get variables list
+        IEnumerable<XElement> vl = agent.Element("VariableList").Elements("Agent");
+        foreach (XElement ve in vl)
+        {
+            //Find property using reflection and set the value accordingly
+            UpdateGameObjectProperty(oTrigger, ve.Element("xname").Value, ve.Element("Data").Value);
+        }
+
+        //Add script URI
+        string sUriName = GetResource("ID", agent.Element("ScriptURI").Value, "Name");
+        //Check if custom script, And add it, otherwise ignore
+        if (sUriName != "Trigger_core")
+        {
+            oTrigger.GetComponent<xGameObjectBase>().bCustom = EngineConstants.TRUE;
+            oTrigger.gameObject.AddComponent(Type.GetType(sUriName));
+        }
+
+        //update all the variables That are Not list
+        var e = agent.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateGameObjectProperty(oTrigger, _d, _v);
+                }
+            }
+        }
+    }
+
     public GameObject ParseAreaPlaceable(GameObject oPlaceable, XElement xe)
     {
         IEnumerable<XElement> vl = xe.Element("VariableList").Elements("Agent");
@@ -12629,6 +12686,27 @@ public partial class Engine
         SignalEvent(oArea.gameObject, ev);
 
         return oCreature;
+    }
+
+    public GameObject ParseAreaTrigger(GameObject oTrigger, XElement xe)
+    {
+        IEnumerable<XElement> vl = xe.Element("VariableList").Elements("Agent");
+        foreach (XElement ve in vl)
+        {
+            //Find property using reflection and set the value accordingly
+            UpdateGameObjectProperty(oTrigger, ve.Element("xname").Value, ve.Element("Data").Value);
+        }
+
+        //Manually update some relevant variables during debugging tests
+        UpdateGameObjectProperty(oTrigger, xe.Element("position").Name.ToString(), xe.Element("position").Value);
+        UpdateGameObjectProperty(oTrigger, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+
+        //Update object position And orientation
+        oTrigger.gameObject.transform.position = oTrigger.gameObject.GetComponent<xGameObjectUTT>().position;
+        var rot = oTrigger.gameObject.GetComponent<xGameObjectUTT>().orientation;
+        oTrigger.gameObject.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+
+        return oTrigger;
     }
 
     public void ParsePlayer(string rTemplate)

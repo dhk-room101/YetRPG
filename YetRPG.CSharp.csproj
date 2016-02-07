@@ -72,6 +72,7 @@
     <Compile Include="Assets\packages\core\scripts\demo\demo000pl_main.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo100ar_wilderness.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo200pl_security_lever.cs" />
+    <Compile Include="Assets\packages\core\scripts\demo\demo200tr_attack.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo_module.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\plt_demo000pl_main.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\constants\ai_constants_h.cs" />

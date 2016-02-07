@@ -29,13 +29,41 @@ public class trigger_core : MonoBehaviour
     //#include"events_h"
 
     Engine engine { get; set; }
+    xGameObjectBase oBase;
+    int counter;
 
     void Awake()
     {
         engine = gameObject.GetComponent<Engine>();
+        oBase = gameObject.GetComponent<xGameObjectBase>();
     }
 
-     public void SetLocalVarOnTeam(GameObject oCreature, string sTriggerTeamVar, string sVarToSetOnCreatures, int nValue)
+    void Update()
+    {
+        //if (bStart)
+        counter++;
+        if (10 - counter < 0)
+        {
+            //engine.Warning(" increment update " + counter);
+            counter = 0;
+            //If current events not null 
+            if (oBase.qEvent != null &&
+            oBase.qEvent.Count > 0 &&
+            //Or there is no custom class to take precedence, or if the event got redirected
+            (oBase.bCustom == EngineConstants.FALSE ||
+            oBase.bRedirected == EngineConstants.TRUE))
+            {
+                //and event is not type invalid
+                if (oBase.qEvent[0].nType != EngineConstants.EVENT_TYPE_INVALID)
+                {
+                    //Do the obvious :-)
+                    HandleEvent();
+                }
+            }
+        }
+    }
+
+    public void SetLocalVarOnTeam(GameObject oCreature, string sTriggerTeamVar, string sVarToSetOnCreatures, int nValue)
      {
           int nTeam = engine.GetLocalInt(gameObject, sTriggerTeamVar);
 
@@ -57,9 +85,9 @@ public class trigger_core : MonoBehaviour
           }
      }
 
-     public void HandleEvent(xEvent ev)
+     public void HandleEvent()
      {
-          //xEvent ev = engine.GetCurrentEvent();
+          xEvent ev = engine.GetCurrentEvent();
           int nEventType = engine.GetEventTypeRef(ref ev);
           string sDebug;
 
@@ -145,5 +173,12 @@ public class trigger_core : MonoBehaviour
                     }
 
           }
-     }
+
+        //Outside the switch loop, assuming a break
+        //In case the event was actually redirected, giveback control to the custom script
+        if (oBase.bRedirected == EngineConstants.TRUE)
+        {
+            oBase.bRedirected = EngineConstants.FALSE;
+        }
+    }
 }

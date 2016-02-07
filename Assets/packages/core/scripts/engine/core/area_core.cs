@@ -52,14 +52,18 @@ public class area_core : MonoBehaviour
 
     void Update()
     {
+        //if (bStart)
         counter++;
         if (10 - counter < 0)
         {
             //engine.Warning(" increment update " + counter);
             counter = 0;
-            //If current events not null
+            //If current events not null 
             if (oBase.qEvent != null &&
-            oBase.qEvent.Count > 0)
+            oBase.qEvent.Count > 0 &&
+            //Or there is no custom class to take precedence, or if the event got redirected
+            (oBase.bCustom == EngineConstants.FALSE ||
+            oBase.bRedirected == EngineConstants.TRUE))
             {
                 //and event is not type invalid
                 if (oBase.qEvent[0].nType != EngineConstants.EVENT_TYPE_INVALID)
@@ -303,5 +307,11 @@ public class area_core : MonoBehaviour
                     }
           }
 
-     }
+        //Outside the switch loop, assuming a break
+        //In case the event was actually redirected, giveback control to the custom script
+        if (oBase.bRedirected == EngineConstants.TRUE)
+        {
+            oBase.bRedirected = EngineConstants.FALSE;
+        }
+    }
 }

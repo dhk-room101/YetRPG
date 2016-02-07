@@ -43,21 +43,25 @@ public class demo100ar_wilderness : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (bStart)
         counter++;
         if (10 - counter < 0)
         {
             //engine.Warning(" increment update " + counter);
             counter = 0;
-            //If current events not null
+            //If current events not null 
             if (oBase.qEvent != null &&
-            oBase.qEvent.Count > 0)
+            oBase.qEvent.Count > 0 &&
+            //As this script is already custom, we checked only to see 
+            //if it needs to redirect the event to its parent core class
+            oBase.bRedirected == EngineConstants.FALSE)
             {
-                    //and event is not type invalid
-                    if (oBase.qEvent[0].nType != EngineConstants.EVENT_TYPE_INVALID)
-                    {
-                        //Do the obvious :-)
-                        HandleEvent();
-                    }
+                //and event is not type invalid
+                if (oBase.qEvent[0].nType != EngineConstants.EVENT_TYPE_INVALID)
+                {
+                    //Do the obvious :-)
+                    HandleEvent();
+                }
             }
         }
     }
@@ -146,8 +150,12 @@ public class demo100ar_wilderness : MonoBehaviour
         }
         if (bEventHandled == EngineConstants.FALSE)
         {
-            engine.Warning("event not handled, redirecting to Area_core!");
-            engine.HandleEventRef(ref ev, EngineConstants.RESOURCE_SCRIPT_AREA_CORE);
+            //engine.Warning("event not handled, redirecting to Area_core!");
+            //engine.HandleEventRef(ref ev, EngineConstants.RESOURCE_SCRIPT_AREA_CORE);
+            engine.Log_Events("Redirecting to Area_core", ev);
+            oBase.bRedirected = EngineConstants.TRUE;
+            //Put the event back in the queue
+            engine.SignalEvent(gameObject, ev);
         }
     }
 }
