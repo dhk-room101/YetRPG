@@ -115,6 +115,12 @@ public class xConvInstance : MonoBehaviour
                     }
                 }
             }
+            else //no condition, just play it
+            {
+                bStart = EngineConstants.TRUE;
+                lIndex = n;//set the found starting branch
+                break;
+            }
         }
 
         if (bStart == EngineConstants.TRUE) //We actually found the Starting conversation node
@@ -196,7 +202,50 @@ public class xConvInstance : MonoBehaviour
             List<xConvNode> pReplies = new List<xConvNode>();
             foreach (Transition t in cnv.NPCLineList.ElementAt(lineIndex).TransitionList)
             {
-                pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
+                node = cnv.PlayerLineList.ElementAt(t.LineIndex);
+                //Let's analyze the current node conditions/plot, If any
+                plotID = node.ConditionPlotURI;
+                if (plotID != 0)//If there is an actual condition
+                {
+                    //Check to see if plot already exists, if not create one
+                    xGameObjectPTY oParty = engine.GetParty().
+                        GetComponent<xGameObjectPTY>();
+                    plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
+                    if (plot == null) //Not found
+                    {
+                        //let's parse and create one
+                        plot = engine.ParsePlot(
+                            engine.GetResource("ID", plotID.ToString(), "Name"));
+                        //gameObject.AddComponent(Type.GetType(Script));
+                        //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
+                    }
+
+                    //Check defined flag versus regular flag
+                    if (node.ConditionPlotFlag > 255) //Defined flag, That is AND/OR combination of regular flags
+                    {
+                        if (engine.PlotEvent(EngineConstants.EVENT_TYPE_GET_PLOT,
+                        plot.GUID.ToString(),
+                        node.ConditionPlotFlag,
+                        engine.GetParty(),
+                        engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"))
+                        == EngineConstants.TRUE)
+                        {
+                            pReplies.Add(node);
+                        }
+                    }
+                    else //Regular flag, check directly
+                    {
+                        ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ConditionPlotFlag);
+                        if (ePlot != null && ePlot.pValue == Convert.ToInt32(node.ConditionResult))
+                        {
+                            pReplies.Add(node);
+                        }
+                    }
+                }
+                else //No condition, just add It
+                {
+                    pReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
+                }
             }
 
             //If an actual multinode conversation
@@ -209,11 +258,11 @@ public class xConvInstance : MonoBehaviour
                     {
                         char c = (char)124;//'|' Delimiter
                         string[] split = pNode.text.Split(c);
-                        pNode.text = split[1];
+                        //pNode.text = split[1];
                         string lineLocation = split[0][0].ToString();
                         string iconID = split[0][1].ToString();
                         GameObject lReply = pLines.ElementAt(int.Parse(lineLocation));
-                        lReply.GetComponent<Text>().text = pNode.text;
+                        lReply.GetComponent<Text>().text = split[1];
                         lReply.GetComponent<xConvTouch>().lineLocation = int.Parse(lineLocation);
                         lReply.GetComponent<xConvTouch>().iconID = iconID;
                         lReply.GetComponent<xConvTouch>().lineIndex = pNode.lineIndex;

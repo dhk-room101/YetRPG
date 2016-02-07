@@ -72,8 +72,8 @@
     <Compile Include="Assets\packages\core\scripts\demo\demo000pl_main.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo100ar_wilderness.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo200pl_security_lever.cs" />
-    <Compile Include="Assets\packages\core\scripts\demo\demo_consts_h.cs" />
     <Compile Include="Assets\packages\core\scripts\demo\demo_module.cs" />
+    <Compile Include="Assets\packages\core\scripts\demo\plt_demo000pl_main.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\constants\ai_constants_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\constants\arl_constants_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\constants\autoss_constants_h.cs" />
@@ -287,6 +287,8 @@
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_stealth_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_traps_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\gen\gen00pt_random.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\gen\plt_gen00pt_random.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />

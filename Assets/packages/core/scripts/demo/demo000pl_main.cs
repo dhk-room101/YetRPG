@@ -31,7 +31,7 @@ public class demo000pl_main : xPlotConditional
 
     void Awake()
     {
-        if (engine == null) engine = xGameObjectMOD.instance.GetComponent<Engine>();
+        if (engine == null) engine = gameObject.GetComponent<Engine>();
     }
 
     public override int StartingConditional(xEvent eParms)

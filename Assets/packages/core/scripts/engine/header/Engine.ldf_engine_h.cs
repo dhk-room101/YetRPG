@@ -12989,7 +12989,7 @@ public partial class Engine
             string s = go.ToString().Split()[0];
             if (s == "GameModule" || s == "MainCamera" || s == "Floaty" ||
                 s == "DirectionalLight" || s == "Invalid" ||
-                s == "Canvas" || s == "EventSystem" ||
+                s == "Canvas" || s == "EventSystem" || s == "Party" ||
                 s == "Floor" || s == "floorPlane")
             {
 
