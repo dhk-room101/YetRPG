@@ -104,15 +104,14 @@ public class xGameObjectUTC : xGameObjectBase
     public int ParentTrapDetectionDifficulty { get; set; }
     public int TrapDisarmDifficulty { get; set; }
     public int ParentTrapDisarmDifficulty { get; set; }
-    public int Usable { get; set; }
-    public int ParentUsable { get; set; }
-    //unused?
-    /*CloseToOpenSound
-    OpenToCloseSound
-    DestroyedSound
-    UsedSound
-    LockedSound
-    HitSound*/
+    public int Useable { get; set; }
+    public int ParentUseable { get; set; }
+    public string CloseToOpenSound { get; set; }
+    public string OpenToCloseSound { get; set; }
+    public string DestroyedSound { get; set; }
+    public string UsedSound { get; set; }
+    public string LockedSound { get; set; }
+    public string HitSound { get; set; }
     //public string Variable2da { get; set; }//from UTC
     //public Dictionary<string, string> ParentVariableList { get; set; }//unused?
     //public Dictionary<string, string> VariableList { get; set; }//from UTC

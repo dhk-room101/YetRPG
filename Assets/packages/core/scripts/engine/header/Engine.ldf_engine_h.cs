@@ -8111,7 +8111,8 @@ public partial class Engine
     * The 'current' xCommand is the xCommand that is currently being executed. It is considered
     * outside of the xCommand queue.
     *
-    *   @returns xCommand - the current command, use GetCommandType to see if it is EngineConstants.COMMAND_INVALID
+    *   @returns xCommand - the current command, 
+    *   use GetCommandType to see if it is EngineConstants.COMMAND_INVALID
     *   @author Sam
     */
     public xCommand GetCurrentCommand(GameObject oObject)
@@ -8309,13 +8310,20 @@ public partial class Engine
     * @param fMinRange - The closest to the GameObject we can be
     * @param bUseOriginalPosition - Even if the target is moving, use the original position
     * @returns a valid command
-    * @remarks Only creatures can move, non-creature objects that have a move xCommand assigned to them will fail the xCommand when attempting to process it.
+    * @remarks Only creatures can move, non-creature objects that have a move xCommand assigned to them 
+    * will fail the xCommand when attempting to process it.
     * @author Noel, Jose
     */
     public xCommand CommandMoveToObject(GameObject oTarget, int bRunToLocation = EngineConstants.TRUE, float fMinRange = 0.0f, int bUseOriginalPosition = EngineConstants.FALSE, float fMaxRange = 0.0f)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Create the New command
+        xCommand cMove = Command(EngineConstants.COMMAND_TYPE_MOVE_TO_OBJECT);
+        SetCommandObjectRef(ref cMove, oTarget, 0);//Target
+        SetCommandIntRef(ref cMove, bRunToLocation, 0);
+        SetCommandIntRef(ref cMove, bUseOriginalPosition, 1);
+        SetCommandFloatRef(ref cMove, fMinRange, 0);
+        SetCommandFloatRef(ref cMove, fMaxRange, 1);
+        return cMove;
     }
 
     /* @brief Moves creature away from specified target GameObject at the specified distance
@@ -12250,7 +12258,8 @@ public partial class Engine
                 }
             case "Boolean":
                 {
-                    x.GetType().GetProperty(key).SetValue(x, Boolean.Parse(value), null);
+                    if (value == "-1") value = "False";
+                    x.GetType().GetProperty(key).SetValue(x, bool.Parse(value), null);
                     break;
                 }
             case "Single":
@@ -12576,11 +12585,6 @@ public partial class Engine
 
     public void ParseTrigger(GameObject oTrigger, string rTemplate)
     {
-        //Add the Cylinder as visual aid
-        GameObject oC = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        oC.GetComponent<Renderer>().material.color = Color.green;
-        oC.transform.parent = oTrigger.transform;
-
         //Get its template XML, Convert name to file ID
         string id = GetResource("Name", rTemplate, "ID", "utt");
         string seed = String.Format("{0:x}", DateTime.Now.ToString("hh:mm:ss tt").GetHashCode() + increment);
@@ -12648,9 +12652,20 @@ public partial class Engine
             UpdateGameObjectProperty(oPlaceable, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
-        //Manually update some relevant variables during debugging tests
-        UpdateGameObjectProperty(oPlaceable, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-        UpdateGameObjectProperty(oPlaceable, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+        //update all the variables That are Not list
+        var e = xe.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateGameObjectProperty(oPlaceable, _d, _v);
+                }
+            }
+        }
 
         //Update object position And orientation
         oPlaceable.gameObject.transform.position = oPlaceable.gameObject.GetComponent<xGameObjectUTP>().position;
@@ -12669,9 +12684,20 @@ public partial class Engine
             UpdateGameObjectProperty(oCreature, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
-        //Manually update some relevant variables during debugging tests
-        UpdateGameObjectProperty(oCreature, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-        UpdateGameObjectProperty(oCreature, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+        //update all the variables That are Not list
+        var e = xe.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateGameObjectProperty(oCreature, _d, _v);
+                }
+            }
+        }
 
         //Update object position And orientation
         oCreature.gameObject.transform.position = oCreature.gameObject.GetComponent<xGameObjectUTC>().position;
@@ -12697,16 +12723,95 @@ public partial class Engine
             UpdateGameObjectProperty(oTrigger, ve.Element("xname").Value, ve.Element("Data").Value);
         }
 
-        //Manually update some relevant variables during debugging tests
-        UpdateGameObjectProperty(oTrigger, xe.Element("position").Name.ToString(), xe.Element("position").Value);
-        UpdateGameObjectProperty(oTrigger, xe.Element("orientation").Name.ToString(), xe.Element("orientation").Value);
+        //update all the variables That are Not list
+        var e = xe.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateGameObjectProperty(oTrigger, _d, _v);
+                }
+            }
+        }
 
+        //Handle geometry list
+        var gl = xe.Element("GeometryList").Elements("Agent");
+        foreach(var g in gl)
+        {
+            var v = g.Element("Vertex");
+            string vs = v.Value;
+            string[] vsa = vs.Split(',');
+            Vector3 vv = new Vector3(float.Parse(vsa[0]), float.Parse(vsa[1]), float.Parse(vsa[2]));
+            oTrigger.gameObject.GetComponent<xGameObjectUTT>().GeometryList.Add(vv);
+        }
+
+        CreateTrigger(oTrigger);
+        
         //Update object position And orientation
         oTrigger.gameObject.transform.position = oTrigger.gameObject.GetComponent<xGameObjectUTT>().position;
         var rot = oTrigger.gameObject.GetComponent<xGameObjectUTT>().orientation;
         oTrigger.gameObject.transform.rotation = Quaternion.Euler(rot.x, rot.y, rot.z);
 
         return oTrigger;
+    }
+
+    public void CreateTrigger(GameObject tParent)
+    {
+        //Calculate dimensions
+        var gl = tParent.gameObject.GetComponent<xGameObjectUTT>().GeometryList;
+        Vector3[] Vertices = new Vector3[4];
+        float mx = 0.0f;
+        float my = 0.0f;
+        float mz = 0.0f;
+
+        int i = 0;
+
+        //For now doing debug, would keep it simple
+        foreach (Vector3 g in gl)
+        {
+            mx = MaxF(mx, g.x);
+            my = MaxF(my, g.y);
+            mz = MaxF(mz, g.z);
+        }
+
+        foreach (Vector3 g in gl)
+        {
+            Vector3 v = new Vector3(mx - g.x, my - g.y, mz - g.z);
+            Vertices[i] = v;
+            i++;
+        }
+
+        GameObject oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/renderPrefab"));
+        oObject.name = "trigger";
+        //Create a mesh with the vertex info you just gathered
+        Mesh mTrigger = new Mesh();
+        mTrigger.name = "meshTrigger";
+        oObject.gameObject.AddComponent<MeshFilter>().mesh = mTrigger;
+        //mTrigger.vertices = oTrigger.gameObject.GetComponent<xGameObjectUTT>().GeometryList.ToArray();
+
+        //Vector3[] Vertices = new Vector3[] { new Vector3(-1, 0, 1), new Vector3(1, 0, 1), new Vector3(1, 0, -1), new Vector3(-1, 0, -1) };
+        Vector2[] UV = new Vector2[] { new Vector2(0, 256), new Vector2(256, 256), new Vector2(256, 0), new Vector2(0, 0) };
+        int[] Triangles = new int[] { 0, 1, 2, 0, 2, 3 };
+        Vector3[] Normals = new Vector3[] { -Vector3.forward, -Vector3.forward, -Vector3.forward, -Vector3.forward };
+
+        mTrigger.vertices = Vertices;
+        mTrigger.uv = UV;
+        mTrigger.triangles = Triangles;
+        mTrigger.normals = Normals;
+
+        //Make it an actual trigger
+        oObject.gameObject.AddComponent<BoxCollider>();
+        oObject.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+
+        oObject.gameObject.AddComponent<xTrigger>();
+
+        //Make it green
+        oObject.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        oObject.transform.parent = tParent.transform;
     }
 
     public void ParsePlayer(string rTemplate)
@@ -13179,6 +13284,39 @@ public partial class Engine
     {
         return GameObject.Find("Canvas").transform.Find("convPanel").gameObject.GetComponent<xConvInstance>().oConversation;
     }
+
+    public int EvaluatePossibleCommand(GameObject oTarget)
+    {
+        xGameObjectBase oBase = gameObject.GetComponent<xGameObjectBase>();
+        //1st evaluate if creature is indeed creature, nothing else should be able to issue commands
+        if (gameObject.GetComponent<xGameObjectBase>().nObjectType != EngineConstants.OBJECT_TYPE_CREATURE)
+        {
+            return EngineConstants.FALSE;
+        }
+        //Okay so I'm a creature, now let's take a look at the target
+        //If I'm placeable, I can try to use it
+        if (oTarget.GetComponent<xGameObjectBase>().nObjectType == EngineConstants.OBJECT_TYPE_PLACEABLE)
+        {
+            //Before using it, let's see if it's in touching distance, otherwise we should issue
+            //command moved to object in the beginning of the queue, and then command use object
+            //For now issue an use object command generic, during tests
+            if (TargetTooFar(oTarget) == EngineConstants.TRUE)
+            {
+                oBase.qCommand.Add(CommandMoveToObject(oTarget));
+            }
+            oBase.qCommand.Add(CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
+        }
+
+        return EngineConstants.FALSE;//always return false in case it fell through
+    }
+
+    public int TargetTooFar(GameObject oTarget)
+    {
+        if (Mathf.Abs(gameObject.transform.position.sqrMagnitude - oTarget.transform.position.sqrMagnitude) < 10)
+            return EngineConstants.FALSE;
+        return EngineConstants.TRUE;
+    }
+
     #endregion
 
     #region moved from constants files

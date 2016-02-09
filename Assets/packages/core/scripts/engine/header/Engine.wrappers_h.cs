@@ -245,7 +245,7 @@ public partial class Engine
 #endif
 
 #if DEBUG
-          //  Log_Trace(EngineConstants.LOG_CHANNEL_COMMANDS, "WR_AddCommand", "*** START, object= " + GetTag(oObject) + ". command= " + IntToString(nCommandType));
+          Log_Trace(EngineConstants.LOG_CHANNEL_COMMANDS, "WR_AddCommand", "*** START, object= " + GetTag(oObject) + ". command= " + IntToString(nCommandType));
           if (bAddToFront != EngineConstants.FALSE)
                Log_Trace(EngineConstants.LOG_CHANNEL_COMMANDS, "WR_AddCommand()", "*** Adding xCommand to front");
           if (bStatic != EngineConstants.FALSE)

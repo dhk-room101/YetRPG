@@ -60,7 +60,9 @@ public class xGameObjectBase : MonoBehaviour {
     public List<xCommand> qCommand { get; set; }//Command Queue
     public xCommand cCommand { get; set; }//The current command. If present, it's outside the command cue
     public xCommand pCommand { get; set; }//The previous command used for AI decisions
-    
+    public int cCommandResult { get; set; }
+    public int pCommandResult { get; set; }
+
     // Use this for initialization
     void Awake () {
         engine = gameObject.GetComponent<Engine>();
@@ -68,6 +70,7 @@ public class xGameObjectBase : MonoBehaviour {
         if (qEvent == null) qEvent = new List<xEvent>();
         if (qCommand == null) qCommand = new List<xCommand>();
         cCommand = pCommand = engine.Command(EngineConstants.COMMAND_TYPE_INVALID);
+        cCommandResult = pCommandResult = EngineConstants.COMMAND_RESULT_INVALID;
     }
 	
 	// Update is called once per frame

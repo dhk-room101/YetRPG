@@ -12,6 +12,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Reflection;
 
 public class xGameObjectMOD : MonoBehaviour
 {
@@ -282,55 +283,76 @@ public class xGameObjectMOD : MonoBehaviour
 
             if (Physics.Raycast(ray.origin, ray.direction, out rch, Mathf.Infinity))
             {
-                var p = rch.transform.parent;
-                if (p != null)
+                var _target = rch.transform.parent;
+                if (_target != null)
                 {
-                    GameObject pat = p.gameObject;
+                    //Make sure the engine component attached to the player kicks in
+                    //For now it's the player only, TO DO any selected follower
+                    GameObject _player = engine.GetHero();
+                    int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
+
+                    /*//Check to see if you need to move closer to the object
+                    GameObject oTarget = _target.gameObject;
+                    GameObject oPlayer = engine.GetHero();
+                    Vector3 pPosition = oPlayer.transform.position;
+                    Vector3 patPosition = oTarget.transform.position;
+
+                    var pn = pPosition.sqrMagnitude;
+                    var patn = patPosition.sqrMagnitude;
+
+                    
                     //TO DO world map transition
-                    //if (pat != null && pat.tag == "WorldMap")
+                    //if (pat != null && oTarget.tag == "WorldMap")
 
                     //Area transition
                     #region area transition
-                    if (pat != null && pat.tag == "AreaTransition")
+                    if (oTarget != null && oTarget.tag == "AreaTransition")
                     {
-                        string sArea = pat.GetComponent<xGameObjectUTP>().PLC_AT_DEST_AREA_TAG;
-                        string sWP = pat.GetComponent<xGameObjectUTP>().PLC_AT_DEST_TAG;
-                        if (sArea != "" && sWP != "")
-                        {
-                            //engine.Warning(w.name + " was clicked");
-                            GameObject _player = GameObject.Find("demo000cr_player");
-
-                            //Set placeable action as area transition
-                            engine.UpdateGameObjectProperty(pat, "PLC_ACTION", EngineConstants.PLACEABLE_ACTION_AREA_TRANSITION.ToString());
-
-                            xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_USE);
-                            engine.SetEventCreatorRef(ref ev, _player);
-                            engine.SignalEvent(pat, ev);
-                        }
+                        DoAction(oTarget, "DoAreaTransition");
                     }
                     #endregion
 
                     //Conversation
                     #region conversation
-                    if (pat != null && pat.tag == "Creature")
+                    if (oTarget != null && oTarget.tag == "Creature")
                     {
                         //If not in combat And has conversation
                         if (engine.GetLocalInt(engine.GetModule(), "GAME_MODE") != EngineConstants.GM_COMBAT &&
-                            engine.HasConversation(pat) != EngineConstants.FALSE)
+                            engine.HasConversation(oTarget) != EngineConstants.FALSE)
                         {
-
-                            //engine.UpdateProperty(gameObject, "CONVERSATION", sConversation);
-
-                            //engine.WR_SetGameMode(EngineConstants.GM_CONVERSATION);
                             //For now doing debug only the player can initiate dialogues
-                            CONVERSATION_SPEAKER = pat;
-                            GameObject _player = GameObject.Find("demo000cr_player");
-                            engine.UT_Talk(pat, _player);
+                            CONVERSATION_SPEAKER = oTarget;
+                            GameObject _player = engine.GetHero();
+                            engine.UT_Talk(oTarget, _player);
                         }
                     }
-                    #endregion
+                    #endregion*/
                 }
             }
+        }
+    }
+
+    public void DoAction(GameObject oObject, string _action)
+    {
+        MethodInfo _method = this.GetType().GetMethod(_action);
+        _method.Invoke(this, new object[] { oObject });
+    }
+
+    public void DoAreaTransition(GameObject placeableAreaTransition)
+    {
+        string sArea = placeableAreaTransition.GetComponent<xGameObjectUTP>().PLC_AT_DEST_AREA_TAG;
+        string sWP = placeableAreaTransition.GetComponent<xGameObjectUTP>().PLC_AT_DEST_TAG;
+        if (sArea != "" && sWP != "")
+        {
+            //engine.Warning(w.name + " was clicked");
+            GameObject _player = engine.GetHero();
+
+            //Set placeable action as area transition
+            engine.UpdateGameObjectProperty(placeableAreaTransition, "PLC_ACTION", EngineConstants.PLACEABLE_ACTION_AREA_TRANSITION.ToString());
+
+            xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_USE);
+            engine.SetEventCreatorRef(ref ev, _player);
+            engine.SignalEvent(placeableAreaTransition, ev);
         }
     }
 
