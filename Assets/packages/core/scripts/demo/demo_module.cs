@@ -228,6 +228,8 @@ public class demo_module : MonoBehaviour
                 }
             case EngineConstants.EVENT_TYPE_MODULE_AREA_TRANSITION:
                 {
+                    xGameObjectMOD.instance.bTransitioning = EngineConstants.FALSE;
+
                     GameObject oArea = engine.CreateObject(EngineConstants.OBJECT_TYPE_AREA, xGameObjectMOD.instance.tArea, Vector3.zero);
                     engine.ParseArea(oArea, xGameObjectMOD.instance.tArea);
 

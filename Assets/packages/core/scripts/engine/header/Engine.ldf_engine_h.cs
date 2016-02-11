@@ -1,5 +1,6 @@
 ﻿//Warning("debug mode: 3-D coordinates in complete!");
 //Warning("ambience conversations to be implemented!");
+//Warning("ScaleEquippedItems to be implemented!");
 
 #region Design Choices
 /*
@@ -483,10 +484,18 @@ public partial class Engine
         XmlDocument x2da = GetXML(n2DA);
         XDocument xDoc = XDocument.Load(new XmlNodeReader(x2da));
         XElement root = xDoc.Root;
-        string cell = (string)
-            (from el in root.Elements(GetNodeName(n2DA))
-             where (int)el.Element("ID") == nRow
-             select el).First().Element(sColumn).Value;
+        string cell = string.Empty;
+
+        try
+        {
+            cell = (from el in root.Elements(GetNodeName(n2DA))
+                     where (int)el.Element("ID") == nRow
+                     select el).First().Element(sColumn).Value;
+        }
+        catch
+        {
+            Console.WriteLine();
+        }
 
         return cell;
     }
@@ -507,9 +516,7 @@ public partial class Engine
     */
     public string GetM2DAResource(int n2DA, string sColumn, int nRow, string s2DA = "")
     {
-        string s = GetM2DAString(n2DA, sColumn, nRow, s2DA);
-        //string r = new string();
-        throw new NotImplementedException();
+        return GetM2DAString(n2DA, sColumn, nRow, s2DA);//String and resource are the same in our port
     }
 
     /* @brief Returns a 2DA value in integer format.
@@ -532,9 +539,17 @@ public partial class Engine
         XDocument xDoc = XDocument.Load(new XmlNodeReader(x2da));
         XElement root = xDoc.Root;
 
-        string sCell = (from el in root.Elements(GetNodeName(n2DA))
-                        where (int)el.Element("ID") == nRow
-                        select el).First().Element(sColumn).Value;
+        string sCell = string.Empty;
+        try
+        {
+            sCell = (from el in root.Elements(GetNodeName(n2DA))
+                            where (int)el.Element("ID") == nRow
+                            select el).First().Element(sColumn).Value;
+        }
+        catch
+        {
+            Console.WriteLine();
+        }
 
         int cell;
 
@@ -1610,8 +1625,10 @@ public partial class Engine
     public int GetLocalInt(GameObject oObject, string sVarName)
     {
         var o = GetGameObjectType(oObject);
-        //piInstance.SetValue(exam, 37, null);
-        //return src.GetType().GetProperty(propName).GetValue(src, null);
+        if (o == null || o.GetType() == null || o.GetType().GetProperty(sVarName) == null)
+        {
+            Console.WriteLine();
+        }
         return int.Parse(o.GetType().GetProperty(sVarName).GetValue(o, null).ToString());
     }
 
@@ -2669,7 +2686,7 @@ public partial class Engine
     */
     public string GetEventResourceRef(ref xEvent evEvent, int nIndex)
     {
-        Debug.LogWarning("get event string");
+        //Debug.LogWarning("get event string");
         return (evEvent.rList.Count > nIndex) ? evEvent.rList.ElementAt(nIndex) : String.Empty;
     }
 
@@ -2686,7 +2703,7 @@ public partial class Engine
     */
     public void SetEventResourceRef(ref xEvent evEvent, int nIndex, string rValue)
     {
-        Debug.LogWarning("set event string");
+        //Debug.LogWarning("set event string");
         evEvent.rList.Insert(nIndex, rValue);
     }
 
@@ -2874,9 +2891,10 @@ public partial class Engine
     public int IsObjectValid(GameObject oObject)
     {
         //Debug.LogWarning("is object valid");
-        //Type t = oObject.GetType();
-        //return (GameObject.FindObjectOfType(t) != null) ? EngineConstants.TRUE : EngineConstants.FALSE;
-        return (oObject.tag != "Invalid") ? EngineConstants.TRUE : EngineConstants.FALSE;
+        //return (oObject.tag != "Invalid") ? EngineConstants.TRUE : EngineConstants.FALSE;
+        if (oObject == null) return EngineConstants.FALSE;
+        else if (oObject.tag == "Invalid") return EngineConstants.FALSE;
+        else return EngineConstants.TRUE;
     }
 
     /* @brief Returns an object's type.
@@ -3069,6 +3087,7 @@ public partial class Engine
                     //For debug visual purposes add 3-D rectangle
                     GameObject oCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     oCube.GetComponent<Renderer>().material.color = Color.yellow;
+                    oCube.GetComponent<Collider>().isTrigger = true;
                     oCube.transform.parent = oObject.transform;
                     break;
                 }
@@ -3082,6 +3101,18 @@ public partial class Engine
                         oObject.SetActive(false);
                     }
                     ParseCreature(oObject, rTemplate);
+                    break;
+                }
+            case EngineConstants.OBJECT_TYPE_ITEM:
+                {
+                    oObject = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/itemPrefab"));
+                    oObject.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_ITEM;
+                    oObject.name = rTemplate;
+                    if (bSpawnActive != EngineConstants.TRUE)
+                    {
+                        oObject.SetActive(false);
+                    }
+                    ParseItem(oObject, rTemplate);
                     break;
                 }
             case EngineConstants.OBJECT_TYPE_PLACEABLE:
@@ -3188,7 +3219,7 @@ public partial class Engine
     */
     public int GetObjectActive(GameObject oObject)
     {
-        Debug.LogWarning("get object active");
+        //Debug.LogWarning("get object active");
         return Convert.ToInt32(oObject.activeInHierarchy);
     }
 
@@ -3711,8 +3742,15 @@ public partial class Engine
     public int HasDeathEffect(GameObject oObject = null, int bCheckForDeathEvent = EngineConstants.FALSE)
     {
         if (oObject == null) oObject = gameObject;//gameObject
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<xEffect> _effects = oObject.GetComponent<xGameObjectUTC>().oEffects;
+        foreach(xEffect ef in _effects)
+        {
+            if(ef.nType == EngineConstants.EFFECT_TYPE_DEATH)
+            {
+                return EngineConstants.TRUE;
+            }
+        }
+        return EngineConstants.FALSE;
     }
 
     /* @brief Set the object's dead flag
@@ -5020,8 +5058,8 @@ public partial class Engine
     */
     public int GetBaseItemType(GameObject oItem)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (oItem != null) return oItem.GetComponent<xGameObjectUTI>().BaseItemType;
+        else return EngineConstants.ITEM_TYPE_INVALID;
     }
 
     /* @brief Gets the material type of an item
@@ -5285,20 +5323,7 @@ public partial class Engine
     */
     public int GetActiveWeaponSet(GameObject oCreature)
     {
-        throw new NotImplementedException();
-        /*string sRet = GetLocal(oCreature, EngineConstants.ACTIVE_WEAPON_SET);
-        int nRet;
-        //If  the returned value can be parsed in to an integer, and it is equal to 1
-        if (int.TryParse(sRet, out nRet) && nRet == EngineConstants.TRUE) 
-        {
-            //TO DO
-            //xGameObject o = oObject.gameObject.GetComponent<xGameObjectBase>();
-            return EngineConstants.TRUE;//1 = alternate Weapon set
-        }
-        else
-        {
-            return EngineConstants.FALSE;//it's either empty or the main weapon set
-        }*/
+        return GetLocalInt(oCreature, "ACTIVE_WEAPON_SET");
     }
 
     /* @brief Equips an item on a creature
@@ -5631,8 +5656,20 @@ public partial class Engine
     */
     public void SetQuickslot(GameObject oCreature, int nSlot, int nAbilityID, string sItemTag = "", int nPlaySound = 0)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<int> _quick = oCreature.GetComponent<xGameObjectUTC>().oAbilitiesQuick;
+
+        if (nSlot == -1) //The first available
+        {
+            for (var i = 0; i < _quick.Count; i++)
+            {
+                if (_quick[i] == -1)
+                {
+                    _quick[i] = nAbilityID;
+                    break;
+                }
+            }
+        }
+        else _quick[nSlot] = nAbilityID;
     }
 
     /* @brief Get the ability ID for the ability in the given quickslot
@@ -5647,8 +5684,8 @@ public partial class Engine
     */
     public int GetQuickslot(GameObject oCreature, int nSlot)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<int> _quick = oCreature.GetComponent<xGameObjectUTC>().oAbilitiesQuick;
+        return _quick[nSlot];
     }
 
     /* @brief Changes the quickbar currently used by the creature
@@ -6290,8 +6327,8 @@ public partial class Engine
     */
     public GameObject UT_GetNearestObjectByTag(GameObject oObject, string sTag, int nIncludeSelf = 0)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Currently returning by name, may need to be tweaked to return a list by tag, sorted by distance
+        return GameObject.Find(sTag);
     }
 
     /* @brief Returns N nearest GameObject of a specific type, with a specifc Group Id
@@ -6995,7 +7032,8 @@ public partial class Engine
 
     /* @brief Returns the group ID of the specified object.
     *
-    * This function returns the group ID of the specified object. If the GameObject is invalid, the function will return FALSE.
+    * This function returns the group ID of the specified object. 
+    * If the GameObject is invalid, the function will return FALSE.
     *
     * @param oObject - The GameObject to get the group ID of
     * @returns Returns the group ID of the specified object
@@ -7004,8 +7042,7 @@ public partial class Engine
     */
     public int GetGroupId(GameObject oObject)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return GetLocalInt(oObject, "Group");
     }
 
     /* @brief Sets the group ID of the specified object.
@@ -7020,8 +7057,7 @@ public partial class Engine
     */
     public void SetGroupId(GameObject oObject, int nGroupId)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        SetLocalInt(oObject, "Group", nGroupId);
     }
 
     /* @brief Sets the team ID of the specified object. -1 sets the GameObject to be independent of any team
@@ -7033,8 +7069,7 @@ public partial class Engine
     */
     public void SetTeamId(GameObject oObject, int nTeamId)
     {
-        Debug.Log("set teamID");
-        oObject.GetComponent<xGameObjectBase>().nTeamId = nTeamId;
+        SetLocalInt(oObject, "Team", nTeamId);
     }
 
     /* @brief Gets the team ID of the specified object. -1 means that the GameObject is independent of any team
@@ -7045,9 +7080,7 @@ public partial class Engine
     */
     public int GetTeamId(GameObject oObject)
     {
-        Debug.Log("get team ID");
-        return oObject.GetComponent<xGameObjectBase>().nTeamId;
-
+        return GetLocalInt(oObject, "Team");
     }
 
     /* @brief Gets the team members given a team ID
@@ -7059,8 +7092,11 @@ public partial class Engine
     */
     public List<GameObject> GetTeam(int nTeamId, int nMembersType = EngineConstants.OBJECT_TYPE_CREATURE)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<GameObject> _Team = new List<GameObject>();
+
+        _Team = GameObject.FindGameObjectsWithTag("Creature").ToList();
+        _Team = _Team.FindAll(x => GetLocalInt(x, "Team") == nTeamId);
+        return _Team;
     }
 
     /* @brief Sets the encounter ID of the specified object. 0 sets the GameObject to be independent of any encounter
@@ -7353,8 +7389,15 @@ public partial class Engine
     */
     public GameObject GetMainControlled()
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectPTY _party = GetParty(GetHero()).GetComponent<xGameObjectPTY>();
+        foreach( GameObject _partyMember in _party.oPartyPool )
+        {
+            if (GetLocalInt(_partyMember, "bControlled") == EngineConstants.TRUE)
+            {
+                return _partyMember;
+            }
+        }
+        throw new NotImplementedException();//At least one party member should be controlled
     }
 
     /* @brief Returns the GameObject for the party
@@ -7978,32 +8021,18 @@ public partial class Engine
     * @remarks Any duplicate commands in the queue that are adjacent to one another are deleted.
     * @author Brenon
     */
-    public void AddCommand(GameObject oObject, xCommand cCommand,
-        int bAddToFront = EngineConstants.FALSE, int bStatic = EngineConstants.FALSE,
-        int nOverrideAddBehavior = -1)
+    public void AddCommand(GameObject oObject, xCommand cCommand, int bAddToFront = EngineConstants.FALSE, int bStatic = EngineConstants.FALSE, int nOverrideAddBehavior = -1)
     {
         cCommand.bStatic = bStatic;
-
-        //If current command is not invalid, then added to queue
-        if (oObject.GetComponent<xGameObjectBase>().cCommand.nType != EngineConstants.COMMAND_TYPE_INVALID)
+        if (cCommand.nType != EngineConstants.COMMAND_TYPE_INVALID)
         {
-            if (cCommand.nType != EngineConstants.COMMAND_TYPE_INVALID)
+            if (bAddToFront == EngineConstants.FALSE)
             {
-                if (bAddToFront == EngineConstants.FALSE)
-                {
-                    oObject.GetComponent<xGameObjectBase>().qCommand.Add(cCommand);
-                }
-                else //insert in front of queue
-                {
-                    oObject.GetComponent<xGameObjectBase>().qCommand.Insert(0, cCommand);
-                }
+                oObject.GetComponent<xGameObjectBase>().qCommand.Add(cCommand);
             }
-        }
-        else //There is no current command, skip the queue and set it directly as current command
-        {
-            if (cCommand.nType != EngineConstants.COMMAND_TYPE_INVALID)
+            else //insert in front of queue
             {
-                oObject.GetComponent<xGameObjectBase>().cCommand = cCommand;
+                oObject.GetComponent<xGameObjectBase>().qCommand.Insert(0, cCommand);
             }
         }
     }
@@ -8117,7 +8146,7 @@ public partial class Engine
     */
     public xCommand GetCurrentCommand(GameObject oObject)
     {
-        return oObject.GetComponent<xGameObjectBase>().cCommand;
+        return oObject.GetComponent<xGameObjectBase>().currentCommand;
     }
 
     /* @brief Returns whether the specified AI xCommand was added by the player (as a result of a mouse click or keyboard action).
@@ -8156,8 +8185,16 @@ public partial class Engine
     */
     public xCommand GetCommandByIndex(GameObject oObject, int nIndex)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xCommand cCommand = new xCommand(EngineConstants.COMMAND_TYPE_INVALID);
+        try
+        {
+            cCommand = oObject.GetComponent<xGameObjectBase>().qCommand[nIndex];
+        }
+        catch
+        {
+
+        }
+        return cCommand;
     }
 
     /* @brief Returns the xCommand type.
@@ -8265,6 +8302,26 @@ public partial class Engine
         cCommand.oList.Insert(nIndex, nCommandObject);
     }
 
+    public Vector3 GetCommandLocationRef(ref xCommand cCommand, int nIndex = 0)
+    {
+        return cCommand.lList.ElementAt(nIndex);
+    }
+    
+    public void SetCommandLocationRef(ref xCommand cCommand, Vector3 lLocation, int nIndex = 0)
+    {
+        cCommand.lList.Insert(nIndex, lLocation);
+    }
+
+    public string GetCommandStringRef(ref xCommand cCommand, int nIndex = 0)
+    {
+        return cCommand.sList.ElementAt(nIndex);
+    }
+
+    public void SetCommandStringRef(ref xCommand cCommand, string sString, int nIndex = 0)
+    {
+        cCommand.sList.Insert(nIndex, sString);
+    }
+
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_GETCOMMANDBOOL = 548;
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_SETCOMMANDBOOL = 549;
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_GETCOMMANDSTRING = 552;
@@ -8288,8 +8345,12 @@ public partial class Engine
     */
     public xCommand CommandMoveToLocation(Vector3 lLocation, int bRunToLocation = EngineConstants.TRUE, int bDeactivateAtEnd = EngineConstants.FALSE)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Create the New command
+        xCommand cMove = Command(EngineConstants.COMMAND_TYPE_MOVE_TO_LOCATION);
+        SetCommandLocationRef(ref cMove, lLocation, 0);//Location
+        SetCommandIntRef(ref cMove, bRunToLocation, 0);
+        SetCommandIntRef(ref cMove, bDeactivateAtEnd, 1);
+        return cMove;
     }
 
     public xCommand CommandMoveToMultiLocations(List<Vector3> lLocations, int bRunToLocation = EngineConstants.TRUE, int nStartingWP = 0, int bLoop = EngineConstants.FALSE)
@@ -8564,8 +8625,10 @@ public partial class Engine
     */
     public xCommand CommandStartConversation(GameObject oTarget, string rConversationFile)//= R""
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xCommand cCommand = Command(EngineConstants.COMMAND_TYPE_START_CONVERSATION);
+        SetCommandObjectRef(ref cCommand, oTarget);
+        SetCommandStringRef(ref cCommand, rConversationFile);
+        return cCommand;
     }
 
     /* @brief Adds a xCommand to move to the Vector3 of a given object
@@ -8652,7 +8715,10 @@ public partial class Engine
     public xCommand CommandUseObject(GameObject oTarget, int nAction)
     {
         Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectBase oBase = gameObject.GetComponent<xGameObjectBase>();
+        xCommand cMove = Command(EngineConstants.COMMAND_TYPE_USE_OBJECT);
+        SetCommandObjectRef(ref cMove, oTarget, 0);//Target
+        return cMove;
     }
 
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_COMMANDINTERACTOBJECT = 587;
@@ -9250,16 +9316,24 @@ public partial class Engine
     *    temporary and permanent effects. The order of the events inside the list is meaningless.
     *
     * @param oObject - The GameObject from which we try to get the effects list.
-    * @param nEffectType - Optionally only return an array of a specified EffectType. Default setting returns all applied effects.
-    * @param nAbilityId - Optionally filter the returned array to include only effects with a matching ability id (0 means no filter).
+    * @param nEffectType - Optionally only return an array of a 
+    * specified EffectType. Default setting returns all applied effects.
+    * @param nAbilityId - Optionally filter the returned array to include only effects 
+    * with a matching ability id (0 means no filter).
     * @param nEffectId - Optionally filter the array by EffectId (-1 means no filter).
-    * @param nDurationType - Optionally filter the array by DurationType (EngineConstants.EFFECT_DURATION_TYPE_INVALID means no filter).
+    * @param nDurationType - Optionally filter the array by DurationType 
+    * (EFFECT_DURATION_TYPE_INVALID means no filter).
     * @author Sam, Georg, Gabo
     */
     public List<xEffect> GetEffects(GameObject oObject, int nEffectType = EngineConstants.EFFECT_TYPE_INVALID, int nAbilityId = 0, GameObject oCreator = null, int nDurationType = EngineConstants.EFFECT_DURATION_TYPE_INVALID, int nEffectId = -1)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<xEffect> _effects = oObject.GetComponent<xGameObjectUTC>().oEffects;
+        if (nEffectType != EngineConstants.EFFECT_TYPE_INVALID) _effects = _effects.FindAll(x => x.nType == nEffectType);
+        if (nAbilityId != 0) _effects = _effects.FindAll(x => x.nList[1] == nAbilityId);
+        //Difference between effect ID and effect type?
+        if (nDurationType != EngineConstants.EFFECT_DURATION_TYPE_INVALID) _effects = _effects.FindAll(x => x.nList[0] == nDurationType);
+
+        return _effects;
     }
 
     /* @brief Returns whether or not a creature has effects matching the filter criteria
@@ -10170,8 +10244,7 @@ public partial class Engine
     */
     public int IsControlled(GameObject oObject)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return GetLocalInt(oObject, "bControlled");
     }
 
     /* @brief Returns the package of a creature.
@@ -10202,8 +10275,7 @@ public partial class Engine
     */
     public int IsPartyAIEnabled(GameObject oCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return GetLocalInt(oCreature, "bTactics");
     }
 
     /* @brief Returns the number of tactics for the creature.
@@ -11023,8 +11095,7 @@ public partial class Engine
     */
     public void SetObjectInteractive(GameObject oObject, int value)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        oObject.gameObject.layer = LayerMask.NameToLayer("Default");
     }
 
     /* @brief Returns whether the creature or placeable can be interacted with.
@@ -11033,8 +11104,7 @@ public partial class Engine
     */
     public int GetObjectInteractive(GameObject oObject)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return (oObject.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast")) ? EngineConstants.TRUE : EngineConstants.FALSE;
     }
 
     /* zDA:O @brief Returns the item's material progression.
@@ -11449,8 +11519,17 @@ public partial class Engine
     */
     public void ScaleEquippedItems(GameObject oCreature, int nTargetLevel)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<GameObject> _inventory = oCreature.GetComponent<xGameObjectUTC>().InventoryList;
+        foreach(var oItem in _inventory)
+        {
+            xGameObjectUTI _Item = oItem.GetComponent<xGameObjectUTI>();
+            int mt = GetLocalInt(oItem, "MaterialType");
+            int m = GetM2DAInt(EngineConstants.TABLE_MATERIAL_TYPES, "Material", mt);
+            int mr = GetM2DAInt(EngineConstants.TABLE_MATERIAL, "Spellpower", m);
+            Console.WriteLine();
+        }
+        //Material type-> Material-> Material Rules-> Spellpower
+        //Warning("ScaleEquippedItems to be implemented!");
     }
 
     /* @brief Returns TRUE if a creature is currently moving
@@ -11949,7 +12028,7 @@ public partial class Engine
             case EngineConstants.TABLE_AREA_DATA: return "area";
             case EngineConstants.TABLE_RESOURCES: return "resource";
             case EngineConstants.TABLE_PROPERTIES: return "property";
-            case EngineConstants.TABLE_ITEMS: return "item";
+            case EngineConstants.TABLE_ITEMS: return "baseitem";
             case EngineConstants.TABLE_EXPERIENCE: return "experience";
             case EngineConstants.TABLE_RULES_CLASSES: return "class";
             case EngineConstants.TABLE_RULES_RACES: return "race";
@@ -11959,6 +12038,8 @@ public partial class Engine
             case EngineConstants.TABLE_DIFFICULTY: return "difficulty";
             case EngineConstants.TABLE_UI_MESSAGES: return "uimessage";
             case EngineConstants.TABLE_COMMANDS: return "command";
+            case EngineConstants.TABLE_MATERIAL: return "materialrule";
+            case EngineConstants.TABLE_MATERIAL_TYPES: return "materialtype";
             default: throw new NotImplementedException();
                 //default: Warning("table not found: " + n2DA); return "";
         }
@@ -11991,6 +12072,8 @@ public partial class Engine
             case EngineConstants.TABLE_AUTOSCALE_DATA: _resource = "AutoscaleData"; break;
             case EngineConstants.TABLE_DIFFICULTY: _resource = "Difficulty"; break;
             case EngineConstants.TABLE_COMMANDS: _resource = "Commands"; break;
+            case EngineConstants.TABLE_MATERIAL: _resource = "MaterialRules"; break;//?
+            case EngineConstants.TABLE_MATERIAL_TYPES: _resource = "MaterialTypes"; break;//?
             default: _resource = ""; break;
         }
 
@@ -12043,6 +12126,15 @@ public partial class Engine
         XDocument xDoc = XDocument.Load(new XmlNodeReader(xmldoc));
         XElement root = xDoc.Root;
         string _nodeOutValue;
+        //Check to see if by any chance the full resource name is being passed
+        //example: Something vs Something.DLG <=> Simple string vs resource string
+
+        string ext = "." + nodeType;
+        if (value.IndexOf(ext) != -1)
+        {
+            value = value.Remove(value.Length - ext.Length);
+        }
+
         if (nodeType != "")
         {
             _nodeOutValue = (string)
@@ -12187,6 +12279,11 @@ public partial class Engine
                     x = oObject.GetComponent<xGameObjectUTC>();
                     break;
                 }
+            case EngineConstants.OBJECT_TYPE_ITEM:
+                {
+                    x = oObject.GetComponent<xGameObjectUTI>();
+                    break;
+                }
             case EngineConstants.OBJECT_TYPE_MODULE:
                 {
                     x = oObject.GetComponent<xGameObjectMOD>();
@@ -12210,7 +12307,7 @@ public partial class Engine
             default: throw new NotImplementedException();
         }
 
-        if (x.GetType().GetProperty(key) == null)
+        if (x == null || x.GetType() == null || x.GetType().GetProperty(key) == null) 
         {
             throw new NotImplementedException();
         }
@@ -12475,7 +12572,6 @@ public partial class Engine
     {
         //Add the Sphere as visual aid
         GameObject oS = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //oS.GetComponent<Renderer>().material.color = Color.grey;//Neutral
         oS.transform.parent = oCreature.transform;
 
         //Get its template XML, Convert name to file ID
@@ -12537,22 +12633,35 @@ public partial class Engine
             }
         }
 
-        /*//Manually update some relevant variables during debugging tests
-        UpdateGameObjectProperty(c, agent.Element("xname").Name.ToString(), agent.Element("xname").Value);
-        UpdateGameObjectProperty(c, agent.Element("Tag").Name.ToString(), agent.Element("Tag").Value);
-        UpdateGameObjectProperty(c, agent.Element("Race").Name.ToString(), agent.Element("Race").Value);
-        UpdateGameObjectProperty(c, agent.Element("Gender").Name.ToString(), agent.Element("Gender").Value);
-        UpdateGameObjectProperty(c, agent.Element("Group").Name.ToString(), agent.Element("Group").Value);
-        UpdateGameObjectProperty(c, agent.Element("Team").Name.ToString(), agent.Element("Team").Value);
-        UpdateGameObjectProperty(c, agent.Element("Selectable").Name.ToString(), agent.Element("Selectable").Value);
-        UpdateGameObjectProperty(c, agent.Element("PlotGiver").Name.ToString(), agent.Element("PlotGiver").Value);
-        UpdateGameObjectProperty(c, agent.Element("Class").Name.ToString(), agent.Element("Class").Value);*/
+        //Inventory
+        IEnumerable<XElement> il = agent.Element("InventoryList").Elements("Agent");
+        foreach (XElement ie in il)
+        {
+            string n = GetResource("ID", ie.Element("ItemURI").Value, "Name");
+            GameObject oItem = CreateObject(EngineConstants.OBJECT_TYPE_ITEM, n, Vector3.zero);
+            //add item properties from UTC
+            UpdateGameObjectProperty(oItem, ie.Element("ItemURI").Name.ToString(), ie.Element("ItemURI").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("StackSize").Name.ToString(), ie.Element("StackSize").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("Stealable").Name.ToString(), ie.Element("Stealable").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("Droppable").Name.ToString(), ie.Element("Droppable").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("Slot").Name.ToString(), ie.Element("Slot").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("Infinite").Name.ToString(), ie.Element("Infinite").Value);
+            UpdateGameObjectProperty(oItem, ie.Element("SetNumber").Name.ToString(), ie.Element("SetNumber").Value);
+            //SetLocalObject(oCreature, "InventoryList", oItem);
+            oCreature.GetComponent<xGameObjectUTC>().InventoryList.Add(oItem);
+            oItem.transform.parent = oCreature.transform;
+        }
 
         switch (oCreature.GetComponent<xGameObjectUTC>().Group)
         {
             case EngineConstants.GROUP_PC:
                 {
                     oS.GetComponent<Renderer>().material.color = Color.blue;
+                    oS.AddComponent<Rigidbody>();
+                    oS.GetComponent<Rigidbody>().mass = 0.01f;
+                    oS.GetComponent<Rigidbody>().drag = 10f;
+                    //oS.GetComponent<Rigidbody>().useGravity = false;
+
                     break;
                 }
             case EngineConstants.GROUP_HOSTILE:
@@ -12581,6 +12690,55 @@ public partial class Engine
         SetEventCreatorRef(ref ev, gameObject);
         SetEventObjectRef(ref ev, 0, oCreature.gameObject);
         SignalEvent(oCreature.gameObject, ev);
+    }
+
+    public void ParseItem(GameObject oItem, string rTemplate)
+    {
+        //Get its template XML, Convert name to file ID
+        string id = GetResource("Name", rTemplate, "ID", "uti");
+        string seed = String.Format("{0:x}", DateTime.Now.ToString("hh:mm:ss tt").GetHashCode() + increment);
+        increment++;
+
+        Unzip(id, seed);
+
+        string f = EngineConstants.SOURCE + id + seed + ".xml";
+
+        //Load the identified XML template for parsing
+        //XmlNode node = doc.SelectSingleNode("//Resource/Agent/ResRefName/text()");
+        XmlDocument xmldoc = new XmlDocument();
+        xmldoc.Load(f);
+        XDocument xDoc = XDocument.Load(new XmlNodeReader(xmldoc));
+        XElement root = xDoc.Root;
+        XElement agent = root.Element("Agent");
+
+        //Get variables list
+        IEnumerable<XElement> vl = agent.Element("VariableList").Elements("Agent");
+        foreach (XElement ve in vl)
+        {
+            //Find property using reflection and set the value accordingly
+            UpdateGameObjectProperty(oItem, ve.Element("xname").Value, ve.Element("Data").Value);
+        }
+
+        //update all the variables That are Not list
+        var e = agent.Elements();
+        foreach (var _x in e)
+        {
+            string _d = _x.Name.ToString();
+            if (_d.IndexOf("List") == -1)//If not list
+            {
+                string _v = _x.Value;
+                if (_v != "")
+                {
+                    UpdateGameObjectProperty(oItem, _d, _v);
+                }
+            }
+        }
+
+        /*//Signal events  Spawn
+            xEvent ev = Event(EngineConstants.EVENT_TYPE_SPAWN);
+            SetEventCreatorRef(ref ev, gameObject);
+            SetEventObjectRef(ref ev, 0, oItem.gameObject);
+            SignalEvent(oItem.gameObject, ev);*/
     }
 
     public void ParseTrigger(GameObject oTrigger, string rTemplate)
@@ -12657,10 +12815,11 @@ public partial class Engine
         foreach (var _x in e)
         {
             string _d = _x.Name.ToString();
-            if (_d.IndexOf("List") == -1)//If not list
+            //If not list, And skip some possible overwrites, Such as -1 values
+            if (_d.IndexOf("List") == -1)
             {
                 string _v = _x.Value;
-                if (_v != "")
+                if (_v != "" && _v != "-1")
                 {
                     UpdateGameObjectProperty(oPlaceable, _d, _v);
                 }
@@ -12689,10 +12848,11 @@ public partial class Engine
         foreach (var _x in e)
         {
             string _d = _x.Name.ToString();
-            if (_d.IndexOf("List") == -1)//If not list
+            //If not list, And skip some possible overwrites, Such as -1 values
+            if (_d.IndexOf("List") == -1)
             {
                 string _v = _x.Value;
-                if (_v != "")
+                if (_v != "" && _v != "-1")
                 {
                     UpdateGameObjectProperty(oCreature, _d, _v);
                 }
@@ -12728,10 +12888,11 @@ public partial class Engine
         foreach (var _x in e)
         {
             string _d = _x.Name.ToString();
-            if (_d.IndexOf("List") == -1)//If not list
+            //If not list, And skip some possible overwrites, Such as -1 values
+            if (_d.IndexOf("List") == -1)
             {
                 string _v = _x.Value;
-                if (_v != "")
+                if (_v != "" && _v != "-1")
                 {
                     UpdateGameObjectProperty(oTrigger, _d, _v);
                 }
@@ -12811,6 +12972,7 @@ public partial class Engine
 
         //Make it green
         oObject.gameObject.GetComponent<Renderer>().material.color = Color.green;
+        oObject.gameObject.GetComponent<Renderer>().material.shader = Shader.Find("Sprites/Default");
         oObject.transform.parent = tParent.transform;
     }
 
@@ -12824,6 +12986,13 @@ public partial class Engine
 
         //Set party leader in module
         SetPartyLeader(oPlayer);
+
+        //Set controlled, as it's the only and first party member
+        SetLocalInt(oPlayer, "bControlled", EngineConstants.TRUE);
+        
+        //Enable tactics, so that if this creature is not selected but active in the party
+        //the AI kicks in
+        SetLocalInt(oPlayer, "bTactics", EngineConstants.TRUE);
 
         GameObject w = GameObject.Find(xGameObjectMOD.instance.tWaypoint);
         oPlayer.gameObject.transform.position = new Vector3(w.transform.position.x + 0.50f, w.transform.position.y + 0.10f, w.transform.position.z - 0.50f);
@@ -13128,6 +13297,10 @@ public partial class Engine
                 {
                     return oObject.GetComponent<xGameObjectUTC>();
                 }
+            case EngineConstants.OBJECT_TYPE_ITEM:
+                {
+                    return oObject.GetComponent<xGameObjectUTI>();
+                }
             case EngineConstants.OBJECT_TYPE_PLACEABLE:
                 {
                     return oObject.GetComponent<xGameObjectUTP>();
@@ -13139,6 +13312,10 @@ public partial class Engine
             case EngineConstants.OBJECT_TYPE_MODULE:
                 {
                     return oObject.GetComponent<xGameObjectMOD>();
+                }
+            case EngineConstants.OBJECT_TYPE_TRIGGER:
+                {
+                    return oObject.GetComponent<xGameObjectUTT>();
                 }
             case EngineConstants.OBJECT_TYPE_WAYPOINT:
                 {
@@ -13302,12 +13479,35 @@ public partial class Engine
             //For now issue an use object command generic, during tests
             if (TargetTooFar(oTarget) == EngineConstants.TRUE)
             {
-                oBase.qCommand.Add(CommandMoveToObject(oTarget));
+                //oBase.qCommand.Add(CommandMoveToObject(oTarget));
+                WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
             }
-            oBase.qCommand.Add(CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
+            //oBase.qCommand.Add(CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
+            WR_AddCommand(gameObject, CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
+        }
+        //Target is a creature, I can try and talk to it if it's not hostile
+        else if (oTarget.GetComponent<xGameObjectBase>().nObjectType == EngineConstants.OBJECT_TYPE_CREATURE)
+        {
+            if (TargetTooFar(oTarget) == EngineConstants.TRUE)
+            {
+                WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
+            }
+            //If not in combat And has conversation
+            if (GetLocalInt(GetModule(), "GAME_MODE") != EngineConstants.GM_COMBAT &&
+                HasConversation(oTarget) != EngineConstants.FALSE)
+            {
+                //For now doing debug only the player can initiate dialogues
+                //SetLocalObject(GetModule(), "CONVERSATION_SPEAKER", oTarget);
+                xGameObjectMOD.instance.CONVERSATION_SPEAKER = oTarget;//hmmm
+                GameObject _player = GetHero();
+                //UT_Talk(oTarget, _player);
+                int nConv = GetLocalInt(oTarget, "ConversationURI");
+                string sConv = GetResource("ID", nConv.ToString(), "Name", "dlg");
+                WR_AddCommand(gameObject, CommandStartConversation(oTarget, sConv));
+            }
         }
 
-        return EngineConstants.FALSE;//always return false in case it fell through
+            return EngineConstants.FALSE;//always return false in case it fell through
     }
 
     public int TargetTooFar(GameObject oTarget)
@@ -13315,6 +13515,11 @@ public partial class Engine
         if (Mathf.Abs(gameObject.transform.position.sqrMagnitude - oTarget.transform.position.sqrMagnitude) < 10)
             return EngineConstants.FALSE;
         return EngineConstants.TRUE;
+    }
+
+    public void MoveToLocation( Vector3 location)
+    {
+        WR_AddCommand(gameObject, CommandMoveToLocation(location));
     }
 
     #endregion

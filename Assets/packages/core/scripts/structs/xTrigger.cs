@@ -1,42 +1,46 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#pragma warning disable 0168
+#pragma warning disable 0219
+#pragma warning disable 0414
 
-public class xTrigger : MonoBehaviour {
+using UnityEngine;
+using System.Collections;
+using System;
+
+public class xTrigger : MonoBehaviour
+{
     Engine engine { get; set; }
 
-     void OnTriggerEnter(Collider other)
-     {
-          //check if already exists by design/accident
-          if (!gameObject.GetComponent<xGameObjectUTT>().oThreats
-               .Contains(gameObject.GetComponent<xGameObjectUTT>().oThreats
-                    .Find(threat => threat.oTarget = other.gameObject)))
-          {
-               //TO DO threat defined by distance between vector positions
-               gameObject.GetComponent<xGameObjectUTT>().oThreats.
-                    Add(new xThreat(other.gameObject,
-                         engine.GetDistanceBetween(gameObject, other.gameObject)));
-          }
-     }
+    void OnTriggerEnter(Collider other)
+    {
+        GameObject _parent = gameObject.transform.parent.gameObject;
+        if (engine == null) engine = _parent.GetComponent<Engine>();
+        GameObject _Other = other.gameObject.transform.parent.gameObject;
+        xGameObjectUTT _Trigger = _parent.GetComponent<xGameObjectUTT>();
 
-     void OnTriggerStay(Collider other)
-     {
-          //TO DO
-     }
+        xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_ENTER);
+        engine.SetEventCreatorRef(ref ev, _Other);
+        engine.SignalEvent(_parent, ev);
+    }
 
-     void OnTriggerExit(Collider other)
-     {
-          gameObject.GetComponent<xGameObjectUTT>().oThreats
-               .Remove(gameObject.GetComponent<xGameObjectUTT>().oThreats
-                    .Find(threat => threat.oTarget = other.gameObject));
-     }
+    void OnTriggerStay(Collider other)
+    {
+        //TO DO
+    }
 
-     // Use this for initialization
-     void Awake() {
+    void OnTriggerExit(Collider other)
+    {
+
+    }
+
+    // Use this for initialization
+    void Awake()
+    {
         engine = gameObject.GetComponent<Engine>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }

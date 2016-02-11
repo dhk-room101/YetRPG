@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class xEffect
 {
-    public GameObject oCreator { get; set; }
+    public GameObject oCreator { get; set; }//Object that created the effect
+    //public int nAbility { get; set; }//Ability that created the effect
     public List<int> nList { get; set; }
     public List<float> fList { get; set; }
     public List<GameObject> oList { get; set; }

@@ -161,6 +161,7 @@ public class xGameObjectMOD : MonoBehaviour
     //Temp debug player reference template
     public string player = "demo000cr_player";
     public GameObject oHero { get; set; }
+    public int bTransitioning { get; set; }
 
     int dCounter;//This is the deleting counter
     int counter;
@@ -253,7 +254,7 @@ public class xGameObjectMOD : MonoBehaviour
             #region COMBAT
             else if (GAME_MODE == EngineConstants.GM_COMBAT)
             {
-                //Time to start the conversation
+                //Time to start the Combat
                 Console.WriteLine();
             }
             #endregion
@@ -263,7 +264,6 @@ public class xGameObjectMOD : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-
             /*GameObject _player = GameObject.Find("demo000cr_player");
             List<xProperty> _p = _player.GetComponent<xGameObjectUTC>().oProperties;
             float _h = _p.Find(x => x.nID == EngineConstants.PROPERTY_DEPLETABLE_HEALTH).fValueTypeBase;
@@ -289,7 +289,11 @@ public class xGameObjectMOD : MonoBehaviour
                     //Make sure the engine component attached to the player kicks in
                     //For now it's the player only, TO DO any selected follower
                     GameObject _player = engine.GetHero();
-                    int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
+                    //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
+                    if (GAME_MODE != EngineConstants.GM_CONVERSATION)
+                    {
+                        int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
+                    }
 
                     /*//Check to see if you need to move closer to the object
                     GameObject oTarget = _target.gameObject;
@@ -328,17 +332,28 @@ public class xGameObjectMOD : MonoBehaviour
                     }
                     #endregion*/
                 }
+                else//Didn't click on an object, get the location and set it as destination to move
+                {
+                    //Make sure the engine component attached to the player kicks in
+                    //For now it's the player only, TO DO any selected follower
+                    GameObject _player = engine.GetHero();
+                    //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
+                    if( GAME_MODE != EngineConstants.GM_CONVERSATION)
+                    {
+                        _player.GetComponent<Engine>().MoveToLocation(new Vector3(rch.point.x, 0, rch.point.z));
+                    }
+                }
             }
         }
     }
 
-    public void DoAction(GameObject oObject, string _action)
+    /*public void DoAction(GameObject oObject, string _action)
     {
         MethodInfo _method = this.GetType().GetMethod(_action);
         _method.Invoke(this, new object[] { oObject });
-    }
+    }*/
 
-    public void DoAreaTransition(GameObject placeableAreaTransition)
+    /*public void DoAreaTransition(GameObject placeableAreaTransition)
     {
         string sArea = placeableAreaTransition.GetComponent<xGameObjectUTP>().PLC_AT_DEST_AREA_TAG;
         string sWP = placeableAreaTransition.GetComponent<xGameObjectUTP>().PLC_AT_DEST_TAG;
@@ -354,7 +369,7 @@ public class xGameObjectMOD : MonoBehaviour
             engine.SetEventCreatorRef(ref ev, _player);
             engine.SignalEvent(placeableAreaTransition, ev);
         }
-    }
+    }*/
 
     void HandleCamera()
     {

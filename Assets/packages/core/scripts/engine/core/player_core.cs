@@ -28,9 +28,12 @@ public class player_core : MonoBehaviour
         {
             //engine.Warning(" increment update " + counter);
             counter = 0;
-            //If current events not null
+            //If current events not null 
             if (oBase.qEvent != null &&
-            oBase.qEvent.Count > 0)
+            oBase.qEvent.Count > 0 &&
+            //Or there is no custom class to take precedence, or if the event got redirected
+            (oBase.bCustom == EngineConstants.FALSE ||
+            oBase.bRedirected == EngineConstants.TRUE))
             {
                 //and event is not type invalid
                 if (oBase.qEvent[0].nType != EngineConstants.EVENT_TYPE_INVALID)
@@ -976,8 +979,16 @@ public class player_core : MonoBehaviour
 
         if (bEventHandled == EngineConstants.FALSE)
         {
-            engine.Warning("event not handled in player core, redirecting to rules core!");
-            engine.HandleEventRef(ref ev, EngineConstants.RESOURCE_SCRIPT_RULES_CORE);
+            //engine.Warning("event not handled in player core, redirecting to rules core!");
+            //engine.HandleEventRef(ref ev, EngineConstants.RESOURCE_SCRIPT_RULES_CORE);
+            gameObject.GetComponent<rules_core>().HandleEvent(ev);
+        }
+
+        //Outside the switch loop, assuming a break
+        //In case the event was actually redirected, giveback control to the custom script
+        if (oBase.bRedirected == EngineConstants.TRUE)
+        {
+            oBase.bRedirected = EngineConstants.FALSE;
         }
     }
 }

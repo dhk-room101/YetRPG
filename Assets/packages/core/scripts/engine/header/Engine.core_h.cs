@@ -1471,7 +1471,9 @@ public partial class Engine
      */
      public int IsPartyMember(GameObject oCreature)
      {
-          return IsFollower(oCreature);
+        if (oCreature.GetComponent<xGameObjectBase>().nObjectType != EngineConstants.OBJECT_TYPE_CREATURE)
+            return EngineConstants.FALSE;
+        else return IsFollower(oCreature);
      }
 
      /* @brief Converts degrees to radians.

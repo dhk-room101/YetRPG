@@ -344,10 +344,10 @@ public class module_core : MonoBehaviour
 
                         //Now set the game mode in conversation mode and let the party begin :-)
                         //string co = engine.GetLocalString(engine.GetModule(), "CONVERSATION");
-                        engine.SetLocalString(engine.GetModule(), "GAME_MODE", nNewGameMode.ToString());
+                        //engine.SetLocalInt(engine.GetModule(), "GAME_MODE", nNewGameMode);
                     }
                     // </rant>
-
+                    engine.SetLocalInt(engine.GetModule(), "GAME_MODE", nNewGameMode);
                     break;
                 }
 

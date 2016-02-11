@@ -289,7 +289,9 @@
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_traps_h.cs" />
     <Compile Include="Assets\packages\core\scripts\engine\sys\Engine.sys_treasure_h.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\gen\gen00pt_random.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\gen\gen00pt_skills.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\gen\plt_gen00pt_random.cs" />
+    <Compile Include="Assets\packages\core\scripts\misc\gen\plt_gen00pt_skills.cs" />
     <Compile Include="Assets\packages\core\scripts\misc\xFloaty.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />
@@ -306,6 +308,7 @@
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectMOD.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectPTY.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTC.cs" />
+    <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTI.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTP.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTT.cs" />
     <Compile Include="Assets\packages\core\scripts\xObjects\xGameObjectUTW.cs" />
@@ -330,6 +333,8 @@
     <None Include="Assets\Resources\GameSettings.xml" />
     <None Include="Assets\Resources\LoadHints.xml" />
     <None Include="Assets\Resources\LoadHintsVLowLevel.xml" />
+    <None Include="Assets\Resources\MaterialRules.xml" />
+    <None Include="Assets\Resources\MaterialTypes.xml" />
     <None Include="Assets\Resources\Packages.xml" />
     <None Include="Assets\Resources\Properties.xml" />
     <None Include="Assets\Resources\Resources.xml" />

@@ -9,6 +9,7 @@ public class xGameObjectUTC : xGameObjectBase
     public List<xProperty> oProperties { get; set; }
     public List<int> oAbilities { get; set; }//Talent, skill, spell
     public List<int> oAbilitiesActive { get; set; }//In use abilities
+    public List<int> oAbilitiesQuick { get; set; }//Quick bar
     public List<xTactic> oTactics { get; set; }
     public List<xEffect> oEffects { get; set; }//Applied effects, doesn't matter positive or negative
     public List<GameObject> oGear { get; set; }//This is the active gear, not the inventory
@@ -220,11 +221,16 @@ public class xGameObjectUTC : xGameObjectBase
     public float GORE { get; set; }
     public int FOLLOWER_STATE { get; set; }
     public int COMBAT_STATE { get; set; }
+    public int ACTIVE_WEAPON_SET { get; set; }
+    public int bControlled { get; set; }//If creature+ follower+ TRUE= TRUE
+    public int bTactics { get; set; }//If TRUE, then AI kicks in on party members
     #endregion
 
     // Use this for initialization
     void Awake()
     {
+        ACTIVE_WEAPON_SET = EngineConstants.INVALID_WEAPON_SET;//0= main,1= alternate
+
         if (oThreats == null) oThreats = new List<xThreat>();
         if (oProperties == null) oProperties = new List<xProperty>();
         if (oAbilities == null) oAbilities = new List<int>();
@@ -238,6 +244,17 @@ public class xGameObjectUTC : xGameObjectBase
         if (SkillList == null) SkillList = new List<int[]>();
         if (TalentList == null) TalentList = new List<int>();
         if (SpellList == null) SpellList = new List<int>();
+
+        if (oAbilitiesQuick == null) oAbilitiesQuick = new List<int>();
+        InitiateAbilitiesQuick();
+    }
+
+    private void InitiateAbilitiesQuick()
+    {
+        for (var i = 0; i < EngineConstants.QUICKBAR_SLOTS_MAX; i++)
+        {
+            oAbilitiesQuick.Add(-1);
+        }
     }
 
     // Update is called once per frame

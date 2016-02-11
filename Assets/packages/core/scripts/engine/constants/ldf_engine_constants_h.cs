@@ -8,6 +8,7 @@ public static partial class EngineConstants
     public const string NA_STRING = "****";
     public const string ACTIVE_WEAPON_SET = "ACTIVE_WEAPON_SET";
     public static string SOURCE = Application.persistentDataPath + "/Source/";//"source.zip";
+    public const int QUICKBAR_SLOTS_MAX = 12;
     public const int EVENT_TYPE_MODULE_AREA_TRANSITION = 42;
     public const int TABLE_ABILITIES = 1;
     public const int TABLE_PROPERTIES = 98;//As found in the show stats script
@@ -470,6 +471,7 @@ public static partial class EngineConstants
     public const int COMMAND_FAILED_INVALID_DATA = -3;
     public const int COMMAND_FAILED_COMMAND_CLEARED = -2;
     public const int COMMAND_FAILED = -1;
+    public const int COMMAND_IN_PROGRESS = 0;//DHK
     public const int COMMAND_SUCCESSFUL = 1;
     public const int COMMAND_LOOPING = 2;
 

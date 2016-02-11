@@ -208,7 +208,7 @@ public partial class Engine
 #if DEBUG
           int nType = _GetAbilityType(nAbilityId);
           int nTable = _GetAbilityTable(nType);
-          return (GetM2DAString(nTable, "LABEL", nAbilityId) + " (" + IntToString(nAbilityId) + ")");
+          return (GetM2DAString(nTable, "label", nAbilityId) + " (" + IntToString(nAbilityId) + ")");
 #endif
 
           return "";

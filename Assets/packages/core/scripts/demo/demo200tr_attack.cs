@@ -83,6 +83,7 @@ public class demo200tr_attack : MonoBehaviour
             ////////////////////////////////////////////////////////////////////////
             case EngineConstants.EVENT_TYPE_SPAWN:
                 {
+                    nEventHandled = EngineConstants.TRUE;
                     break;
                 }
             ////////////////////////////////////////////////////////////////////////
@@ -121,6 +122,7 @@ public class demo200tr_attack : MonoBehaviour
 
                     }
 
+                    nEventHandled = EngineConstants.TRUE;
                     break;
                 }
             ////////////////////////////////////////////////////////////////////////
@@ -130,12 +132,12 @@ public class demo200tr_attack : MonoBehaviour
             case EngineConstants.EVENT_TYPE_EXIT:
                 {
                     GameObject oCreature = engine.GetEventCreatorRef(ref ev);
-
+                    nEventHandled = EngineConstants.TRUE;
                     break;
                 }
 
         }
-
+        
         if (nEventHandled == EngineConstants.FALSE)
         {
             //HandleEventRef(ref ev, EngineConstants.RESOURCE_SCRIPT_TRIGGER_CORE);

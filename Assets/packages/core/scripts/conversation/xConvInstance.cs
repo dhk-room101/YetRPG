@@ -143,7 +143,13 @@ public class xConvInstance : MonoBehaviour
         GameObject npcLine = gameObject.transform.Find("NPCLine").gameObject;
 
         Text ct = (Text)npcLine.GetComponent(typeof(Text));
-        ct.text = node.text;
+        string _owner = node.Speaker;
+        if (node.Speaker == "" || node.Speaker == string.Empty || node.Speaker == null)
+        {
+            GameObject speaker = xGameObjectMOD.instance.CONVERSATION_SPEAKER;
+            _owner = speaker.name;
+        }
+        ct.text = _owner + ": " + node.text;
 
         if (node.Ambient)//If ambient, we skip the conversation mode
         {
@@ -198,6 +204,7 @@ public class xConvInstance : MonoBehaviour
                 //Something tries to directly set a defined flag...
                 else throw new NotImplementedException();
             }
+
             //Get the list of player replies
             List<xConvNode> pReplies = new List<xConvNode>();
             foreach (Transition t in cnv.NPCLineList.ElementAt(lineIndex).TransitionList)
@@ -283,6 +290,42 @@ public class xConvInstance : MonoBehaviour
                         }
                         else //it's end dialogue
                         {
+                            plotID = node.ActionPlotURI;
+                            if (plotID != 0)//If there is an actual condition
+                            {
+                                //Check to see if plot already exists, if not create one
+                                xGameObjectPTY oParty = engine.GetParty().
+                                    GetComponent<xGameObjectPTY>();
+                                plot = oParty.oPlots.Find(x => x.ResRefID == plotID);
+                                if (plot == null) //Not found
+                                {
+                                    //let's parse and create one
+                                    plot = engine.ParsePlot(
+                                        engine.GetResource("ID", plotID.ToString(), "Name"));
+                                    //gameObject.AddComponent(Type.GetType(Script));
+                                    //oParty.gameObject.AddComponent(Type.GetType(plot.ResRefName));
+                                }
+
+                                if (node.ActionPlotFlag <= 255) //Only regular flags can be set directly
+                                {
+                                    engine.PlotEvent(EngineConstants.EVENT_TYPE_SET_PLOT,
+                                        plot.GUID.ToString(),
+                                        node.ActionPlotFlag,
+                                        engine.GetParty(),
+                                        engine.GetLocalObject(engine.GetModule(), "CONVERSATION_SPEAKER"));
+
+                                    ePlot = plot.StatusList.Find(x => x.pNode.Flag == node.ActionPlotFlag);
+                                    if (ePlot != null)
+                                    {
+                                        ePlot.pValue = Convert.ToInt32(node.ActionResult);
+                                        engine.DisplayFloatyMessage(
+                                            engine.GetHero(), ePlot.pNode.xname, 0, 12345, 2);
+                                    }
+                                }
+                                //Something tries to directly set a defined flag...
+                                else throw new NotImplementedException();
+                            }
+
                             end = true;
                             timer = 2.0f;
                             nextLine = pNode;
@@ -359,12 +402,13 @@ public class xConvInstance : MonoBehaviour
             //Something tries to directly set the defined flag...
             else throw new NotImplementedException();
         }
+
         //Get the list of NPC replies
         List<xConvNode> npcReplies = new List<xConvNode>();
         List<int> npcRepliesIndex = new List<int>();
         foreach (Transition t in cnv.PlayerLineList.ElementAt(lineIndex).TransitionList)
         {
-            npcReplies.Add(cnv.PlayerLineList.ElementAt(t.LineIndex));
+            npcReplies.Add(cnv.NPCLineList.ElementAt(t.LineIndex));
             npcRepliesIndex.Add(t.LineIndex);
         }
 
@@ -414,6 +458,12 @@ public class xConvInstance : MonoBehaviour
                     }
                 }
             }
+            else //no condition, just play it
+            {
+                bStart = EngineConstants.TRUE;
+                lIndex = n;//set the found starting branch
+                break;
+            }
         }
 
         if (bStart == EngineConstants.TRUE) //We actually found the Next NPC conversation node
@@ -430,7 +480,7 @@ public class xConvInstance : MonoBehaviour
             }
             else if (end)
             {
-
+                
             }
             else throw new NotImplementedException();
         }
