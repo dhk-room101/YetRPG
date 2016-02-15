@@ -38,3 +38,5 @@ changes history:
 01/31/16: dialogue parser completed, basic game states changes, and other small tweaks
 
 02/04/16: complete dialogue implementation
+
+02/14/16: basic combat implemented
