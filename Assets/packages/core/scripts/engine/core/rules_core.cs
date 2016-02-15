@@ -123,7 +123,7 @@ public class rules_core : MonoBehaviour
             // --------------------------------------------------------------------
             case EngineConstants.EVENT_TYPE_APPLY_EFFECT:
                 {
-                    engine.Effects_HandleApplyEffect();
+                    engine.Effects_HandleApplyEffect(ev);//DHK
 
                     break;
                 }

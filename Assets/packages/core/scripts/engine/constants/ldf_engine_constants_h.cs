@@ -127,7 +127,7 @@ public static partial class EngineConstants
 
     // Event Types
     // Object Scripting Events
-    public const int EVENT_TYPE_INVALID = 123456;
+    public const int EVENT_TYPE_INVALID = 0;
     public const int EVENT_TYPE_SPELLCASTAT = 1;
     public const int EVENT_TYPE_DAMAGED = 2;
     public const int EVENT_TYPE_SPAWN = 3;
@@ -2099,7 +2099,7 @@ public static partial class EngineConstants
     public const string APPEARANCE_DATA_CREATURE_TYPE = "creature_type";
     public const string APPEARANCE_DATA_ONESHOT_KILL = "OneShotKills";
     public const string APPEARANCE_DATA_CAN_DO_DEATHBLOWS = "CanDoDeathblows";
-    public const string SS_DATA_RESTRICT = "brestrict";
+    public const string SS_DATA_RESTRICT = "bRestricted";
     public const string SUMMON_DATA_TEMPLATE = "template";
     public const string SUMMON_DATA_ABILITY_0 = "ability0";
     public const string SUMMON_DATA_ABILITY_1 = "ability1";

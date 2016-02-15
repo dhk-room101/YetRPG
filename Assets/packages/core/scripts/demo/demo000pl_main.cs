@@ -4,6 +4,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class demo000pl_main : xPlotConditional
 {
@@ -95,7 +96,43 @@ public class demo000pl_main : xPlotConditional
                         //the other bar patrons) to turn hostile. Since they're in the presence
                         //of the player already, they'll immediately percieve him and initiate
                         //combat.
+
                         engine.UT_TeamGoesHostile(EngineConstants.BANDIT_TEAM);
+
+                        //DHK
+                        //Give the player 100 health points
+                        engine.SetCreatureProperty(engine.GetHero(), EngineConstants.PROPERTY_DEPLETABLE_HEALTH, 100, EngineConstants.PROPERTY_VALUE_BASE);
+                        engine.SetCurrentHealth(engine.GetHero(), 100);
+
+                        //Turn hostile team red
+                        List<GameObject> arTeam = engine.UT_GetTeam(EngineConstants.BANDIT_TEAM);
+                        for (int nIndex = 0; nIndex < engine.GetArraySize(arTeam); nIndex++)
+                        {
+                            GameObject _member = arTeam[nIndex];
+                            GameObject _sphere = _member.transform.Find("Sphere").gameObject;
+                            _sphere.GetComponent<Renderer>().material.color = Color.red;
+                        }
+                        //During debug manually add the player to the bandits threat target
+                        for (int nIndex = 0; nIndex < engine.GetArraySize(arTeam); nIndex++)
+                        {
+                            GameObject _member = arTeam[nIndex];
+                            engine.SetEnemy(_member, engine.GetHero());
+                        }
+                        //During debug manually add the player to the bandits threat target
+                        for (int nIndex = 0; nIndex < engine.GetArraySize(arTeam); nIndex++)
+                        {
+                            GameObject _member = arTeam[nIndex];
+                            xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_PERCEPTION_APPEAR);
+                            engine.SetEventObjectRef(ref ev, 0, engine.GetHero());
+                            engine.SetEventIntegerRef(ref ev, 0, EngineConstants.TRUE);//Hostile True
+                            engine.SetEventIntegerRef(ref ev, 1, EngineConstants.FALSE);//Stealth false
+                            engine.SetEventIntegerRef(ref ev, 2, EngineConstants.TRUE);//Hostility changed True
+                            engine.SignalEvent(_member, ev);
+                        }
+                        
+                        engine.WR_SetGameMode(EngineConstants.GM_COMBAT);
+                        //end DHK
+
                         break;
                     }
 

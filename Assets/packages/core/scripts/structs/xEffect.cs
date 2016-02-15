@@ -13,6 +13,8 @@ public class xEffect
     public List<string> rList { get; set; }
     public List<Vector3> lList { get; set; }
     public int nType { get; set; }
+    public int nAbilityID { get; set; }
+    public int nDurationType { get; set; }
     
     public xEffect(int nType)
     {

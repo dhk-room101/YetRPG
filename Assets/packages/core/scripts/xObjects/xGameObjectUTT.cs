@@ -64,12 +64,8 @@ public class xGameObjectUTT : xGameObjectBase {
     //public Dictionary<string, string> VariableList { get; set; }
     #endregion
 
-    //Is this needed here? Or on character UTC? Both?
-    public List<xThreat> oThreats { get; set; }
-
     // Use this for initialization
     void Awake() {
-        if (oThreats == null) oThreats = new List<xThreat>();
         if (GeometryList == null) GeometryList = new List<Vector3>();
     }
 	

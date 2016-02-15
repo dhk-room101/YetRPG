@@ -64,7 +64,9 @@ public class xGameObjectBase : MonoBehaviour
     public List<xCommand> qCommand { get; set; }//Command Queue
     public xCommand currentCommand { get; set; }//The current command. If present, it's outside the command cue
     public xCommand lastCommand { get; set; }//The last command used for AI decisions
-
+    public int cBreak { get; set; }//If 1, stop any running command 
+    public int cProgress { get; set; }//If 1, Command in progress
+    public List<xEffect> cResult { get; set; }//Command attack result effect
     int counter { get; set; }
 
     // Use this for initialization
@@ -75,6 +77,7 @@ public class xGameObjectBase : MonoBehaviour
         if (qEvent == null) qEvent = new List<xEvent>();
         if (qCommand == null) qCommand = new List<xCommand>();
         currentCommand = lastCommand = engine.Command(EngineConstants.COMMAND_TYPE_INVALID);
+        if (cResult == null) cResult = new List<xEffect>();
     }
 
     // Update is called once per frame
@@ -85,28 +88,26 @@ public class xGameObjectBase : MonoBehaviour
         {
             //engine.Warning(" increment update " + counter);
             counter = 0;
-            //Let's take a look at commands, specifically to the current one
-            //If current command is invalid, it means that there is no command to process
-            if (currentCommand.nType == EngineConstants.COMMAND_TYPE_INVALID)
+            //If I have something in cue, But no command in progress
+            if (qCommand.Count > 0 && cProgress == EngineConstants.FALSE)
             {
-                //Let's take a look at the command queue, maybe there's something there
-                if (qCommand.Count > 0)
-                {
-                    //There is something, so snatch the first element, make It current, And removed from list
-                    currentCommand = qCommand[0];
-                    qCommand.RemoveAt(0);
-                    HandleCommand(currentCommand);
-                }
-                else
-                {
-                    //Nothing in queue, so nothing to do :-)
-                }
+                cProgress = EngineConstants.TRUE;
+                currentCommand = qCommand[0];
+                qCommand.RemoveAt(0);
+                HandleCommand(currentCommand);
+            }
+            //If current command has a result different than result invalid
+            if (currentCommand.nResult != EngineConstants.COMMAND_RESULT_INVALID)
+            {
+                HandleCommandResult();
             }
         }
     }
 
     void HandleCommand(xCommand cCommand)
     {
+        currentCommand.nResult = EngineConstants.COMMAND_IN_PROGRESS;
+        cBreak = EngineConstants.FALSE;//reset the command break back to zero
         switch (cCommand.nType)
         {
             case EngineConstants.COMMAND_TYPE_WAIT:
@@ -164,20 +165,43 @@ public class xGameObjectBase : MonoBehaviour
 
                     break;
                 }
+            case EngineConstants.COMMAND_TYPE_ATTACK:
+                {
+                    StartCoroutine(
+                        HandleCommandAttack(cCommand, () =>
+                        {
+                            PendingCommandRef(ref cCommand);
+                        })
+                        );
+
+                    break;
+                }
             default: throw new NotImplementedException();
         }
     }
 
+    void HandleCommandResult()
+    {
+        xEvent ev = new xEvent(EngineConstants.EVENT_TYPE_COMMAND_COMPLETE);
+        engine.SetEventIntegerRef(ref ev, 0, currentCommand.nType);//Command type
+        engine.SetEventIntegerRef(ref ev, 1, lastCommand.nResult);//Command result
+        engine.SetEventObjectRef(ref ev, 0, gameObject);//Target
+        engine.SignalEvent(gameObject, ev);
+
+        cProgress = EngineConstants.FALSE;//Finished with a current command
+        lastCommand = currentCommand;
+        if (qCommand.Count == 0) currentCommand = engine.Command(EngineConstants.COMMAND_TYPE_INVALID);//Reset
+    }
+
+    //Function called internally by coroutines, Assume always success?
     void UpdateCommandRef(ref xCommand cCommand)
     {
-        lastCommand = cCommand;
-        currentCommand = engine.Command(EngineConstants.COMMAND_TYPE_INVALID);
+        cCommand.nResult = EngineConstants.COMMAND_RESULT_SUCCESS;
+    }
 
-        xEvent ev = new xEvent(EngineConstants.EVENT_TYPE_COMMAND_COMPLETE);
-        engine.SetEventIntegerRef(ref ev, 0, cCommand.nType);
-        engine.SetEventIntegerRef(ref ev, 1, EngineConstants.COMMAND_RESULT_SUCCESS);
-        engine.SetEventObjectRef(ref ev, 0, gameObject);
-        engine.SignalEvent(gameObject, ev);
+    void PendingCommandRef(ref xCommand cCommand)
+    {
+        //Wait
     }
 
     IEnumerator HandleCommandWait(xCommand cCommand, Action onComplete)
@@ -198,12 +222,15 @@ public class xGameObjectBase : MonoBehaviour
             GameObject ot = GameObject.Find(oTarget.name);
 
             float distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
-            while (distance > 0)
+            while (distance > 0 && cBreak == EngineConstants.FALSE)
             //while (bTargetReached == EngineConstants.FALSE)
             {
                 vObject = Vector3.MoveTowards(vObject, vTarget, Time.deltaTime * 3);
                 gameObject.transform.position = vObject;
-                Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+
+                if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
+                    Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+
                 distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
 
                 yield return null;
@@ -217,13 +244,16 @@ public class xGameObjectBase : MonoBehaviour
     {
         Vector3 vTarget = engine.GetCommandLocationRef(ref cCommand);
         Vector3 vObject = gameObject.transform.position;
-        
+
         float distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
-        while (distance > 0)
+        while (distance > 0 && cBreak == EngineConstants.FALSE)
         {
             vObject = Vector3.MoveTowards(vObject, vTarget, Time.deltaTime * 3);
             gameObject.transform.position = vObject;
-            Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+
+            if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
+                Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+
             distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
 
             yield return null;
@@ -271,9 +301,25 @@ public class xGameObjectBase : MonoBehaviour
         xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_CONVERSATION);
         engine.SetEventCreatorRef(ref ev, engine.GetHero());
         engine.SetEventResourceRef(ref ev, 0, engine.GetCommandStringRef(ref cCommand));
-        engine.SignalEvent(oTarget, ev);
+        engine.SignalEvent(gameObject, ev);
 
         yield return null;
         onComplete();
+    }
+
+    IEnumerator HandleCommandAttack(xCommand cCommand, Action onComplete)
+    {
+        GameObject oTarget = engine.GetCommandObjectRef(ref cCommand);
+
+        xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_COMMAND_PENDING);
+        engine.SetEventCreatorRef(ref ev, gameObject);
+        engine.SetEventObjectRef(ref ev, 0, gameObject);
+        engine.SetEventObjectRef(ref ev, 1, oTarget);
+        engine.SetEventIntegerRef(ref ev, 0, EngineConstants.COMMAND_TYPE_ATTACK);
+        engine.SetEventIntegerRef(ref ev, 1, EngineConstants.COMMAND_TYPE_ATTACK);
+        engine.SignalEvent(gameObject, ev);
+
+        yield return null;
+        //onComplete();//Not needed here, we would update the command attack results in set command results function
     }
 }

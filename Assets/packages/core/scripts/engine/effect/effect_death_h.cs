@@ -207,7 +207,6 @@ public partial class Engine
      */
      public void KillCreature(GameObject oVictim, GameObject oKiller = null, int nAbilityId = 0, int bProcessInline = EngineConstants.FALSE, int nDamage = 0)
      {
-
           Log_Trace(EngineConstants.LOG_CHANNEL_COMBAT_DEATH, "effect_death_h.KillCreature", "victim:" + ToString(oVictim) + ", killer: " + ToString(oKiller));
 
           if (IsObjectValid(oVictim) != EngineConstants.FALSE && GetObjectType(oVictim) == EngineConstants.OBJECT_TYPE_CREATURE)

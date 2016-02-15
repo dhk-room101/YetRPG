@@ -10,10 +10,15 @@ public class xGameObjectUTC : xGameObjectBase
     public List<int> oAbilities { get; set; }//Talent, skill, spell
     public List<int> oAbilitiesActive { get; set; }//In use abilities
     public List<int> oAbilitiesQuick { get; set; }//Quick bar
+    public List<AbilityCooldown> oAbilitiesCooldown { get; set; }
+    public List<GameObject> oPerception { get; set; }
     public List<xTactic> oTactics { get; set; }
     public List<xEffect> oEffects { get; set; }//Applied effects, doesn't matter positive or negative
     public List<GameObject> oGear { get; set; }//This is the active gear, not the inventory
     public GameObject[] oWeaponSet = { null, null };//This is the weapon set, maximum 2
+
+    public int bStatue { get; set; }
+    public int bGhost { get; set; }
 
     #region variables initialized from UTC
     public string ResRefName { get; set; }
@@ -218,26 +223,31 @@ public class xGameObjectUTC : xGameObjectBase
     public float TS_OVERRIDE_REACTIVE { get; set; }
 
     //DHK
+    public int EFFECT_FLAG_DISABLE { get; set; }
     public float GORE { get; set; }
     public int FOLLOWER_STATE { get; set; }
     public int COMBAT_STATE { get; set; }
     public int ACTIVE_WEAPON_SET { get; set; }
     public int bControlled { get; set; }//If creature+ follower+ TRUE= TRUE
     public int bTactics { get; set; }//If TRUE, then AI kicks in on party members
+    public int bStealthed { get; set; }
     #endregion
 
     // Use this for initialization
     void Awake()
     {
-        ACTIVE_WEAPON_SET = EngineConstants.INVALID_WEAPON_SET;//0= main,1= alternate
+        ACTIVE_WEAPON_SET = 0;//0= main,1= alternate
 
         if (oThreats == null) oThreats = new List<xThreat>();
         if (oProperties == null) oProperties = new List<xProperty>();
         if (oAbilities == null) oAbilities = new List<int>();
         if (oAbilitiesActive == null) oAbilitiesActive = new List<int>();
+        if (oAbilitiesCooldown == null) oAbilitiesCooldown = new List<AbilityCooldown>();
+        if (oPerception == null) oPerception = new List<GameObject>();
         if (oTactics == null) oTactics = new List<xTactic>();
         if (oEffects == null) oEffects = new List<xEffect>();
         if (oGear == null) oGear = new List<GameObject>();
+        InitiateGear();
 
         if (VariableList == null) VariableList = new Dictionary<string, string>();
         if (InventoryList == null) InventoryList = new List<GameObject>();
@@ -247,6 +257,19 @@ public class xGameObjectUTC : xGameObjectBase
 
         if (oAbilitiesQuick == null) oAbilitiesQuick = new List<int>();
         InitiateAbilitiesQuick();
+    }
+
+    private void InitiateGear()
+    {
+        for (var i = 0; i < 15; i++)
+        {
+            GameObject _Object = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/objectPrefab"));
+            _Object.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_INVALID;
+            _Object.name = "GearPlaceholder";
+            _Object.transform.parent = gameObject.transform;
+            _Object.SetActive(false);
+            oGear.Add(_Object);
+        }
     }
 
     private void InitiateAbilitiesQuick()
@@ -260,6 +283,27 @@ public class xGameObjectUTC : xGameObjectBase
     // Update is called once per frame
     void Update()
     {
-
+        //If cooldown is done, remove from list
+        foreach (AbilityCooldown _ability in oAbilitiesCooldown)
+        {
+            if (_ability.timeStamp <= Time.time)
+            {
+                oAbilitiesCooldown.Remove(_ability);
+            }
+        }
     }
+}
+
+public class AbilityCooldown
+{
+    public int nAbility { get; set; }
+    public int nCooldown { get; set; }
+    public float timeStamp { get; set; }
+    public AbilityCooldown(int nAbility, int nCooldown)
+    {
+        this.nAbility = nAbility;
+        this.nCooldown = nCooldown;
+        timeStamp = Time.time + nCooldown;//Frames or seconds?
+    }
+
 }

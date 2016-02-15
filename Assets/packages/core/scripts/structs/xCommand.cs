@@ -13,6 +13,7 @@ public class xCommand
     public List<Vector3> lList { get; set; }
     public int nType { get; set; }
     public int bStatic { get; set; }
+    public int nResult { get; set; }//By default 0 = command in progress
 
     public xCommand(int nType)
     {

@@ -169,9 +169,9 @@ public partial class Engine
      // </Debug>
 
      // -----------------------------------------------------------------------------
-     // This handles rules_core.EngineConstants.EVENT_TYPE_APPLY_EFFECT.
+     // This handles rules_core.EVENT_TYPE_APPLY_EFFECT.
      // -----------------------------------------------------------------------------
-     public int Effects_HandleApplyEffect()
+     public int Effects_HandleApplyEffect(xEvent ev)
      {
           xEffect eEffect = GetCurrentEffect();
           int nEffectType = GetEffectTypeRef(ref eEffect);
@@ -639,7 +639,7 @@ public partial class Engine
 
           }
 
-          SetIsCurrentEffectValid(nReturnValue);
+          SetIsCurrentEffectValid(ev, nReturnValue);
           return nReturnValue;
      }
 

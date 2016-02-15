@@ -148,7 +148,7 @@ public class placeable_core : MonoBehaviour
                // Sent by engine when an xEffect is to be applied to the placeable.
                //---------------------------------------------------------------------
                case EngineConstants.EVENT_TYPE_APPLY_EFFECT:
-                    engine.Effects_HandleApplyEffect();
+                    engine.Effects_HandleApplyEffect(ev);//DHK
                     break;
 
                //---------------------------------------------------------------------

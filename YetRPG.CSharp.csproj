@@ -296,6 +296,7 @@
     <Compile Include="Assets\packages\core\scripts\structs\xCommand.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEffect.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xEvent.cs" />
+    <Compile Include="Assets\packages\core\scripts\structs\xPerception.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xPlot.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xPlotConditional.cs" />
     <Compile Include="Assets\packages\core\scripts\structs\xProperty.cs" />
@@ -317,6 +318,9 @@
     <Compile Include="Assets\packages\core\scripts\zdebug\xAddTalent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Resources\AIAbilitiesCond.xml" />
+    <None Include="Assets\Resources\AIP_Default.xml" />
+    <None Include="Assets\Resources\AITacticsTargetType.xml" />
     <None Include="Assets\Resources\AbilitiesBase.xml" />
     <None Include="Assets\Resources\AppearanceBase.xml" />
     <None Include="Assets\Resources\AreaData.xml" />
@@ -326,11 +330,15 @@
     <None Include="Assets\Resources\BaseItem.xml" />
     <None Include="Assets\Resources\BaseRace.xml" />
     <None Include="Assets\Resources\Commands.xml" />
+    <None Include="Assets\Resources\DamageTypes.xml" />
     <None Include="Assets\Resources\Difficulty.xml" />
     <None Include="Assets\Resources\DragonAge.txt" />
+    <None Include="Assets\Resources\EffectImmunities.xml" />
+    <None Include="Assets\Resources\Effects.xml" />
     <None Include="Assets\Resources\EngineEvents.xml" />
     <None Include="Assets\Resources\Experience.xml" />
     <None Include="Assets\Resources\GameSettings.xml" />
+    <None Include="Assets\Resources\ItemStats.xml" />
     <None Include="Assets\Resources\LoadHints.xml" />
     <None Include="Assets\Resources\LoadHintsVLowLevel.xml" />
     <None Include="Assets\Resources\MaterialRules.xml" />
@@ -338,6 +346,9 @@
     <None Include="Assets\Resources\Packages.xml" />
     <None Include="Assets\Resources\Properties.xml" />
     <None Include="Assets\Resources\Resources.xml" />
+    <None Include="Assets\Resources\SoundSetTypes.xml" />
+    <None Include="Assets\Resources\TacticsBaseConditions.xml" />
+    <None Include="Assets\Resources\TacticsConditions.xml" />
     <None Include="Assets\Resources\TalkTable.xml" />
     <None Include="Assets\Resources\UIMessages.xml" />
   </ItemGroup>

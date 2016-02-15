@@ -1012,7 +1012,7 @@ public partial class Engine
           // Retrieve condition details
           int nTacticCondition_ValidTarget = GetHashedM2DAInt(EngineConstants.TABLE_TACTICS_BASE_CONDITIONS, EngineConstants.HASH_VALIDFORTARGET, nTacticCondition_Base);
           int nTacticCondition_Parameter = GetHashedM2DAInt(EngineConstants.TABLE_TACTICS_CONDITIONS, EngineConstants.HASH_CONDITIONPARAMETER, nTacticCondition);
-          int nTacticCondition_Parameter2 = GetHashedM2DAInt(EngineConstants.TABLE_TACTICS_CONDITIONS, Convert.ToInt32(EngineConstants.HASH_CONDITIONPARAMETER2), nTacticCondition);
+          int nTacticCondition_Parameter2 = GetHashedM2DAInt(EngineConstants.TABLE_TACTICS_CONDITIONS, unchecked((int)EngineConstants.HASH_CONDITIONPARAMETER2), nTacticCondition);
 
           Log_Trace_AI("_AI_ExecuteTactic", "[Condition Valid for Target: " + IntToString(nTacticCondition_ValidTarget) + "] " +
                                             "[Condition Base: " + IntToString(nTacticCondition_Base) + "] " +
@@ -2820,7 +2820,7 @@ public partial class Engine
                case EngineConstants.AI_COMMAND_ACTIVATE_MODE: sRet = "***** ACTIVATE MODE *****"; break;
                case EngineConstants.AI_COMMAND_ATTACK: sRet = "***** ATTACK *****"; break;
                case EngineConstants.AI_COMMAND_DEACTIVATE_MODE: sRet = "***** DEACTIVATE MODE *****"; break;
-               case EngineConstants.AI_COMMAND_USE_ABILITY: sRet = "USE EngineConstants.ABILITY"; break;
+               case EngineConstants.AI_COMMAND_USE_ABILITY: sRet = "USE ABILITY"; break;
                case EngineConstants.AI_COMMAND_USE_ITEM: sRet = "***** USE ITEM *****"; break;
                case EngineConstants.AI_COMMAND_USE_PLACEABLE: sRet = "***** USE PLACEABLE *****"; break;
                case EngineConstants.AI_COMMAND_WAIT: sRet = "***** WAIT *****"; break;

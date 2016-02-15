@@ -1,6 +1,14 @@
-﻿//Warning("debug mode: 3-D coordinates in complete!");
+﻿//public void SetAttackDuration(GameObject oObject, float fDuration_s)//not so sure
+//oPerception.transform.localScale = new Vector3(_perception*2, 0.01f, _perception*2);
+//Warning("command play animation to be implemented");
+//Warning("play additive animation to be implemented");
+//Warning("Signal Damage to be implemented");
+//Warning("apply effective visual effect to be implemented");
+//Warning("GetAbilitiesDueToAOEs to be implemented");
+//Warning("debug mode: 3-D coordinates in complete!");
 //Warning("ambience conversations to be implemented!");
 //Warning("ScaleEquippedItems to be implemented!");
+//Warning("play sound set not implemented!");
 
 #region Design Choices
 /*
@@ -489,8 +497,8 @@ public partial class Engine
         try
         {
             cell = (from el in root.Elements(GetNodeName(n2DA))
-                     where (int)el.Element("ID") == nRow
-                     select el).First().Element(sColumn).Value;
+                    where (int)el.Element("ID") == nRow
+                    select el).First().Element(sColumn).Value;
         }
         catch
         {
@@ -543,8 +551,8 @@ public partial class Engine
         try
         {
             sCell = (from el in root.Elements(GetNodeName(n2DA))
-                            where (int)el.Element("ID") == nRow
-                            select el).First().Element(sColumn).Value;
+                     where (int)el.Element("ID") == nRow
+                     select el).First().Element(sColumn).Value;
         }
         catch
         {
@@ -595,9 +603,19 @@ public partial class Engine
         XmlDocument x2da = GetXML(n2DA);
         XDocument xDoc = XDocument.Load(new XmlNodeReader(x2da));
         XElement root = xDoc.Root;
-        string sCell = (from el in root.Elements(GetNodeName(n2DA))
-                        where (int)el.Element("ID") == nRow
-                        select el).First().Element(sColumn).Value;
+
+        string sCell = string.Empty;
+        try
+        {
+            sCell = (from el in root.Elements(GetNodeName(n2DA))
+                     where (int)el.Element("ID") == nRow
+                     select el).First().Element(sColumn).Value;
+        }
+        catch
+        {
+            Console.WriteLine();
+        }
+
         float cell;
         //Ignore if 4* or Empty
         if (sCell == "****" || sCell == null || sCell == string.Empty)
@@ -666,7 +684,50 @@ public partial class Engine
     */
     public int GetHashedM2DAInt(int n2DA, int nColumnHash, int nRow)
     {
-        throw new NotImplementedException();
+        switch (nColumnHash)
+        {
+            case 0x12A02374: // "Type"
+                {
+                    return GetM2DAInt(n2DA, "Type", nRow);
+                }
+            case 0x36032F31: // "UseChance"
+                {
+                    return GetM2DAInt(n2DA, "UseChance", nRow);
+                }
+            case 0x20804179: // "SubCommand"
+                {
+                    return GetM2DAInt(n2DA, "SubCommand", nRow);
+                }
+            case 0x0DF6E88A: // "Command"
+                {
+                    return GetM2DAInt(n2DA, "Command", nRow);
+                }
+            case 0x03C7F222: // "Condition"
+                {
+                    return GetM2DAInt(n2DA, "Condition", nRow);
+                }
+            case 0x0F642429: // "TargetType"
+                {
+                    return GetM2DAInt(n2DA, "TargetType", nRow);
+                }
+            case 0x56BB2EC7: // "ConditionBase"
+                {
+                    return GetM2DAInt(n2DA, "ConditionBase", nRow);
+                }
+            case 0x77485DB5: // "ValidForTarget"
+                {
+                    return GetM2DAInt(n2DA, "ValidForTarget", nRow);
+                }
+            case 0x706DADFC: // "ConditionParameter"
+                {
+                    return GetM2DAInt(n2DA, "ConditionParameter", nRow);
+                }
+            case unchecked((int)0xBCC74707): // "ConditionParameter2"
+                {
+                    return GetM2DAInt(n2DA, "ConditionParameter", nRow);
+                }
+            default: throw new NotImplementedException();
+        }
     }
 
     /* @brief Returns a bool 2DA value (by hashed column and row) in integer format.
@@ -1142,6 +1203,7 @@ public partial class Engine
     public float GetDistanceBetween(GameObject oObjectA, GameObject oObjectB, int bSubtractPersonalSpace = EngineConstants.FALSE)
     {
         Debug.Log("get distance between: TO DO subtract personal space");//zDA2
+        if (oObjectA == null || oObjectB == null) return -1.0f;
         return Vector3.Distance(oObjectA.transform.position, oObjectB.transform.position);
     }
 
@@ -1173,16 +1235,8 @@ public partial class Engine
     */
     public int IsInTrigger(GameObject oObject, GameObject oTrigger)
     {
-        Debug.Log("is in trigger: double check");
-        int rRet = EngineConstants.FALSE;
-
-        xTrigger _xTrigger = oTrigger.GetComponent<xTrigger>();//get trigger script
-        if (_xTrigger != null)//if found
-        {
-            return rRet = ((_xTrigger.gameObject.GetComponent<xGameObjectUTT>().oThreats
-                 .Find(threat => threat.oTarget = oObject)) != null) ? EngineConstants.TRUE : EngineConstants.FALSE;
-        }
-        return rRet;
+        Debug.Log("update me");
+        throw new NotImplementedException();
     }
 
     /* @brief Determines if a Vector3 is empty.
@@ -1422,8 +1476,8 @@ public partial class Engine
 
     /* @brief Converts a floating point number to a string.
     *
-    * Returns the float fFloat in string format. The string Will include nWidth number of digits before the decimal
-    * place and nDecimals number of digits after the decimal place.
+    * Returns the float fFloat in string format. The string Will include nWidth number of digits 
+    * before the decimal place and nDecimals number of digits after the decimal place.
     *
     * @param fFloat - The float value to convert.
     * @param nWidth - The size of the value before the decimal, must be a value between 0 and 18 inclusive.
@@ -2348,7 +2402,9 @@ public partial class Engine
     */
     public string GetStringByStringId(int nId)
     {
-        //Warning("get Talk string by Talk ID " + nId);
+#if DEBUG
+        Log_Trace(EngineConstants.LOG_CHANNEL_SYSTEMS, "get Talk string by Talk ID " + nId);
+#endif
         return GetTlkTableString(nId);
     }
 
@@ -2571,6 +2627,11 @@ public partial class Engine
     public void SetEventIntegerRef(ref xEvent evEvent, int nIndex, int nValue)
     {
         //Debug.LogWarning("set event integer");
+        if (evEvent.nList.Count < nIndex)
+        {
+            while (evEvent.nList.Count < nIndex)
+                evEvent.nList.Add(default(int)); //fill with empty
+        }
         evEvent.nList.Insert(nIndex, nValue);
     }
 
@@ -2586,7 +2647,7 @@ public partial class Engine
     */
     public float GetEventFloatRef(ref xEvent evEvent, int nIndex)
     {
-        Debug.LogWarning("get event float");
+        //Debug.LogWarning("get event float");
         return (evEvent.fList.Count > nIndex) ? evEvent.fList.ElementAt(nIndex) : -1.0f;
     }
 
@@ -2604,7 +2665,12 @@ public partial class Engine
     */
     public void SetEventFloatRef(ref xEvent evEvent, int nIndex, float fValue)
     {
-        Debug.LogWarning("set event float");
+        //Debug.LogWarning("set event float");
+        if (evEvent.fList.Count < nIndex)
+        {
+            while (evEvent.fList.Count < nIndex)
+                evEvent.fList.Add(default(float)); //fill with empty
+        }
         evEvent.fList.Insert(nIndex, fValue);
     }
 
@@ -2908,7 +2974,8 @@ public partial class Engine
     public int GetObjectType(GameObject oObject)
     {
         //Debug.LogWarning("get object type");
-        return oObject.GetComponent<xGameObjectBase>().nObjectType;
+        int _Type = oObject.GetComponent<xGameObjectBase>().nObjectType;
+        return _Type;
     }
 
     /* @brief Returns the resref of the specified object
@@ -3368,7 +3435,8 @@ public partial class Engine
     public void SetAttackDuration(GameObject oObject, float fDuration_s)
     {
         //please see struct CombatAttackResultStruct in combat_h, this is for melee weapons
-        Debug.LogWarning("set attack duration: TO DO");
+        xCommand cWait = CommandWait(fDuration_s);
+        WR_AddCommand(oObject, cWait);
     }
 
     /* @brief return an array of objects enclosed by the specified shape
@@ -3455,7 +3523,7 @@ public partial class Engine
     */
     public void PlayAdditiveAnimation(GameObject nObjectId, int nAnimation, int bForceRestart = EngineConstants.FALSE)
     {
-        throw new NotImplementedException();
+        //Warning("play additive animation to be implemented");
     }
 
     /* @brief stops an additive animation playing on top of the current base animation
@@ -3547,7 +3615,7 @@ public partial class Engine
     {
         Debug.Log("update threat table");
         xThreat _threat = oCreature.GetComponent<xGameObjectUTC>().oThreats
-                  .Find(threat => threat.oTarget = oEnemy);
+                  .Find(threat => threat.oThreat == oEnemy);
         if (_threat != null)
         {
             _threat.fThreat = fThreatChange;
@@ -3565,7 +3633,7 @@ public partial class Engine
         Debug.Log("clear enemy threat");
         oCreature.GetComponent<xGameObjectUTC>().oThreats
              .Remove(oCreature.GetComponent<xGameObjectUTC>().oThreats
-                  .Find(threat => threat.oTarget = oEnemy));
+                  .Find(threat => threat.oThreat == oEnemy));
     }
 
     /* @brief Clear all threat entries
@@ -3609,7 +3677,7 @@ public partial class Engine
     public GameObject GetThreatEnemy(GameObject oCreature, int i)
     {
         Debug.Log("get threat enemy, by index");
-        return oCreature.GetComponent<xGameObjectUTC>().oThreats.ElementAt(i).oTarget;
+        return oCreature.GetComponent<xGameObjectUTC>().oThreats.ElementAt(i).oThreat;
     }
 
     /* @brief Get the threat value on a specific index of the table
@@ -3636,7 +3704,7 @@ public partial class Engine
     {
         Debug.Log("get threat the value by object ID");
         xThreat _threat = oCreature.GetComponent<xGameObjectUTC>().oThreats
-                  .Find(threat => threat.oTarget = oEnemy);
+                  .Find(threat => threat.oThreat == oEnemy);
         if (_threat != null)
         {
             return _threat.fThreat;
@@ -3743,9 +3811,9 @@ public partial class Engine
     {
         if (oObject == null) oObject = gameObject;//gameObject
         List<xEffect> _effects = oObject.GetComponent<xGameObjectUTC>().oEffects;
-        foreach(xEffect ef in _effects)
+        foreach (xEffect ef in _effects)
         {
-            if(ef.nType == EngineConstants.EFFECT_TYPE_DEATH)
+            if (ef.nType == EngineConstants.EFFECT_TYPE_DEATH)
             {
                 return EngineConstants.TRUE;
             }
@@ -3853,8 +3921,8 @@ public partial class Engine
                                         throw new NotImplementedException();
                                     }
                                     //Check for clamping
-                                    int max = GetM2DAInt(EngineConstants.TABLE_PROPERTIES, "Max", _property.nID);
-                                    int min = GetM2DAInt(EngineConstants.TABLE_PROPERTIES, "Min", _property.nID);
+                                    float max = GetM2DAFloat(EngineConstants.TABLE_PROPERTIES, "Max", _property.nID);
+                                    float min = GetM2DAFloat(EngineConstants.TABLE_PROPERTIES, "Min", _property.nID);
 
                                     if (min <= _property.fValueTypeTotal && _property.fValueTypeTotal <= max) return _property.fValueTypeTotal;
                                     else if (_property.fValueTypeTotal < min) return min;
@@ -4683,8 +4751,11 @@ public partial class Engine
     */
     public List<int> GetAbilitiesDueToAOEs(GameObject oCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Debug.Log("update me");
+        //throw new NotImplementedException();
+        //AI_abilities_cond.xls
+        //Warning("GetAbilitiesDueToAOEs to be implemented");
+        return new List<int>();
     }
 
     /* @brief Individual "impact" events for each GameObject within an Area of Effect.
@@ -5058,7 +5129,8 @@ public partial class Engine
     */
     public int GetBaseItemType(GameObject oItem)
     {
-        if (oItem != null) return oItem.GetComponent<xGameObjectUTI>().BaseItemType;
+        if (oItem != null && oItem.name != "GearPlaceholder")
+            return oItem.GetComponent<xGameObjectUTI>().BaseItemType;
         else return EngineConstants.ITEM_TYPE_INVALID;
     }
 
@@ -5599,8 +5671,8 @@ public partial class Engine
     */
     public void SignalDamage(GameObject oSource, GameObject oTarget)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        // Notify the UI system to indicate damage to a party member
+        //Warning("Signal Damage to be implemented");
     }
 
     /* @brief Starts the character generation or level up process
@@ -6345,8 +6417,18 @@ public partial class Engine
     */
     public List<GameObject> GetNearestObjectByGroup(GameObject oObject, int nGroupId, int nObjectType = EngineConstants.OBJECT_TYPE_ALL, int nNumberOfObjects = 1, int nCheckLiving = 0, int nCheckPerceived = 0, int nIncludeSelf = 0)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<GameObject> _Group = new List<GameObject>();
+        List<GameObject> _Find = new List<GameObject>();
+        if (nObjectType == EngineConstants.OBJECT_TYPE_CREATURE)
+            _Find = GameObject.FindGameObjectsWithTag("Creature").ToList();
+        else throw new NotImplementedException();
+        foreach (GameObject _creature in _Find)
+        {
+            if (GetGroupId(_creature) == nGroupId && _creature.name != oObject.name)
+                _Group.Add(_creature);
+        }
+
+        return _Group;
     }
 
     /* @brief Returns N nearest GameObject of a specific type, with a specifc Hostility
@@ -6363,8 +6445,18 @@ public partial class Engine
     */
     public List<GameObject> GetNearestObjectByHostility(GameObject oObject, int nHostility, int nObjectType = EngineConstants.OBJECT_TYPE_ALL, int nNumberOfObjects = 1, int nCheckLiving = 0, int nCheckPerceived = 0, int nIncludeSelf = 0)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        List<GameObject> _Group = new List<GameObject>();
+        List<GameObject> _Find = new List<GameObject>();
+        if (nObjectType == EngineConstants.OBJECT_TYPE_CREATURE)
+            _Find = GameObject.FindGameObjectsWithTag("Creature").ToList();
+        else throw new NotImplementedException();
+        foreach (GameObject _creature in _Find)
+        {
+            if (IsObjectHostile(gameObject, _creature) == EngineConstants.TRUE)
+                _Group.Add(_creature);
+        }
+
+        return _Group;
     }
 
     /* @brief Indicates if a creature is perceiving any hostiles
@@ -6400,13 +6492,31 @@ public partial class Engine
     * beyond the visual radius (about 60m).
     *
     * @param oPerceivingCreature - The creature that will see another creature
-    * @param oPerceivingCreature - The creature that will be seen.
+    * @param oPerceivedCreature - The creature that will be seen.
     * @author Gabo.
     */
     public int TriggerPerception(GameObject oPerceivingCreature, GameObject oPerceivedCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectUTC _Perceiving = oPerceivingCreature.GetComponent<xGameObjectUTC>();
+        xGameObjectUTC _Perceived = oPerceivedCreature.GetComponent<xGameObjectUTC>();
+
+        //If either one has definite effect, and they are in their respective perception lists, remove
+        if (HasDeathEffect(oPerceivedCreature) != EngineConstants.FALSE ||
+            HasDeathEffect(oPerceivingCreature) != EngineConstants.FALSE) 
+        {
+            if (_Perceiving.oPerception.Contains(oPerceivedCreature))
+                _Perceiving.oPerception.Remove(oPerceivedCreature);
+            if (_Perceived.oPerception.Contains(oPerceivingCreature))
+                _Perceived.oPerception.Remove(oPerceivingCreature);
+            return EngineConstants.FALSE;
+        }
+
+        if (!_Perceiving.oPerception.Contains(oPerceivedCreature))
+            _Perceiving.oPerception.Add(oPerceivedCreature);
+        if (!_Perceived.oPerception.Contains(oPerceivingCreature))
+            _Perceived.oPerception.Add(oPerceivingCreature);
+
+        return EngineConstants.TRUE;
     }
 
     /* @brief Returns an array of hostile creatures
@@ -6436,8 +6546,14 @@ public partial class Engine
     */
     public int IsPerceiving(GameObject oidA, GameObject oidB)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (oidA.GetComponent<xGameObjectBase>().nObjectType != EngineConstants.OBJECT_TYPE_CREATURE ||
+            oidB.GetComponent<xGameObjectBase>().nObjectType != EngineConstants.OBJECT_TYPE_CREATURE)
+            return EngineConstants.FALSE;//both needs to be creatures
+
+        if (oidA.GetComponent<xGameObjectUTC>().oPerception.Contains(oidB))
+            return EngineConstants.TRUE;
+
+        return EngineConstants.FALSE;
     }
 
     /* @brief Delete all entries in the perception list of a creature
@@ -6447,8 +6563,7 @@ public partial class Engine
     */
     public void ClearPerceptionList(GameObject oPerceiver)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        oPerceiver.GetComponent<xGameObjectUTC>().oPerception = new List<GameObject>();
     }
 
     /* @}*/
@@ -6768,8 +6883,8 @@ public partial class Engine
     */
     public int IsLocationValid(Vector3 lLocation)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (lLocation == Vector3.zero) return EngineConstants.FALSE;
+        else return EngineConstants.TRUE;
     }
 
     /* @brief Used to test if a specific Vector3 is safe.
@@ -6991,8 +7106,15 @@ public partial class Engine
     */
     public int GetGroupHostility(int nGroupA, int nGroupB)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if ((nGroupA == EngineConstants.GROUP_HOSTILE || nGroupA == EngineConstants.GROUP_HOSTILE_ON_GROUND) &&
+            (nGroupB == EngineConstants.GROUP_FRIENDLY || nGroupB == EngineConstants.GROUP_PC))
+            return EngineConstants.TRUE;
+
+        else if ((nGroupA == EngineConstants.GROUP_FRIENDLY || nGroupA == EngineConstants.GROUP_PC) &&
+            (nGroupB == EngineConstants.GROUP_HOSTILE || nGroupB == EngineConstants.GROUP_HOSTILE_ON_GROUND))
+            return EngineConstants.TRUE;
+
+        else return EngineConstants.FALSE;
     }
 
     /* @brief Sets whether two groups are hostile to each other.
@@ -7009,25 +7131,28 @@ public partial class Engine
     */
     public void SetGroupHostility(int nGroupA, int nGroupB, int bHostile)
     {
+        //It's unlikely this is needed, it simply PC/friendly versus hostile/hostile on ground
         Debug.Log("update me");
         throw new NotImplementedException();
     }
 
     /* @brief Returns whether two objects are hostile to each other.
     *
-    * This function checks the hostility of the two specified objects and returns whether they are hostile to each other or not.
+    * This function checks the hostility of the two specified objects and 
+    * returns whether they are hostile to each other or not.
     * If either of the two objects are not valid, the function will return FALSE
     *
     * @param oSource - The source GameObject to use to check the hostility tables
     * @param oTarget - The target GameObject to use to check the hostility tables
-    * @returns Returns TRUE if the two objects are hostile to one another, FALSE otherwise. Returns FALSE on error.
+    * @returns Returns TRUE if the two objects are hostile to one another, FALSE otherwise. 
+    * Returns FALSE on error.
     * @sa SetGroupHostility(), GetGroupHostility()
     * @author Brenon
     */
     public int IsObjectHostile(GameObject oSource, GameObject oTarget)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (oSource == null || oTarget == null) return EngineConstants.FALSE;
+        return GetGroupHostility(GetLocalInt(oSource, "Group"), GetLocalInt(oTarget, "Group"));
     }
 
     /* @brief Returns the group ID of the specified object.
@@ -7294,8 +7419,7 @@ public partial class Engine
     */
     public void PlaySoundSet(GameObject oTarget, int nSoundSetEntry, float fProbabilityOverride = 0.0f)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Warning("play sound set not implemented!");
     }
 
     /* @brief Play a sound object
@@ -7390,7 +7514,7 @@ public partial class Engine
     public GameObject GetMainControlled()
     {
         xGameObjectPTY _party = GetParty(GetHero()).GetComponent<xGameObjectPTY>();
-        foreach( GameObject _partyMember in _party.oPartyPool )
+        foreach (GameObject _partyMember in _party.oPartyPool)
         {
             if (GetLocalInt(_partyMember, "bControlled") == EngineConstants.TRUE)
             {
@@ -7469,8 +7593,7 @@ public partial class Engine
     */
     public GameObject GetAttackTarget(GameObject oCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return GetLocalObject(oCreature, "AI_THREAT_TARGET");
     }
 
     /* @brief Gets the weapon style used by a creature
@@ -7482,8 +7605,30 @@ public partial class Engine
     */
     public int GetWeaponStyle(GameObject oCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        int t0 = GetBaseItemType(oCreature.GetComponent<xGameObjectUTC>().oGear[EngineConstants.INVENTORY_SLOT_MAIN]);
+        int t1 = GetBaseItemType(oCreature.GetComponent<xGameObjectUTC>().oGear[EngineConstants.INVENTORY_SLOT_OFFHAND]);
+        switch (t0)
+        {
+            case 40://battle axe
+            case 5://great swords
+            case 36://mauls
+            case 19://short bow
+            case 20://Longbow
+            case 21://crossbow
+            case 16://mage staff
+                return EngineConstants.WEAPONSTYLE_TWOHANDED;
+            case 3://daggers
+            case 49://war axe
+            case 2://long swords
+            case 4://Maces
+                {
+                    if (t1 == 3 || t1 == 49 || t1 == 2 || t1 == 4)
+                        return EngineConstants.WEAPONSTYLE_DUAL;
+                    else return EngineConstants.WEAPONSTYLE_SINGLE;
+                }
+            default: throw new NotImplementedException();
+        }
+
     }
 
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_GETSPELLTARGETOBJECT = 523;
@@ -7497,8 +7642,7 @@ public partial class Engine
     */
     public xEffect GetAttackImpactDamageEffect(GameObject oAttacker, int nDamageEffectId)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return oAttacker.GetComponent<xGameObjectBase>().cResult[nDamageEffectId];
     }
 
     /* @brief This function sets the results of an attack 
@@ -7512,8 +7656,11 @@ public partial class Engine
     */
     public void SetAttackResult(GameObject oAttacker, int nResult1, xEffect eDamageEffect1, int nResult2, xEffect eDamageEffect2)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //If result is not miss and effect is not invalid
+        if (nResult1 != 0 && eDamageEffect1.nType != 0)
+            oAttacker.GetComponent<xGameObjectBase>().cResult.Add(eDamageEffect1);
+        if (nResult2 != 0 && eDamageEffect2.nType != 0)
+            oAttacker.GetComponent<xGameObjectBase>().cResult.Add(eDamageEffect2);
     }
 
     /* @brief This function sets the result for an ability
@@ -7861,8 +8008,8 @@ public partial class Engine
     */
     public int GetAutoPauseCombatStatus()
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        string _pause = ReadIniEntry("DebugOptions", "AutoPauseCombat");
+        return int.Parse(_pause);
     }
 
     /* @}*/
@@ -7934,15 +8081,25 @@ public partial class Engine
     *
     * @param oCreature - owner of the ability
     * @param nAbilityId - ability to check the cooldown
-    * @param sSourceItemTag - if an item ability, specify the specific item providing the ability.  If an empty string, the engine will grab the first item with this ability, this may not be the desired intention if the player has several items with the same ability.
+    * @param sSourceItemTag - if an item ability, specify the specific item providing the ability.  
+    * If an empty string, the engine will grab the first item with this ability, 
+    * this may not be the desired intention if the player has several items with the same ability.
     * @returns 0.0f if the ability is ready to be used again
     * @sa SetCooldown
     * @author Jose
     */
     public float GetRemainingCooldown(GameObject oCreature, int nAbilityId, string sSourceItemTag = "")
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //float cooldown = GetM2DAFloat(EngineConstants.TABLE_ABILITIES, "cooldown", nAbilityId);
+        //return cooldown;
+        //The logic here is:
+        //if ability is found in the ability to cool down list, it means it's not ready to be used
+        //so we return a value bigger than zero, one in our case
+        //otherwise, Not found means it's ready and we return zero
+        xGameObjectUTC _utc = oCreature.GetComponent<xGameObjectUTC>();
+        if (_utc.oAbilitiesCooldown.Find(x => x.nAbility == nAbilityId) != null)
+            return EngineConstants.TRUE;
+        else return EngineConstants.FALSE;
     }
 
     /* @brief Get a list of abilities that need to be turned off due to a condition change
@@ -8058,8 +8215,22 @@ public partial class Engine
     */
     public void SetCommandResult(GameObject oObject, int nResult)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectBase oBase = oObject.GetComponent<xGameObjectBase>();
+
+        int i = 0;
+        foreach (xEffect ef in oBase.cResult)
+        {
+            xEvent ev = Event(EngineConstants.EVENT_TYPE_ATTACK_IMPACT);
+            SetEventObjectRef(ref ev, 0, oObject);
+            SetEventObjectRef(ref ev, 1, GetLocalObject(oObject, EngineConstants.AI_THREAT_TARGET));
+            SetEventIntegerRef(ref ev, 0, nResult);
+            SetEventIntegerRef(ref ev, 1, i);
+
+            SignalEvent(oObject, ev);
+            i++;
+        }
+
+        oBase.currentCommand.nResult = nResult;
     }
 
     /* @brief Removes a specific xCommand from an objects xCommand queue
@@ -8082,7 +8253,8 @@ public partial class Engine
     * the currently executed xCommand which is outside of the queue.
     * 
     * @param oObject - the GameObject on which to clear the xCommand list
-    * @param nHardClear - specifies if the GameObject can finish the action in progress or not (Hard = don't wait)
+    * @param nHardClear - specifies if the GameObject can finish the action in progress or not 
+    * (Hard = don't wait)
     * @returns TRUE on success, FALSE on failure
     * @remarks Designers should NOT use this function, but use the WR_ClearAllCommands
     * wrapper function instead, defined in wrappers_h
@@ -8090,8 +8262,13 @@ public partial class Engine
     */
     public int ClearAllCommands(GameObject oObject, int nHardClear = EngineConstants.TRUE)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectBase oBase = oObject.GetComponent<xGameObjectBase>();
+        oBase.qCommand = new List<xCommand>();
+        oBase.currentCommand = new xCommand(EngineConstants.COMMAND_TYPE_INVALID);
+        if (nHardClear == EngineConstants.FALSE) throw new NotImplementedException();
+        else oBase.cBreak = EngineConstants.TRUE;
+
+        return EngineConstants.TRUE;
     }
 
     /* @brief This function clears all ambient conversation for a given GameObject or for all objects
@@ -8249,6 +8426,11 @@ public partial class Engine
     */
     public void SetCommandIntRef(ref xCommand cCommand, int nCommandInt, int nIndex = 0)
     {
+        if (cCommand.nList.Count < nIndex)
+        {
+            while (cCommand.nList.Count < nIndex)
+                cCommand.nList.Add(default(int)); //fill with empty
+        }
         cCommand.nList.Insert(nIndex, nCommandInt);
     }
 
@@ -8274,6 +8456,12 @@ public partial class Engine
     */
     public void SetCommandFloatRef(ref xCommand cCommand, float nCommandFloat, int nIndex = 0)
     {
+        //In case the index is off the roof, create some bogus entries to fill up
+        if (cCommand.fList.Count < nIndex)
+        {
+            while (cCommand.fList.Count < nIndex)
+                cCommand.fList.Add(default(float)); //fill with empty
+        }
         cCommand.fList.Insert(nIndex, nCommandFloat);
     }
 
@@ -8306,7 +8494,7 @@ public partial class Engine
     {
         return cCommand.lList.ElementAt(nIndex);
     }
-    
+
     public void SetCommandLocationRef(ref xCommand cCommand, Vector3 lLocation, int nIndex = 0)
     {
         cCommand.lList.Insert(nIndex, lLocation);
@@ -8426,7 +8614,7 @@ public partial class Engine
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_COMMANDPICKUPITEM = 564;
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_COMMANDPUTDOWNITEM = 565;
 
-    /* @brief This function is an attack xCommand consBased ontructor.
+    /* @brief This function is an attack xCommand constructor.
     *
     * This function is an attack xCommand constructor.
     * It creates an attack xCommand which can then be added to any
@@ -8443,8 +8631,18 @@ public partial class Engine
     */
     public xCommand CommandAttack(GameObject oTarget, int nForcedResult = EngineConstants.COMBAT_RESULT_INVALID)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Before using it, let's see if it's in touching distance, otherwise we should issue
+        //command moved to object in the beginning of the queue, and then command use object
+        //For now issue an use object command generic, during tests
+        if (TargetTooFar(oTarget) == EngineConstants.TRUE)
+        {
+            //oBase.qCommand.Add(CommandMoveToObject(oTarget));
+            WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
+        }
+
+        xCommand cAttack = Command(EngineConstants.COMMAND_TYPE_ATTACK);
+        SetCommandObjectRef(ref cAttack, oTarget, 0);//Target
+        return cAttack;
     }
 
     /* @brief Deathblow xCommand constructor.
@@ -8578,8 +8776,8 @@ public partial class Engine
     */
     public xCommand CommandPlayAnimation(int nAnimation, int nLoops = 0, int bPlayNext = 0, int bBlendIn = 1, int bRandomizeOffset = 0)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Warning("command play animation to be implemented");
+        return Command(EngineConstants.COMMAND_TYPE_INVALID);
     }
 
     // const INT CVirtualMachineCommands::EngineConstants.COMMAND_COMMANDOPENDOOR = 570;
@@ -8625,6 +8823,15 @@ public partial class Engine
     */
     public xCommand CommandStartConversation(GameObject oTarget, string rConversationFile)//= R""
     {
+        //Before using it, let's see if it's in touching distance, otherwise we should issue
+        //command moved to object in the beginning of the queue, and then command use object
+        //For now issue an use object command generic, during tests
+        if (TargetTooFar(oTarget) == EngineConstants.TRUE)
+        {
+            //oBase.qCommand.Add(CommandMoveToObject(oTarget));
+            WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
+        }
+
         xCommand cCommand = Command(EngineConstants.COMMAND_TYPE_START_CONVERSATION);
         SetCommandObjectRef(ref cCommand, oTarget);
         SetCommandStringRef(ref cCommand, rConversationFile);
@@ -8714,7 +8921,15 @@ public partial class Engine
     */
     public xCommand CommandUseObject(GameObject oTarget, int nAction)
     {
-        Debug.Log("update me");
+        //Before using it, let's see if it's in touching distance, otherwise we should issue
+        //command moved to object in the beginning of the queue, and then command use object
+        //For now issue an use object command generic, during tests
+        if (TargetTooFar(oTarget) == EngineConstants.TRUE)
+        {
+            //oBase.qCommand.Add(CommandMoveToObject(oTarget));
+            WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
+        }
+
         xGameObjectBase oBase = gameObject.GetComponent<xGameObjectBase>();
         xCommand cMove = Command(EngineConstants.COMMAND_TYPE_USE_OBJECT);
         SetCommandObjectRef(ref cMove, oTarget, 0);//Target
@@ -8836,10 +9051,13 @@ public partial class Engine
     */
     public void Engine_ApplyEffectOnObject(int nDurationType, xEffect eEffect, GameObject oTarget, float fDuration = 0.0f, GameObject oCreator = null, int nAbilityId = 0)
     {
-        if (oCreator == null) oCreator = gameObject;//gameObject
-                                                    //check for oCreator if null in line
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (oCreator == null) oCreator = gameObject;//check for oCreator if null in line
+
+        eEffect.nDurationType = nDurationType;//To keep track for future use
+        oTarget.GetComponent<xGameObjectUTC>().oEffects.Add(eEffect);
+        xEvent ev = Event(EngineConstants.EVENT_TYPE_APPLY_EFFECT);
+        ev.eEffect = eEffect;
+        SignalEvent(oTarget, ev);
     }
 
     /* @brief This function applies an xEffect on an object.
@@ -8992,6 +9210,11 @@ public partial class Engine
     */
     public void SetEffectIntegerRef(ref xEffect efEffect, int nIndex, int nValue)
     {
+        if (efEffect.nList.Count < nIndex)
+        {
+            while (efEffect.nList.Count < nIndex)
+                efEffect.nList.Add(default(int)); //fill with empty
+        }
         efEffect.nList.Insert(nIndex, nValue);
     }
 
@@ -9024,6 +9247,11 @@ public partial class Engine
     */
     public void SetEffectFloatRef(ref xEffect efEffect, int nIndex, float fValue)
     {
+        if (efEffect.fList.Count < nIndex)
+        {
+            while (efEffect.fList.Count < nIndex)
+                efEffect.fList.Add(default(float)); //fill with empty
+        }
         efEffect.fList.Insert(nIndex, fValue);
     }
 
@@ -9056,7 +9284,7 @@ public partial class Engine
     */
     public void SetEffectObjectRef(ref xEffect efEffect, int nIndex, GameObject oValue)
     {
-        Debug.LogWarning("set effect object");
+        //Debug.LogWarning("set effect object");
         efEffect.oList.Insert(nIndex, oValue);
     }
 
@@ -9104,9 +9332,7 @@ public partial class Engine
         return (efEffect != null) ? efEffect.nType : Effect(EngineConstants.EFFECT_TYPE_INVALID).nType;
     }
 
-    /* @brief Set the creator of an effect
-    *
-    * Gets the DurationType of an effect
+    /* @brief Gets the DurationType of an effect
     * 
     * @param eEffect - the xEffect 
     * @returns Returns the EngineConstants.EFFECT_DURATION_TYPE_* of an effect
@@ -9114,8 +9340,7 @@ public partial class Engine
     */
     public int GetEffectDurationTypeRef(ref xEffect eEffect)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return eEffect.nDurationType;
     }
 
     /* @brief Get the creator of an effect
@@ -9224,8 +9449,7 @@ public partial class Engine
     */
     public int GetEffectAbilityIDRef(ref xEffect efEffect)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return efEffect.nAbilityID;
     }
 
     /* @brief Sets the ability id for the effect
@@ -9239,8 +9463,7 @@ public partial class Engine
     */
     public void SetEffectAbilityIDRef(ref xEffect efEffect, int nAbilityId)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        efEffect.nAbilityID = nAbilityId;
     }
 
     /* @brief Sets the specified integer on the xEffect Engine Data structure
@@ -9291,8 +9514,9 @@ public partial class Engine
     */
     public xEffect GetCurrentEffect()
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Return the last effect from the queue, would remove it later through code if/when needed
+        int c = gameObject.GetComponent<xGameObjectUTC>().oEffects.Count;
+        return gameObject.GetComponent<xGameObjectUTC>().oEffects[c - 1];
     }
 
     /* @brief  Tells the game if the xEffect associated with the current xEvent is valid or not.
@@ -9304,10 +9528,14 @@ public partial class Engine
     * @param nValid - The xEffect is valid and was properly applied.
     * @author Noel
     */
-    public void SetIsCurrentEffectValid(int nValid = EngineConstants.TRUE)
+    public void SetIsCurrentEffectValid(xEvent ev, int nValid = EngineConstants.TRUE)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectUTC _utc = gameObject.GetComponent<xGameObjectUTC>();
+        if (nValid != EngineConstants.TRUE) //Invalid, remove
+        {
+            if (_utc.oEffects.Contains(ev.eEffect))
+                _utc.oEffects.Remove(ev.eEffect);
+        }
     }
 
     /* @brief Returns the list of effects that are currently applied to an object.
@@ -9393,8 +9621,24 @@ public partial class Engine
     */
     public int GetEffectsFlags(GameObject oOwner)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        /*EFFECT_FLAG_DISABLE_MOVEMENT = 1;
+    EFFECT_FLAG_DISABLE_TURNING = 2;
+    EFFECT_FLAG_DISABLE_COMBAT = 4;
+    EFFECT_FLAG_DISABLE_TALENTS = 8;
+    EFFECT_FLAG_DISABLE_SPELLS = 16;
+    EFFECT_FLAG_DISABLE_SKILLS = 32;
+    EFFECT_FLAG_DISABLE_ITEMS = 64;
+    EFFECT_FLAG_DISABLE_INPUT = 128;*/
+        int[] flags = new int[] { 1, 2, 4, 8, 16, 32, 64, 128 };
+        int _current = GetLocalInt(oOwner, "EFFECT_FLAG_DISABLE");
+        foreach (int i in flags)
+        {
+            if ((_current & i) == i)
+                return i;
+        }
+        return 0;
+        //return GetLocalInt(oOwner, "EFFECT_FLAG_DISABLE");//The flag is being set with |= bitwise operation
+        //return ((nVal & nFlag) == nFlag ? EngineConstants.TRUE : EngineConstants.FALSE);
     }
 
     /* @}*/
@@ -9413,8 +9657,7 @@ public partial class Engine
     */
     public void ApplyEffectVisualEffect(GameObject oCreator, GameObject oTarget, int nVFXId, int nDurationType, float fDuration, int nAbilityId = EngineConstants.ABILITY_INVALID)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        //Warning("apply effective visual effect to be implemented");
     }
 
     /* @brief add/remove visual xEffect for items
@@ -9472,8 +9715,14 @@ public partial class Engine
     */
     public xEffect EffectImpact(float fDamage, GameObject oWeapon, int nVfx = 0, int nAbi = 0, int nDamageType = 1)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xEffect ef = Effect(EngineConstants.EFFECT_TYPE_IMPACT);
+        SetEffectObjectRef(ref ef, 0, oWeapon);
+        SetEffectFloatRef(ref ef, 0, fDamage);
+        SetEffectIntegerRef(ref ef, 0, nVfx);
+        SetEffectIntegerRef(ref ef, 1, nAbi);
+        SetEffectIntegerRef(ref ef, 2, nDamageType);
+
+        return ef;
     }
 
     /* @brief EffectModifyProperty Constructor.
@@ -9724,7 +9973,7 @@ public partial class Engine
         xPlot plot = GetParty().GetComponent<xGameObjectPTY>()
             .oPlots.Find(x => x.GUID.ToString() == strPlot);
         //Then by resref
-        if (plot == null) 
+        if (plot == null)
         {
             plot = GetParty().GetComponent<xGameObjectPTY>()
             .oPlots.Find(x => x.ResRefName == strPlot);
@@ -10405,8 +10654,11 @@ public partial class Engine
     */
     public string GetTacticCommandItemTag(GameObject oCreature, int nIndex)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        int aip = GetLocalInt(oCreature, "PackageAI");
+        int c = GetM2DAInt(aip, "Command", nIndex);
+        string itemTag = string.Empty;
+        if (c == 7 /* Use Item */) itemTag = GetM2DAString(aip, "SubCommandLabel", nIndex);
+        return itemTag;
     }
 
     /* @brief Sets a tactic entry for a party member
@@ -10522,8 +10774,7 @@ public partial class Engine
     **/
     public int GetStealthEnabled(GameObject oCreature)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        return GetLocalInt(oCreature, "bStealthed");
     }
 
     /* @brief Modify whether the creature can be tracked via the Survival Skill
@@ -10901,8 +11152,43 @@ public partial class Engine
 
     public float GetItemStat(GameObject oItem, int nStatType)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        int _Type = GetBaseItemType(oItem);
+        int _Stat = 0;
+        switch (nStatType)
+        {
+            case EngineConstants.ITEM_STAT_ATTACK:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "Attack", _Type);
+                    break;
+                }
+            case EngineConstants.ITEM_STAT_ARMOR_PENETRATION:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "ArmorPenetration", _Type);
+                    break;
+                }
+            case EngineConstants.ITEM_STAT_CRIT_CHANCE_MODIFIER:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "CritChanceModifier", _Type);
+                    break;
+                }
+            case EngineConstants.ITEM_STAT_OPTIMUM_RANGE:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "OptimumRange", _Type);
+                    break;
+                }
+            case EngineConstants.ITEM_STAT_ATTRIBUTE_MOD:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "AttributeMod", _Type);
+                    break;
+                }
+            case EngineConstants.ITEM_STAT_DAMAGE:
+                {
+                    _Stat = GetM2DAInt(EngineConstants.TABLE_ITEMSTATS, "Damage", _Type);
+                    break;
+                }
+            default: throw new NotImplementedException();
+        }
+        return _Stat;
     }
 
     /* @}*/
@@ -10918,7 +11204,6 @@ public partial class Engine
     */
     public string ReadIniEntry(string sHeadingLabel, string sValueLabel)
     {
-
         TextAsset iniTextAsset;
         iniTextAsset = Resources.Load(System.IO.Path.GetFileNameWithoutExtension("DragonAge")) as TextAsset;
         File.WriteAllBytes(Application.persistentDataPath + "/DragonAge.ini", iniTextAsset.bytes);
@@ -10931,7 +11216,8 @@ public partial class Engine
             {
                 if (line.IndexOf(sValueLabel) != -1)
                 {
-                    throw new NotImplementedException();
+                    string[] aString = line.Split('=');
+                    return aString[aString.Length - 1];
                 }
             }
         }
@@ -11200,8 +11486,8 @@ public partial class Engine
     */
     public void SetCreatureIsGhost(GameObject oObject, int value)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (value == EngineConstants.TRUE) throw new NotImplementedException();
+        SetLocalInt(oObject, "bGhost", value);
     }
 
     /* @brief Turns creature into a statue.  Statues have their animations frozen and cannot move.
@@ -11210,8 +11496,8 @@ public partial class Engine
     */
     public void SetCreatureIsStatue(GameObject oObject, int value)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        if (value == EngineConstants.TRUE) throw new NotImplementedException();
+        SetLocalInt(oObject, "bStatue", value);
     }
 
     /* @brief Starts the specified creature's heart beating
@@ -11255,8 +11541,15 @@ public partial class Engine
     */
     public int GetItemEquipSlot(GameObject oItem)
     {
-        Debug.Log("update me");
-        throw new NotImplementedException();
+        xGameObjectUTC _utc = gameObject.GetComponent<xGameObjectUTC>();
+        for (int i = 0; i < _utc.oGear.Count; i++)
+        {
+            if (oItem == _utc.oGear[i])
+            {
+                return i;
+            }
+        }
+        return EngineConstants.INVENTORY_SLOT_INVALID;
     }
 
     /* @brief Sets an item to be irremovable. Once equipped, an irremovable item cannot be unequipped by the player, only by scripting.
@@ -11520,9 +11813,9 @@ public partial class Engine
     public void ScaleEquippedItems(GameObject oCreature, int nTargetLevel)
     {
         List<GameObject> _inventory = oCreature.GetComponent<xGameObjectUTC>().InventoryList;
-        foreach(var oItem in _inventory)
+        foreach (var oItem in _inventory)
         {
-            xGameObjectUTI _Item = oItem.GetComponent<xGameObjectUTI>();
+            //xGameObjectUTI _Item = oItem.GetComponent<xGameObjectUTI>();
             int mt = GetLocalInt(oItem, "MaterialType");
             int m = GetM2DAInt(EngineConstants.TABLE_MATERIAL_TYPES, "Material", mt);
             int mr = GetM2DAInt(EngineConstants.TABLE_MATERIAL, "Spellpower", m);
@@ -12014,7 +12307,7 @@ public partial class Engine
     public string GetNodeName(int n2DA)
     {
         //TO DO integer to table name
-        Debug.Log("Table request: " + n2DA);
+        //Debug.Log("Table request: " + n2DA);
         switch (n2DA)
         {
             case EngineConstants.TABLE_AREA_LOAD_HINT:
@@ -12022,6 +12315,7 @@ public partial class Engine
             case EngineConstants.TABLE_AREA_LOAD_HINT_LOW:
             case EngineConstants.TABLE_AREA_LOAD_HINT_MID:
             case EngineConstants.TABLE_AREA_LOAD_HINT_HIGH: return "loadhint";
+
             case EngineConstants.TABLE_ABILITIES: return "ability";
             case EngineConstants.TABLE_EVENTS: return "event";
             case EngineConstants.TABLE_APPEARANCE: return "appearance";
@@ -12040,6 +12334,19 @@ public partial class Engine
             case EngineConstants.TABLE_COMMANDS: return "command";
             case EngineConstants.TABLE_MATERIAL: return "materialrule";
             case EngineConstants.TABLE_MATERIAL_TYPES: return "materialtype";
+            case EngineConstants.TABLE_SOUNDSETS: return "soundsettype";
+            case EngineConstants.TABLE_TACTICS_CONDITIONS: return "condition";
+            case EngineConstants.TABLE_TACTICS_BASE_CONDITIONS: return "basecondition";
+            case EngineConstants.TABLE_AI_TACTICS_TARGET_TYPE: return "targettype";
+            case EngineConstants.TABLE_AI_ABILITY_COND: return "condition";
+            case EngineConstants.TABLE_ITEMSTATS: return "itemstat";
+            case EngineConstants.TABLE_DAMAGETYPES: return "damagetype";
+            case EngineConstants.TABLE_EFFECTS: return "effect";
+            case EngineConstants.TABLE_EFFECT_IMMUNITIES: return "effectimmunity";
+
+            //AI Packages
+            case EngineConstants.AI_TABLE_DEFAULT: return "aipackage";
+
             default: throw new NotImplementedException();
                 //default: Warning("table not found: " + n2DA); return "";
         }
@@ -12073,7 +12380,21 @@ public partial class Engine
             case EngineConstants.TABLE_DIFFICULTY: _resource = "Difficulty"; break;
             case EngineConstants.TABLE_COMMANDS: _resource = "Commands"; break;
             case EngineConstants.TABLE_MATERIAL: _resource = "MaterialRules"; break;//?
-            case EngineConstants.TABLE_MATERIAL_TYPES: _resource = "MaterialTypes"; break;//?
+            case EngineConstants.TABLE_MATERIAL_TYPES: _resource = "MaterialTypes"; break;
+            case EngineConstants.TABLE_SOUNDSETS: _resource = "SoundSetTypes"; break;
+            case EngineConstants.TABLE_TACTICS_CONDITIONS: _resource = "TacticsConditions"; break;
+            case EngineConstants.TABLE_TACTICS_BASE_CONDITIONS: _resource = "TacticsBaseConditions"; break;
+            case EngineConstants.TABLE_AI_TACTICS_TARGET_TYPE: _resource = "AITacticsTargetType"; break;
+            case EngineConstants.TABLE_AI_ABILITY_COND: _resource = "AIAbilitiesCond"; break;
+            case EngineConstants.TABLE_ITEMSTATS: _resource = "ItemStats"; break;
+            case EngineConstants.TABLE_DAMAGETYPES: _resource = "DamageTypes"; break;
+            case EngineConstants.TABLE_EFFECTS: _resource = "Effects"; break;
+            case EngineConstants.TABLE_EFFECT_IMMUNITIES: _resource = "EffectImmunities"; break;
+
+
+            //AI Packages
+            case EngineConstants.AI_TABLE_DEFAULT: _resource = "AIP_Default"; break;
+
             default: _resource = ""; break;
         }
 
@@ -12307,11 +12628,11 @@ public partial class Engine
             default: throw new NotImplementedException();
         }
 
-        if (x == null || x.GetType() == null || x.GetType().GetProperty(key) == null) 
+        if (x == null || x.GetType() == null || x.GetType().GetProperty(key) == null)
         {
             throw new NotImplementedException();
         }
-       
+
         string o = x.GetType().GetProperty(key).ToString().Split()[0].Split(c)[1];
         switch (o)
         {
@@ -12331,6 +12652,9 @@ public partial class Engine
                 {
                     if (value != "null")
                     {
+                        string _Trim = " (UnityEngine.GameObject)";
+                        if (value.IndexOf(_Trim) != -1)
+                            value = value.Remove(value.Length - _Trim.Length);
                         GameObject go = GameObject.Find(value);
                         x.GetType().GetProperty(key).SetValue(x, go, null);
                     }
@@ -12633,6 +12957,8 @@ public partial class Engine
             }
         }
 
+        xGameObjectUTC _utc = oCreature.GetComponent<xGameObjectUTC>();
+
         //Inventory
         IEnumerable<XElement> il = agent.Element("InventoryList").Elements("Agent");
         foreach (XElement ie in il)
@@ -12648,11 +12974,24 @@ public partial class Engine
             UpdateGameObjectProperty(oItem, ie.Element("Infinite").Name.ToString(), ie.Element("Infinite").Value);
             UpdateGameObjectProperty(oItem, ie.Element("SetNumber").Name.ToString(), ie.Element("SetNumber").Value);
             //SetLocalObject(oCreature, "InventoryList", oItem);
-            oCreature.GetComponent<xGameObjectUTC>().InventoryList.Add(oItem);
+
+            _utc.InventoryList.Add(oItem);
+            int _Slot = int.Parse(ie.Element("Slot").Value);
+            if (_utc.oGear[_Slot].GetComponent<xGameObjectBase>().nObjectType == EngineConstants.OBJECT_TYPE_INVALID)
+                _utc.oGear[_Slot] = oItem;
+
             oItem.transform.parent = oCreature.transform;
+            oItem.SetActive(false);
         }
 
-        switch (oCreature.GetComponent<xGameObjectUTC>().Group)
+        //Add a flat sphere to be used for simple perception checks
+        GameObject oPerception = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/perceptionPrefab"));
+        oPerception.name = "Perception";
+        int _perception = oCreature.GetComponent<xGameObjectUTC>().PerceptionRange;
+        oPerception.transform.localScale = new Vector3(_perception * 2, 0.01f, _perception * 2);
+        oPerception.transform.parent = oCreature.transform;
+
+        switch (GetLocalInt(oCreature, "Group"))
         {
             case EngineConstants.GROUP_PC:
                 {
@@ -12681,6 +13020,23 @@ public partial class Engine
                     oS.GetComponent<Renderer>().material.color = Color.grey;
                     break;
                 }
+        }
+
+        //Skill-talent-spell
+        IEnumerable<XElement> iSks = agent.Element("SkillList").Elements("Agent");
+        foreach (XElement iSk in iSks)
+        {
+            AddAbility(oCreature, int.Parse(iSk.Element("Skill").Value));
+        }
+        IEnumerable<XElement> iTs = agent.Element("TalentList").Elements("Agent");
+        foreach (XElement iT in iTs)
+        {
+            AddAbility(oCreature, int.Parse(iT.Element("Talent").Value));
+        }
+        IEnumerable<XElement> iSps = agent.Element("SpellList").Elements("Agent");
+        foreach (XElement iSp in iSps)
+        {
+            AddAbility(oCreature, int.Parse(iSp.Element("Spell").Value));
         }
 
         int propertiesSet = SetCreatureBaseProperties(oCreature);
@@ -12733,12 +13089,6 @@ public partial class Engine
                 }
             }
         }
-
-        /*//Signal events  Spawn
-            xEvent ev = Event(EngineConstants.EVENT_TYPE_SPAWN);
-            SetEventCreatorRef(ref ev, gameObject);
-            SetEventObjectRef(ref ev, 0, oItem.gameObject);
-            SignalEvent(oItem.gameObject, ev);*/
     }
 
     public void ParseTrigger(GameObject oTrigger, string rTemplate)
@@ -12901,7 +13251,7 @@ public partial class Engine
 
         //Handle geometry list
         var gl = xe.Element("GeometryList").Elements("Agent");
-        foreach(var g in gl)
+        foreach (var g in gl)
         {
             var v = g.Element("Vertex");
             string vs = v.Value;
@@ -12911,7 +13261,7 @@ public partial class Engine
         }
 
         CreateTrigger(oTrigger);
-        
+
         //Update object position And orientation
         oTrigger.gameObject.transform.position = oTrigger.gameObject.GetComponent<xGameObjectUTT>().position;
         var rot = oTrigger.gameObject.GetComponent<xGameObjectUTT>().orientation;
@@ -12989,7 +13339,7 @@ public partial class Engine
 
         //Set controlled, as it's the only and first party member
         SetLocalInt(oPlayer, "bControlled", EngineConstants.TRUE);
-        
+
         //Enable tactics, so that if this creature is not selected but active in the party
         //the AI kicks in
         SetLocalInt(oPlayer, "bTactics", EngineConstants.TRUE);
@@ -13033,7 +13383,10 @@ public partial class Engine
             SetLocalInt(oCreature, EngineConstants.CREATURE_SPAWN_DEAD, EngineConstants.TRUE);
             oCreature.GetComponent<xGameObjectBase>().bDead = EngineConstants.TRUE;
         }
+
+        //Set current and base health to fBase
         SetCreatureProperty(oCreature, EngineConstants.PROPERTY_DEPLETABLE_HEALTH, fBase, EngineConstants.PROPERTY_VALUE_BASE);//Should create a new one
+        SetCurrentHealth(oCreature, fBase);
         return EngineConstants.TRUE;
     }
 
@@ -13325,7 +13678,6 @@ public partial class Engine
         }
     }
 
-    //public GameObject FindChild(string pRoot, string pName)
     public GameObject FindChild(GameObject pRoot, string pName)
     {
         //Transform pTransform = GameObject.Find(pRoot).GetComponent<Transform>();
@@ -13474,40 +13826,26 @@ public partial class Engine
         //If I'm placeable, I can try to use it
         if (oTarget.GetComponent<xGameObjectBase>().nObjectType == EngineConstants.OBJECT_TYPE_PLACEABLE)
         {
-            //Before using it, let's see if it's in touching distance, otherwise we should issue
-            //command moved to object in the beginning of the queue, and then command use object
-            //For now issue an use object command generic, during tests
-            if (TargetTooFar(oTarget) == EngineConstants.TRUE)
-            {
-                //oBase.qCommand.Add(CommandMoveToObject(oTarget));
-                WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
-            }
             //oBase.qCommand.Add(CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
             WR_AddCommand(gameObject, CommandUseObject(oTarget, EngineConstants.COMMAND_TYPE_USE_OBJECT));
         }
         //Target is a creature, I can try and talk to it if it's not hostile
         else if (oTarget.GetComponent<xGameObjectBase>().nObjectType == EngineConstants.OBJECT_TYPE_CREATURE)
         {
-            if (TargetTooFar(oTarget) == EngineConstants.TRUE)
-            {
-                WR_AddCommand(gameObject, CommandMoveToObject(oTarget));
-            }
             //If not in combat And has conversation
             if (GetLocalInt(GetModule(), "GAME_MODE") != EngineConstants.GM_COMBAT &&
                 HasConversation(oTarget) != EngineConstants.FALSE)
             {
                 //For now doing debug only the player can initiate dialogues
-                //SetLocalObject(GetModule(), "CONVERSATION_SPEAKER", oTarget);
-                xGameObjectMOD.instance.CONVERSATION_SPEAKER = oTarget;//hmmm
+                SetLocalObject(GetModule(), "CONVERSATION_SPEAKER", oTarget);
                 GameObject _player = GetHero();
-                //UT_Talk(oTarget, _player);
                 int nConv = GetLocalInt(oTarget, "ConversationURI");
                 string sConv = GetResource("ID", nConv.ToString(), "Name", "dlg");
                 WR_AddCommand(gameObject, CommandStartConversation(oTarget, sConv));
             }
         }
 
-            return EngineConstants.FALSE;//always return false in case it fell through
+        return EngineConstants.FALSE;//always return false in case it fell through
     }
 
     public int TargetTooFar(GameObject oTarget)
@@ -13517,11 +13855,31 @@ public partial class Engine
         return EngineConstants.TRUE;
     }
 
-    public void MoveToLocation( Vector3 location)
+    public void MoveToLocation(Vector3 location)
     {
         WR_AddCommand(gameObject, CommandMoveToLocation(location));
     }
 
+    public void SetEnemy(GameObject oCreatureA, GameObject oCreatureB)
+    {
+        xGameObjectUTC _a = oCreatureA.GetComponent<xGameObjectUTC>();
+        xGameObjectUTC _b = oCreatureB.GetComponent<xGameObjectUTC>();
+
+        if (_a.oThreats.Find(x => x.oThreat == oCreatureB) == null)
+            _a.oThreats.Add(new xThreat(oCreatureB, 1.0f));
+
+        if (_b.oThreats.Find(x => x.oThreat == oCreatureA) == null)
+            _b.oThreats.Add(new xThreat(oCreatureA, 1.0f));
+
+        //Sort
+        List<xThreat> _fThreatSortedA = new List<xThreat>();
+        _fThreatSortedA = _a.oThreats.OrderByDescending(o => o.fThreat).ToList();
+        _a.oThreats = _fThreatSortedA;
+
+        List<xThreat> _fThreatSortedB = new List<xThreat>();
+        _fThreatSortedB = _b.oThreats.OrderByDescending(o => o.fThreat).ToList();
+        _b.oThreats = _fThreatSortedB;
+    }
     #endregion
 
     #region moved from constants files

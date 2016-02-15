@@ -3,12 +3,12 @@ using System.Collections;
 
 public class xThreat
 {
-    public GameObject oTarget { get; set; }
+    public GameObject oThreat { get; set; }
     public float fThreat { get; set; }
 
-    public xThreat(GameObject oTarget, float fThreat = 0.0f)
+    public xThreat(GameObject oThreat, float fThreat = 0.0f)
     {
-        this.oTarget = oTarget;
+        this.oThreat = oThreat;
         this.fThreat = fThreat;
     }
 }

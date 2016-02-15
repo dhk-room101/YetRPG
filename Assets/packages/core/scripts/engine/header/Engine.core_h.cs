@@ -1032,8 +1032,8 @@ public partial class Engine
                }
                else if (nObjectType == EngineConstants.OBJECT_TYPE_CREATURE)
                {
-                    SetCreatureProperty(oObject, EngineConstants.PROPERTY_DEPLETABLE_HEALTH, fNewValue, EngineConstants.PROPERTY_VALUE_CURRENT);
-               }
+                SetCreatureProperty(oObject, EngineConstants.PROPERTY_DEPLETABLE_HEALTH, fNewValue, EngineConstants.PROPERTY_VALUE_CURRENT);
+            }
                else
                {
 #if DEBUG
@@ -2499,7 +2499,7 @@ public partial class Engine
           if (IsObjectValid(oWeapon) != EngineConstants.FALSE && IsHumanoid(oAttacker) != EngineConstants.FALSE)
           {
 
-               float fSpeedMod = GetM2DAFloat(EngineConstants.TABLE_ITEMSTATS, "dspeed", GetBaseItemType(oWeapon));
+               float fSpeedMod = GetM2DAFloat(EngineConstants.TABLE_ITEMSTATS, "Dspeed", GetBaseItemType(oWeapon));
 
                // ---------------------------------------------------------------------
                // Calculate weapon speed.

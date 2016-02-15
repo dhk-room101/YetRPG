@@ -1458,7 +1458,6 @@ public partial class Engine
 **/
      public void UT_TeamGoesHostile(int nTeamID, int bHostile = EngineConstants.TRUE)
      {
-
           int nIndex;
           GameObject oPC = GetPartyLeader();
           List<GameObject> arTeam = UT_GetTeam(nTeamID);

@@ -264,12 +264,24 @@ public class xGameObjectMOD : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            GameObject _bandit = GameObject.Find("demo200cr_bandit");
+            xGameObjectBase eBase = _bandit.GetComponent<xGameObjectBase>();
+
+            gameObject.GetComponent<Engine>().DisplayFloatyMessage(
+                gameObject.GetComponent<Engine>().GetHero(),
+                Convert.ToInt32(gameObject.GetComponent<Engine>().GetCurrentHealth(
+                    gameObject.GetComponent<Engine>().GetHero())).ToString(),
+                0, 25422);
+
+            /*GameObject _player = GameObject.Find("demo000cr_player");
+            List<GameObject> _g = _player.GetComponent<xGameObjectUTC>().oGear;*/
+
             /*GameObject _player = GameObject.Find("demo000cr_player");
             List<xProperty> _p = _player.GetComponent<xGameObjectUTC>().oProperties;
             float _h = _p.Find(x => x.nID == EngineConstants.PROPERTY_DEPLETABLE_HEALTH).fValueTypeBase;
             float _d = _p.Find(x => x.nID == EngineConstants.PROPERTY_ATTRIBUTE_DEXTERITY).fValueTypeBase;
             float _s = _p.Find(x => x.nID == EngineConstants.PROPERTY_ATTRIBUTE_STRENGTH).fValueTypeBase;
-            gameObject.GetComponent< Engine>().DisplayFloatyMessage(_player,_player.name,0, 52224);*/
+            gameObject.GetComponent<Engine>().DisplayFloatyMessage(_player,_player.name,0, 52224);*/
 
             /*GameObject _creature = GameObject.Find("demo100cr_barkeep");
             var c = _creature.GetComponent<xGameObjectUTC>().ConversationURI;
@@ -294,43 +306,6 @@ public class xGameObjectMOD : MonoBehaviour
                     {
                         int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
                     }
-
-                    /*//Check to see if you need to move closer to the object
-                    GameObject oTarget = _target.gameObject;
-                    GameObject oPlayer = engine.GetHero();
-                    Vector3 pPosition = oPlayer.transform.position;
-                    Vector3 patPosition = oTarget.transform.position;
-
-                    var pn = pPosition.sqrMagnitude;
-                    var patn = patPosition.sqrMagnitude;
-
-                    
-                    //TO DO world map transition
-                    //if (pat != null && oTarget.tag == "WorldMap")
-
-                    //Area transition
-                    #region area transition
-                    if (oTarget != null && oTarget.tag == "AreaTransition")
-                    {
-                        DoAction(oTarget, "DoAreaTransition");
-                    }
-                    #endregion
-
-                    //Conversation
-                    #region conversation
-                    if (oTarget != null && oTarget.tag == "Creature")
-                    {
-                        //If not in combat And has conversation
-                        if (engine.GetLocalInt(engine.GetModule(), "GAME_MODE") != EngineConstants.GM_COMBAT &&
-                            engine.HasConversation(oTarget) != EngineConstants.FALSE)
-                        {
-                            //For now doing debug only the player can initiate dialogues
-                            CONVERSATION_SPEAKER = oTarget;
-                            GameObject _player = engine.GetHero();
-                            engine.UT_Talk(oTarget, _player);
-                        }
-                    }
-                    #endregion*/
                 }
                 else//Didn't click on an object, get the location and set it as destination to move
                 {
