@@ -107,9 +107,15 @@ public class demo100ar_wilderness : MonoBehaviour
                 {
                     //Reposition the camera on top of the start waypoint
                     GameObject c = GameObject.FindGameObjectWithTag("MainCamera");
+                    c.transform.position = new Vector3(0, 10, 0);
+                    c.transform.rotation = Quaternion.Euler(90, 0, 0);
+
                     GameObject m = GameObject.FindGameObjectWithTag("Module");
                     GameObject w = GameObject.Find(xGameObjectMOD.instance.tWaypoint);
                     c.transform.position = new Vector3(w.transform.position.x, w.transform.position.y + 25, w.transform.position.z);
+
+                    engine.LoadingScreen(false);
+
                     bEventHandled = EngineConstants.TRUE;
                     break;
                 }

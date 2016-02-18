@@ -98,12 +98,7 @@ public class demo000pl_main : xPlotConditional
                         //combat.
 
                         engine.UT_TeamGoesHostile(EngineConstants.BANDIT_TEAM);
-
-                        //DHK
-                        //Give the player 100 health points
-                        engine.SetCreatureProperty(engine.GetHero(), EngineConstants.PROPERTY_DEPLETABLE_HEALTH, 100, EngineConstants.PROPERTY_VALUE_BASE);
-                        engine.SetCurrentHealth(engine.GetHero(), 100);
-
+                        
                         //Turn hostile team red
                         List<GameObject> arTeam = engine.UT_GetTeam(EngineConstants.BANDIT_TEAM);
                         for (int nIndex = 0; nIndex < engine.GetArraySize(arTeam); nIndex++)

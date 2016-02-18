@@ -47,7 +47,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using UnityEditor;
 using Random = UnityEngine.Random;
 using System.IO;
 using ICSharpCode.SharpZipLib.Core;
@@ -4013,7 +4012,10 @@ public partial class Engine
         xProperty _property = null;
 
         int nPropertyType = GetCreaturePropertyType(oCreature, nProperty);
-
+        if (nProperty == 7)
+        {
+            Console.WriteLine();
+        }
         switch (nPropertyType)
         {
             //If depletable: base, total, modifier, current
@@ -12942,6 +12944,16 @@ public partial class Engine
             }
         }
 
+        //Check for conversation to pre-cache it
+        if (agent.Element("ConversationURI").Value != "")
+        {
+            string sConversation = GetResource("ID", agent.Element("ConversationURI").Value, "Name");
+            if (sConversation != string.Empty)
+            {
+                ParseConversation(sConversation);
+            }
+        }
+
         //update all the variables That are Not list
         var e = agent.Elements();
         foreach (var _x in e)
@@ -13039,13 +13051,13 @@ public partial class Engine
             AddAbility(oCreature, int.Parse(iSp.Element("Spell").Value));
         }
 
-        int propertiesSet = SetCreatureBaseProperties(oCreature);
-
         //Signal events  Spawn
         xEvent ev = Event(EngineConstants.EVENT_TYPE_SPAWN);
         SetEventCreatorRef(ref ev, gameObject);
         SetEventObjectRef(ref ev, 0, oCreature.gameObject);
         SignalEvent(oCreature.gameObject, ev);
+
+        int propertiesSet = SetCreatureBaseProperties(oCreature);//Has to be in this order, SPAWN Above resets all values
     }
 
     public void ParseItem(GameObject oItem, string rTemplate)
@@ -13385,8 +13397,8 @@ public partial class Engine
         }
 
         //Set current and base health to fBase
-        SetCreatureProperty(oCreature, EngineConstants.PROPERTY_DEPLETABLE_HEALTH, fBase, EngineConstants.PROPERTY_VALUE_BASE);//Should create a new one
-        SetCurrentHealth(oCreature, fBase);
+        //SetCreatureProperty(oCreature, EngineConstants.PROPERTY_DEPLETABLE_HEALTH, fBase, EngineConstants.PROPERTY_VALUE_BASE);//Should create a new one
+        //SetCurrentHealth(oCreature, fBase);
         return EngineConstants.TRUE;
     }
 
@@ -13402,7 +13414,7 @@ public partial class Engine
         }
         else
         {
-            ParseConversation();
+            StartConversation();
             //Signal the conversation to start
             GameObject oConversation = GameObject.Find("Canvas").transform.Find("convPanel").gameObject;
 
@@ -13477,11 +13489,33 @@ public partial class Engine
         return plot;
     }
 
-    public void ParseConversation()
+    public void StartConversation()
+    {
+        string sConversation = GetLocalString(GetModule(), "CONVERSATION");
+        string id = GetResource("Name", sConversation, "ID", "dlg");
+        xConversation cnv = xGameObjectMOD.instance.currentAreaConversations.Find(x => x.ID == int.Parse(id)).Conv;
+        if (cnv == null) throw new NotImplementedException();
+
+        GameObject oConversation = (GameObject)GameObject.Instantiate(Resources.Load("Conversation/convPanel"));
+        //Position the conversation panel
+        RectTransform rectangle = oConversation.GetComponent<RectTransform>();
+
+        rectangle.pivot = new Vector2(0.5f, 0.5f);
+        rectangle.anchoredPosition = new Vector2(Screen.width / 2, 60);
+
+        oConversation.name = "convPanel";
+        Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+
+        oConversation.transform.SetParent(canvas);
+
+        oConversation.GetComponent<xConvInstance>().oConversation = cnv;
+    }
+
+    public void ParseConversation(string sConversation)
     {
         xConversation cnv = new xConversation();
 
-        string sConversation = GetLocalString(GetModule(), "CONVERSATION");
+        //string sConversation = GetLocalString(GetModule(), "CONVERSATION");
 
         //Get its template XML, Convert name to file ID
         string id = GetResource("Name", sConversation, "ID", "dlg");
@@ -13599,21 +13633,7 @@ public partial class Engine
             i++;
         }
 
-        //Temporary during the bug, the goal is to pre-parse conversations 
-        //and other resources during area load and store them
-        GameObject oConversation = (GameObject)GameObject.Instantiate(Resources.Load("conversation/convPanel"));
-        //Position the conversation panel
-        RectTransform rectangle = oConversation.GetComponent<RectTransform>();
-
-        rectangle.pivot = new Vector2(0.5f, 0.5f);
-        rectangle.anchoredPosition = new Vector2(Screen.width / 2, 60);
-
-        oConversation.name = "convPanel";
-        Transform canvas = GameObject.Find("Canvas").gameObject.transform;
-
-        oConversation.transform.SetParent(canvas);
-
-        oConversation.GetComponent<xConvInstance>().oConversation = cnv;
+        xGameObjectMOD.instance.currentAreaConversations.Add(new Conversation(cnv, int.Parse(id)));
     }
 
     public int PlotEvent(int nType, string sGuid, int nFlag, GameObject oCreator, GameObject oTarget)
@@ -13702,7 +13722,8 @@ public partial class Engine
             if (s == "GameModule" || s == "MainCamera" || s == "Floaty" ||
                 s == "DirectionalLight" || s == "Invalid" ||
                 s == "Canvas" || s == "EventSystem" || s == "Party" ||
-                s == "Floor" || s == "floorPlane")
+                s == "Floor" || s == "floorPlane" ||
+                s.IndexOf("Loading") != -1) 
             {
 
             }
@@ -13879,6 +13900,64 @@ public partial class Engine
         List<xThreat> _fThreatSortedB = new List<xThreat>();
         _fThreatSortedB = _b.oThreats.OrderByDescending(o => o.fThreat).ToList();
         _b.oThreats = _fThreatSortedB;
+    }
+
+    public void MainMenu(bool visible)
+    {
+        if (visible)
+        {
+            Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+            GameObject oMainMenu = (GameObject)GameObject.Instantiate(Resources.Load("Menu/MainMenu"));
+            oMainMenu.name = "MainMenu";
+            oMainMenu.transform.SetParent(canvas);
+            GameObject Logo = oMainMenu.transform.Find("Logo").gameObject;
+            RectTransform rLogo = Logo.GetComponent<RectTransform>();
+            Logo.transform.position = new Vector3(Screen.width /2 - rLogo.rect.width, Screen.height - rLogo.rect.height / 2, 0);
+            int i = 0;
+            foreach (string s in xGameObjectMOD.instance.mainMenuButtons)
+            {
+                GameObject oButtonMenu = (GameObject)GameObject.Instantiate(Resources.Load("Menu/ButtonMenu"));
+                oButtonMenu.transform.SetParent(oMainMenu.transform);
+                oButtonMenu.name = s;
+                RectTransform rButton = oButtonMenu.GetComponent<RectTransform>();
+
+                GameObject oButtonText = oButtonMenu.transform.Find("ButtonMenuText").gameObject;
+                oButtonText.GetComponent<Text>().text = s;
+
+                if (i == 0)
+                {
+                    oButtonText.GetComponent<Text>().color = new Color(0, 0, 0, 1);
+                    GameObject oButtonImage = oButtonMenu.transform.Find("ButtonMenuImage").gameObject;
+                    oButtonImage.SetActive(true);
+                }
+                //oButtonText.transform.position = new Vector3(Screen.width / 2 - rButton.rect.width, Screen.height - rButton.rect.height / 2 + 20 * i, 0);
+                oButtonMenu.transform.position = new Vector3(100, Screen.height / 2 - 20 * i, 0);
+
+                i++;
+            }
+        }
+        else
+        {
+            Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+            GameObject MainMenu = canvas.Find("MainMenu").gameObject;
+            DestroyObject(MainMenu);
+        }
+    }
+
+    public void LoadingScreen(bool visible)
+    {
+        if (visible)
+        {
+            Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+            GameObject LoadingPanel = canvas.Find("LoadingPanel").gameObject;
+            LoadingPanel.SetActive(true);
+        }
+        else
+        {
+            Transform canvas = GameObject.Find("Canvas").gameObject.transform;
+            GameObject LoadingPanel = canvas.Find("LoadingPanel").gameObject;
+            LoadingPanel.SetActive(false);
+        }
     }
     #endregion
 

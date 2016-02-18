@@ -228,8 +228,12 @@ public class xGameObjectBase : MonoBehaviour
                 vObject = Vector3.MoveTowards(vObject, vTarget, Time.deltaTime * 3);
                 gameObject.transform.position = vObject;
 
-                if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
-                    Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+                if (engine.GetLocalInt(engine.GetModule(), "GAME_MODE") == EngineConstants.GM_COMBAT ||
+                    engine.GetLocalInt(engine.GetModule(), "GAME_MODE") == EngineConstants.GM_EXPLORE)
+                {
+                    if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
+                        Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+                }
 
                 distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
 
@@ -251,8 +255,12 @@ public class xGameObjectBase : MonoBehaviour
             vObject = Vector3.MoveTowards(vObject, vTarget, Time.deltaTime * 3);
             gameObject.transform.position = vObject;
 
-            if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
-                Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+            if (engine.GetLocalInt(engine.GetModule(), "GAME_MODE") == EngineConstants.GM_COMBAT ||
+                    engine.GetLocalInt(engine.GetModule(), "GAME_MODE") == EngineConstants.GM_EXPLORE)
+            {
+                if (gameObject.GetComponent<xGameObjectUTC>().bControlled == EngineConstants.TRUE)
+                    Camera.main.transform.position = new Vector3(vObject.x, Camera.main.transform.position.y, vObject.z);
+            }
 
             distance = Mathf.Abs(vObject.sqrMagnitude - vTarget.sqrMagnitude);
 

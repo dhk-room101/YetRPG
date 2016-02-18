@@ -107,7 +107,13 @@ public class demo_module : MonoBehaviour
                     engine.SetEventObjectRef(ref ev, 0, oArea.gameObject);
                     engine.SignalEvent(oArea.gameObject, evpr);
 
-                    engine.Warning("module start, Implement loading screen PLEASE!");
+                    //engine.LoadingScreen(false);
+
+                    engine.WR_SetGameMode(EngineConstants.GM_EXPLORE);
+
+                    GameObject d = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/directionalLightPrefab"));
+                    d.name = "directionalLight";
+
                     bEventHandled = EngineConstants.TRUE;
                     break;
                 }

@@ -8,7 +8,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System;
 using System.Linq;
-using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.SceneManagement;
@@ -162,6 +161,10 @@ public class xGameObjectMOD : MonoBehaviour
     public string player = "demo000cr_player";
     public GameObject oHero { get; set; }
     public int bTransitioning { get; set; }
+    public List<Conversation> currentAreaConversations { get; set; }
+
+    //Static arrays
+    public string[] mainMenuButtons = new string[] { "New Game", "Load Game", "Quit" };
 
     int dCounter;//This is the deleting counter
     int counter;
@@ -192,15 +195,17 @@ public class xGameObjectMOD : MonoBehaviour
         oParty.GetComponent<xGameObjectBase>().nObjectType = EngineConstants.OBJECT_TYPE_PARTY;
         oParty.transform.parent = gameObject.transform;
 
+        if (currentAreaConversations == null) currentAreaConversations = new List<Conversation>();
+
         //Damn strings also need to be initialized C# 5-
         //if (PARTY_OVERRIDE_CONVERSATION == null) PARTY_OVERRIDE_CONVERSATION = string.Empty;
         engine.SetLocalString(engine.GetModule(), "PARTY_OVERRIDE_CONVERSATION", string.Empty);
-        
+
         //Initialize the camera in the scene
         HandleCamera();
 
         //Initialize the module in start mode, as opposed to load mode
-        InitializeModule("START");//Or LOAD
+        InitializeModule();//Or LOAD
 
         //oCharacters = new List<GameObject>();
 
@@ -264,14 +269,14 @@ public class xGameObjectMOD : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            GameObject _bandit = GameObject.Find("demo200cr_bandit");
+            /*GameObject _bandit = GameObject.Find("demo200cr_bandit");
             xGameObjectBase eBase = _bandit.GetComponent<xGameObjectBase>();
 
             gameObject.GetComponent<Engine>().DisplayFloatyMessage(
                 gameObject.GetComponent<Engine>().GetHero(),
                 Convert.ToInt32(gameObject.GetComponent<Engine>().GetCurrentHealth(
                     gameObject.GetComponent<Engine>().GetHero())).ToString(),
-                0, 25422);
+                0, 25422);*/
 
             /*GameObject _player = GameObject.Find("demo000cr_player");
             List<GameObject> _g = _player.GetComponent<xGameObjectUTC>().oGear;*/
@@ -290,32 +295,35 @@ public class xGameObjectMOD : MonoBehaviour
         //Check to see what was clicked on
         if (Input.GetMouseButton(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rch;
-
-            if (Physics.Raycast(ray.origin, ray.direction, out rch, Mathf.Infinity))
+            if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
             {
-                var _target = rch.transform.parent;
-                if (_target != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit rch;
+
+                if (Physics.Raycast(ray.origin, ray.direction, out rch, Mathf.Infinity))
                 {
-                    //Make sure the engine component attached to the player kicks in
-                    //For now it's the player only, TO DO any selected follower
-                    GameObject _player = engine.GetHero();
-                    //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
-                    if (GAME_MODE != EngineConstants.GM_CONVERSATION)
+                    var _target = rch.transform.parent;
+                    if (_target != null)
                     {
-                        int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
+                        //Make sure the engine component attached to the player kicks in
+                        //For now it's the player only, TO DO any selected follower
+                        GameObject _player = engine.GetHero();
+                        //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
+                        if (GAME_MODE != EngineConstants.GM_CONVERSATION)
+                        {
+                            int nCommand = _player.GetComponent<Engine>().EvaluatePossibleCommand(_target.gameObject);
+                        }
                     }
-                }
-                else//Didn't click on an object, get the location and set it as destination to move
-                {
-                    //Make sure the engine component attached to the player kicks in
-                    //For now it's the player only, TO DO any selected follower
-                    GameObject _player = engine.GetHero();
-                    //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
-                    if( GAME_MODE != EngineConstants.GM_CONVERSATION)
+                    else//Didn't click on an object, get the location and set it as destination to move
                     {
-                        _player.GetComponent<Engine>().MoveToLocation(new Vector3(rch.point.x, 0, rch.point.z));
+                        //Make sure the engine component attached to the player kicks in
+                        //For now it's the player only, TO DO any selected follower
+                        GameObject _player = engine.GetHero();
+                        //if (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT)
+                        if (_player != null && (GAME_MODE == EngineConstants.GM_EXPLORE || GAME_MODE == EngineConstants.GM_COMBAT))
+                        {
+                            _player.GetComponent<Engine>().MoveToLocation(new Vector3(rch.point.x, 0, rch.point.z));
+                        }
                     }
                 }
             }
@@ -351,8 +359,8 @@ public class xGameObjectMOD : MonoBehaviour
         // Find the 'main' camera object.
         GameObject oCamera = GameObject.FindWithTag("MainCamera");
 
-        oCamera.transform.position = new Vector3(0, 10, 0);
-        oCamera.transform.rotation = Quaternion.Euler(90, 0, 0);
+        //oCamera.transform.position = new Vector3(0, 10, 0);
+        //oCamera.transform.rotation = Quaternion.Euler(90, 0, 0);
 
         //DontDestroyOnLoad(oCamera);
     }
@@ -442,38 +450,45 @@ public class xGameObjectMOD : MonoBehaviour
         //Debug.Log(Application.loadedLevelName);
     }
 
-    void InitializeModule(string type)
+    void InitializeModule()
     {
-        switch (type)
-        {
-            case "START":
-                {
-                    tArea = "demo100ar_wilderness";//"demo200ar_tavern";//21646
-                    tWaypoint = "demo100wp_start";
+        //engine.WR_SetGameMode(EngineConstants.GM_CHARGEN);
 
-                    //Add demo module script on module object, And because it's custom, set the flag true
-                    //Very important to set the custom flag, this is how redirected events are handled
-                    //This has to be done manually only for the module once, other objects set this on the fly
-                    oBase.bCustom = EngineConstants.TRUE;
-                    gameObject.AddComponent(Type.GetType(Script));
+        GAME_MODE = EngineConstants.GM_CHARGEN;
 
-                    //Signal event module start
-                    xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_MODULE_START);
-                    engine.SetEventCreatorRef(ref ev, gameObject);
-                    engine.SetEventObjectRef(ref ev, 0, gameObject);
-                    engine.SignalEvent(gameObject, ev);
+        //Initialize the Main menu screen and/or intro video
+        engine.MainMenu(true);
 
-                    //Signal event game mode explore For now during debug, otherwise GM_pregame
-                    //Followed by showstartmenu
-                    engine.WR_SetGameMode(EngineConstants.GM_EXPLORE);
+        tArea = "demo100ar_wilderness";//"demo200ar_tavern";//21646
+        tWaypoint = "demo100wp_start";
 
-                    break;
-                }
-            case "LOAD":
-                {
-                    break;
-                }
-            default: break;
-        }
+        //Add demo module script on module object, And because it's custom, set the flag true
+        //Very important to set the custom flag, this is how redirected events are handled
+        //This has to be done manually only for the module once, other objects set this on the fly
+        oBase.bCustom = EngineConstants.TRUE;
+        gameObject.AddComponent(Type.GetType(Script));
+    }
+
+    public void StartGame()
+    {
+        engine.MainMenu(false);
+        engine.LoadingScreen(true);
+
+        //Signal event module start
+        xEvent ev = engine.Event(EngineConstants.EVENT_TYPE_MODULE_START);
+        engine.SetEventCreatorRef(ref ev, gameObject);
+        engine.SetEventObjectRef(ref ev, 0, gameObject);
+        engine.SignalEvent(gameObject, ev);
+    }
+}
+
+public class Conversation
+{
+    public xConversation Conv { get; set; }
+    public int ID { get; set; }
+    public Conversation(xConversation Conv, int ID)
+    {
+        this.Conv = Conv;
+        this.ID = ID;
     }
 }

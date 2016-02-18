@@ -1,0 +1,738 @@
+fileFormatVersion: 2
+guid: 1fe0828957faa5046826749b02c834dd
+timeCreated: 1455753394
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: BackPlate
+    100002: brow_left
+    100004: brow_right
+    100006: cheek_left
+    100008: cheek_right
+    100010: Chest
+    100012: Chest1
+    100014: Chest2
+    100016: CrustHook1
+    100018: CrustHook10
+    100020: CrustHook11
+    100022: CrustHook12
+    100024: CrustHook13
+    100026: CrustHook14
+    100028: CrustHook15
+    100030: CrustHook16
+    100032: CrustHook17
+    100034: CrustHook18
+    100036: CrustHook19
+    100038: CrustHook2
+    100040: CrustHook20
+    100042: CrustHook3
+    100044: CrustHook4
+    100046: CrustHook5
+    100048: CrustHook6
+    100050: CrustHook7
+    100052: CrustHook8
+    100054: CrustHook9
+    100056: eye_Left
+    100058: eye_LeftLookat
+    100060: eye_Right
+    100062: eye_RightLookat
+    100064: eyeBlink_Left
+    100066: eyeBlink_Right
+    100068: eyeLookAt
+    100070: eyeLookAtBase
+    100072: eyeLookBackAt
+    100074: FrontPlate
+    100076: GOD
+    100078: Head
+    100080: headBase
+    100082: //RootNode
+    100084: innerLowLip_left
+    100086: innerLowLip_right
+    100088: innerUpperLip_left
+    100090: innerUpperLip_right
+    100092: jawBone
+    100094: LeftAnkle
+    100096: LeftCollar
+    100098: LeftElbow
+    100100: LeftElbowTwist1
+    100102: LeftElbowTwist2
+    100104: LeftHip
+    100106: LeftHipTwist1
+    100108: LeftIndexFinger
+    100110: LeftIndexFinger1
+    100112: LeftIndexFinger2
+    100114: LeftKnee
+    100116: LeftMiddleFinger
+    100118: LeftMiddleFinger1
+    100120: LeftMiddleFinger2
+    100122: LeftPinkFinger
+    100124: LeftPinkFinger1
+    100126: LeftPinkFinger2
+    100128: LeftPlate
+    100130: LeftRingFinger
+    100132: LeftRingFinger1
+    100134: LeftRingFinger2
+    100136: LeftShoulder
+    100138: LeftShoulderPad
+    100140: LeftShoulderTwist1
+    100142: LeftShoulderTwist2
+    100144: LeftSpawn
+    100146: LeftThumbFinger
+    100148: LeftThumbFinger1
+    100150: LeftThumbFinger2
+    100152: LeftToe
+    100154: LeftWrist
+    100156: LipCorner_left
+    100158: LipCorner_right
+    100160: LowerBack
+    100162: LowerCheek_left
+    100164: lowerCheek_right
+    100166: lowerLip_left
+    100168: lowerLip_right
+    100170: lowLid_Left
+    100172: lowLid_Right
+    100174: mouthBase
+    100176: Neck
+    100178: Neck1
+    100180: outBrow_left
+    100182: outBrow_Right
+    100184: outerUpperLip_left
+    100186: outerUpperLip_right
+    100188: Pelvis
+    100190: Prop01
+    100192: Prop02
+    100194: Prop03
+    100196: Prop04
+    100198: Prop05
+    100200: Prop06
+    100202: Prop07
+    100204: Prop08
+    100206: Prop09
+    100208: Prop10
+    100210: Prop11
+    100212: Prop12
+    100214: Prop13
+    100216: Prop14
+    100218: Prop15
+    100220: Prop16
+    100222: Prop17
+    100224: Prop18
+    100226: Prop19
+    100228: RightAnkle
+    100230: RightCollar
+    100232: RightElbow
+    100234: RightElbowTwist1
+    100236: RightElbowTwist2
+    100238: RightHip
+    100240: RightHipTwist1
+    100242: RightIndexFinger
+    100244: RightIndexFinger1
+    100246: RightIndexFinger2
+    100248: RightKnee
+    100250: RightMiddleFinger
+    100252: RightMiddleFinger1
+    100254: RightMiddleFinger2
+    100256: RightPinkFinger
+    100258: RightPinkFinger1
+    100260: RightPinkFinger2
+    100262: RightPlate
+    100264: RightRingFinger
+    100266: RightRingFinger1
+    100268: RightRingFinger2
+    100270: RightShoulder
+    100272: RightShoulderPad
+    100274: RightShoulderTwist1
+    100276: RightShoulderTwist2
+    100278: RightSpawn
+    100280: RightThumbFinger
+    100282: RightThumbFinger1
+    100284: RightThumbFinger2
+    100286: RightToe
+    100288: RightWrist
+    100290: Root
+    100292: Sneer
+    100294: tongue
+    100296: tongue1
+    100298: underEye_left
+    100300: underEye_Right
+    100302: upperLip_left
+    100304: upperLip_right
+    100306: HF_HAR_MOR_HairM1
+    100308: HF_HAR_MOR_HairM2
+    100310: HF_ROB_ENC_RobeM1
+    100312: HF_UEM_BAS_EyesM1
+    100314: HF_UHM_BAS_FaceM1
+    100316: HF_ULM_BAS_LashesM1
+    400000: BackPlate
+    400002: brow_left
+    400004: brow_right
+    400006: cheek_left
+    400008: cheek_right
+    400010: Chest
+    400012: Chest1
+    400014: Chest2
+    400016: CrustHook1
+    400018: CrustHook10
+    400020: CrustHook11
+    400022: CrustHook12
+    400024: CrustHook13
+    400026: CrustHook14
+    400028: CrustHook15
+    400030: CrustHook16
+    400032: CrustHook17
+    400034: CrustHook18
+    400036: CrustHook19
+    400038: CrustHook2
+    400040: CrustHook20
+    400042: CrustHook3
+    400044: CrustHook4
+    400046: CrustHook5
+    400048: CrustHook6
+    400050: CrustHook7
+    400052: CrustHook8
+    400054: CrustHook9
+    400056: eye_Left
+    400058: eye_LeftLookat
+    400060: eye_Right
+    400062: eye_RightLookat
+    400064: eyeBlink_Left
+    400066: eyeBlink_Right
+    400068: eyeLookAt
+    400070: eyeLookAtBase
+    400072: eyeLookBackAt
+    400074: FrontPlate
+    400076: GOD
+    400078: Head
+    400080: headBase
+    400082: //RootNode
+    400084: innerLowLip_left
+    400086: innerLowLip_right
+    400088: innerUpperLip_left
+    400090: innerUpperLip_right
+    400092: jawBone
+    400094: LeftAnkle
+    400096: LeftCollar
+    400098: LeftElbow
+    400100: LeftElbowTwist1
+    400102: LeftElbowTwist2
+    400104: LeftHip
+    400106: LeftHipTwist1
+    400108: LeftIndexFinger
+    400110: LeftIndexFinger1
+    400112: LeftIndexFinger2
+    400114: LeftKnee
+    400116: LeftMiddleFinger
+    400118: LeftMiddleFinger1
+    400120: LeftMiddleFinger2
+    400122: LeftPinkFinger
+    400124: LeftPinkFinger1
+    400126: LeftPinkFinger2
+    400128: LeftPlate
+    400130: LeftRingFinger
+    400132: LeftRingFinger1
+    400134: LeftRingFinger2
+    400136: LeftShoulder
+    400138: LeftShoulderPad
+    400140: LeftShoulderTwist1
+    400142: LeftShoulderTwist2
+    400144: LeftSpawn
+    400146: LeftThumbFinger
+    400148: LeftThumbFinger1
+    400150: LeftThumbFinger2
+    400152: LeftToe
+    400154: LeftWrist
+    400156: LipCorner_left
+    400158: LipCorner_right
+    400160: LowerBack
+    400162: LowerCheek_left
+    400164: lowerCheek_right
+    400166: lowerLip_left
+    400168: lowerLip_right
+    400170: lowLid_Left
+    400172: lowLid_Right
+    400174: mouthBase
+    400176: Neck
+    400178: Neck1
+    400180: outBrow_left
+    400182: outBrow_Right
+    400184: outerUpperLip_left
+    400186: outerUpperLip_right
+    400188: Pelvis
+    400190: Prop01
+    400192: Prop02
+    400194: Prop03
+    400196: Prop04
+    400198: Prop05
+    400200: Prop06
+    400202: Prop07
+    400204: Prop08
+    400206: Prop09
+    400208: Prop10
+    400210: Prop11
+    400212: Prop12
+    400214: Prop13
+    400216: Prop14
+    400218: Prop15
+    400220: Prop16
+    400222: Prop17
+    400224: Prop18
+    400226: Prop19
+    400228: RightAnkle
+    400230: RightCollar
+    400232: RightElbow
+    400234: RightElbowTwist1
+    400236: RightElbowTwist2
+    400238: RightHip
+    400240: RightHipTwist1
+    400242: RightIndexFinger
+    400244: RightIndexFinger1
+    400246: RightIndexFinger2
+    400248: RightKnee
+    400250: RightMiddleFinger
+    400252: RightMiddleFinger1
+    400254: RightMiddleFinger2
+    400256: RightPinkFinger
+    400258: RightPinkFinger1
+    400260: RightPinkFinger2
+    400262: RightPlate
+    400264: RightRingFinger
+    400266: RightRingFinger1
+    400268: RightRingFinger2
+    400270: RightShoulder
+    400272: RightShoulderPad
+    400274: RightShoulderTwist1
+    400276: RightShoulderTwist2
+    400278: RightSpawn
+    400280: RightThumbFinger
+    400282: RightThumbFinger1
+    400284: RightThumbFinger2
+    400286: RightToe
+    400288: RightWrist
+    400290: Root
+    400292: Sneer
+    400294: tongue
+    400296: tongue1
+    400298: underEye_left
+    400300: underEye_Right
+    400302: upperLip_left
+    400304: upperLip_right
+    400306: HF_HAR_MOR_HairM1
+    400308: HF_HAR_MOR_HairM2
+    400310: HF_ROB_ENC_RobeM1
+    400312: HF_UEM_BAS_EyesM1
+    400314: HF_UHM_BAS_FaceM1
+    400316: HF_ULM_BAS_LashesM1
+    4300000: HF_ROB_ENC_RobeM1
+    4300002: HF_UHM_BAS_FaceM1
+    4300004: HF_UEM_BAS_EyesM1
+    4300006: HF_HAR_MOR_HairM1
+    4300008: HF_HAR_MOR_HairM2
+    4300010: HF_ULM_BAS_LashesM1
+    7400000: fh_p.pp_wyn_lp
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: HF_HAR_MOR_HairM1
+    13700002: HF_HAR_MOR_HairM2
+    13700004: HF_ROB_ENC_RobeM1
+    13700006: HF_UEM_BAS_EyesM1
+    13700008: HF_UHM_BAS_FaceM1
+    13700010: HF_ULM_BAS_LashesM1
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 1
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: fh_p.pp_wyn_lp
+      takeName: Take 001
+      firstFrame: 2
+      lastFrame: 80
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: GOD
+        weight: 1
+      - path: GOD/eyeLookAtBase
+        weight: 1
+      - path: GOD/eyeLookAtBase/eyeLookAt
+        weight: 1
+      - path: GOD/eyeLookAtBase/eyeLookAt/eye_LeftLookat
+        weight: 1
+      - path: GOD/eyeLookAtBase/eyeLookAt/eye_RightLookat
+        weight: 1
+      - path: GOD/LeftSpawn
+        weight: 1
+      - path: GOD/LeftSpawn/CrustHook3
+        weight: 1
+      - path: GOD/RightSpawn
+        weight: 1
+      - path: GOD/RightSpawn/CrustHook2
+        weight: 1
+      - path: GOD/Root
+        weight: 1
+      - path: GOD/Root/CrustHook4
+        weight: 1
+      - path: GOD/Root/LowerBack
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/CrustHook11
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/CrustHook12
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/CrustHook13
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftElbowTwist1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftElbowTwist2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/CrustHook14
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftIndexFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftIndexFinger/LeftIndexFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftIndexFinger/LeftIndexFinger1/LeftIndexFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftMiddleFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftMiddleFinger/LeftMiddleFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftMiddleFinger/LeftMiddleFinger1/LeftMiddleFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftPinkFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftPinkFinger/LeftPinkFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftPinkFinger/LeftPinkFinger1/LeftPinkFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftRingFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftRingFinger/LeftRingFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftRingFinger/LeftRingFinger1/LeftRingFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftThumbFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftThumbFinger/LeftThumbFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/LeftThumbFinger/LeftThumbFinger1/LeftThumbFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/LeftWrist/Prop02
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/Prop18
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftElbow/Prop18/Prop03
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftShoulderTwist1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulder/LeftShoulderTwist2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/LeftCollar/LeftShoulderPad
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/eyeLookBackAt
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/brow_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/brow_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/eye_Left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/eye_Right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/eyeBlink_Left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/eyeBlink_Right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/lowLid_Left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/lowLid_Right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/cheek_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/cheek_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/innerUpperLip_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/innerUpperLip_left/upperLip_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/innerUpperLip_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/innerUpperLip_right/upperLip_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/innerLowLip_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/innerLowLip_left/lowerLip_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/innerLowLip_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/innerLowLip_right/lowerLip_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/LowerCheek_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/lowerCheek_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/tongue
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/jawBone/tongue/tongue1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/outerUpperLip_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/outerUpperLip_left/LipCorner_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/outerUpperLip_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/mouthBase/outerUpperLip_right/LipCorner_right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/outBrow_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/outBrow_Right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/Sneer
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/underEye_left
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/Neck/Neck1/Head/headBase/underEye_Right
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/CrustHook7
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/CrustHook8
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/CrustHook9
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/Prop19
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/Prop19/Prop04
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightElbowTwist1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightElbowTwist2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/CrustHook10
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/Prop01
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightIndexFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightIndexFinger/RightIndexFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightIndexFinger/RightIndexFinger1/RightIndexFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightMiddleFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightMiddleFinger/RightMiddleFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightMiddleFinger/RightMiddleFinger1/RightMiddleFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightPinkFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightPinkFinger/RightPinkFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightPinkFinger/RightPinkFinger1/RightPinkFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightRingFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightRingFinger/RightRingFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightRingFinger/RightRingFinger1/RightRingFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightThumbFinger
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightThumbFinger/RightThumbFinger1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightElbow/RightWrist/RightThumbFinger/RightThumbFinger1/RightThumbFinger2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightShoulderTwist1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulder/RightShoulderTwist2
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Chest2/RightCollar/RightShoulderPad
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/CrustHook1
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop15
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop15/Prop08
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop15/Prop09
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop15/Prop10
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop16
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop16/Prop11
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop17
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop17/Prop06
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/Chest1/Prop17/Prop07
+        weight: 1
+      - path: GOD/Root/LowerBack/Chest/CrustHook5
+        weight: 1
+      - path: GOD/Root/LowerBack/CrustHook6
+        weight: 1
+      - path: GOD/Root/Pelvis
+        weight: 1
+      - path: GOD/Root/Pelvis/BackPlate
+        weight: 1
+      - path: GOD/Root/Pelvis/FrontPlate
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/CrustHook18
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftHipTwist1
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftKnee
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftKnee/CrustHook19
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftKnee/LeftAnkle
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftKnee/LeftAnkle/CrustHook20
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftHip/LeftKnee/LeftAnkle/LeftToe
+        weight: 1
+      - path: GOD/Root/Pelvis/LeftPlate
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/CrustHook15
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightHipTwist1
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightKnee
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightKnee/CrustHook16
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightKnee/RightAnkle
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightKnee/RightAnkle/CrustHook17
+        weight: 1
+      - path: GOD/Root/Pelvis/RightHip/RightKnee/RightAnkle/RightToe
+        weight: 1
+      - path: GOD/Root/Pelvis/RightPlate
+        weight: 1
+      - path: GOD/Root/Prop13
+        weight: 1
+      - path: GOD/Root/Prop13/Prop05
+        weight: 1
+      - path: GOD/Root/Prop14
+        weight: 1
+      - path: GOD/Root/Prop14/Prop12
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
